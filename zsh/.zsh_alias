@@ -1,0 +1,39 @@
+# Start a server in this directory using python simple http server.
+alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
+
+# Start tmux in 256 colors
+alias tmux="TERM=xterm-256color tmux"
+alias tmuxconfig="vim ~/.tmux.conf"
+
+alias top="htop"
+alias tree="tree -aC"
+alias cat="bat"
+alias cat="bat"
+
+alias ll="exa --long -a"
+alias ls="exa --long"
+
+# Docker related alias
+alias di="docker images"
+alias dir="docker rm image "
+alias dps="docker ps -a"
+
+# Vim related alias
+alias vim="nvim"
+alias vimrc="vim ~/.config/nvim/init.vim"
+
+alias zshrc="vim ~/.zshrc"
+alias zalias="vim ~/.zsh_alias"
+
+# Local PG SQL Client
+alias pglocal="pgcli -h localhost -p 5432 -U evanliu"
+
+# input ~/.zsh_plugins into antibody, then pump the output to ~/.zsh_plugins.sh file.
+# zshrc will source ~/.zsh_plugins.sh file and statically load those plugins.
+# This needs to be done everytime you have add a new line to the .zsh_plugins file.
+alias sourcezsh="antibody bundle < ~/.zsh_plugins > ~/.zsh_plugins.sh"
+
+# FZF with file preview
+alias fzf="fzf --preview 'head -1000 {}'"
+alias fzf="ag --nobreak --nonumbers --noheading . | fzf --preview 'head -1000 {}'"
+
