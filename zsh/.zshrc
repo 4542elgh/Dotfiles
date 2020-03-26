@@ -20,6 +20,9 @@ else
 fi;
 # zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+# Got that sweet Arch logo and system info showing on new instance
+neofetch
+
 # ZSH enable history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -33,7 +36,7 @@ source ~/.zsh_plugins.sh
 source ~/.zsh_alias
 
 # This is to switch environmental variables if there is a .env file
-source ~/.autoenv/activate.sh
+# source ~/.autoenv/activate.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
