@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Echo the text
+echo "Hello World"

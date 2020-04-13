@@ -1,0 +1,4 @@
+configuration {
+	theme: "glue_pro_blue";
+	show-icons: true;
+}

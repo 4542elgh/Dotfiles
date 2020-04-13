@@ -2,13 +2,12 @@
 alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
 
 # Start tmux in 256 colors
-alias tmux="TERM=xterm-256color tmux"
+alias tmux='TERM=xterm-256color tmux -f "${XDG_CONFIG_HOME}"/tmux/tmux.conf'
 alias tmuxconfig="vim ~/.tmux.conf"
 
 alias top="htop"
 alias tree="tree -aC"
-alias cat="bat"
-alias cat="bat"
+alias cat="bat" 
 
 alias ll="exa --long -a"
 alias ls="exa --long"
@@ -25,6 +24,11 @@ alias vimrc="vim ~/.config/nvim/init.vim"
 alias zshrc="vim ~/.zshrc"
 alias zalias="vim ~/.zsh_alias"
 
+alias i3config="vim ~/.config/i3/config"
+alias terminatorconfig="vim ~/.config/terminator/config"
+alias picomconfig="vim ~/.config/picom/picom.conf"
+alias bumblebeeconfig="cd /usr/share/bumblebee-status"
+
 # Local PG SQL Client
 alias pglocal="pgcli -h localhost -p 5432 -U evanliu"
 
@@ -35,5 +39,12 @@ alias sourcezsh="antibody bundle < ~/.zsh_plugins > ~/.zsh_plugins.sh"
 
 # FZF with file preview
 alias fzf="fzf --preview 'head -1000 {}'"
-alias fzf="ag --nobreak --nonumbers --noheading . | fzf --preview 'head -1000 {}'"
 
+# Invoke ImageMagick for taking screenshot and place into clipboard
+alias ss="import png:- | xclip -selection clipboard -t image/png"
+
+# Get clipboard manager entries
+alias clip="roficlip"
+alias ffmpeg="ffmpeg -f x11grab -s 1920x1080 -r 25 -i :0.0+1920,0 output.mp4"
+
+alias covid='watch -c -n600 "curl -s -L covid19.trackercli.com/US"'

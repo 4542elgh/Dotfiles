@@ -1,15 +1,37 @@
 # Start ZSH in debug mode to test speed
 # zmodload zsh/zprof
 
+export BAT_CONFIG_PATH="${HOME}/.config/bat/config"
+
+export EDITOR="vim"
+export XDG_CONFIG_HOME="${HOME}/.config"
+
 # PG CLI
 export PGGSSENCMODE="disable"
 
-# This is for global node package
 export ZSH="$HOME"
-export NPM_PACKAGES="/Users/$USER/.npm-packages"
-export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
-export PATH="$NPM_PACKAGES/bin:$PATH"
+
+# This is for global node package
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
+
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+
+# PATH variable
+export PATH="$HOME/.local/bin:$PATH"
 export PATH="/opt/miniconda3/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+
+bindkey -v
 
 # Speed up zsh compinit by only checking cache once a day
 autoload -Uz compinit 
@@ -48,8 +70,8 @@ unset LSCOLORS
 export CLICOLOR=1
 export CLICOLOR_FORCE=1
 
-# Some environmental variables
-export do_ip="159.65.66.29"
+setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
+setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
 
 # Ignore the following directive when executing `history` command
-export HISTIGNORE="pwd:ls:cd:history:clear:exit"
+export HISTORY_IGNORE="(history|clear|exit|ls|cd|pwd|exit|cd ..)"

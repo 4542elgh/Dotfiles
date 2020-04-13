@@ -11,6 +11,18 @@ set shiftwidth=2
 set hidden
 set cursorcolumn
 set cursorline
+set splitright
+set splitbelow
+
+"--------------------------------------------------------------------------------
+" Rofi file extensions interpret as css syntax
+"--------------------------------------------------------------------------------
+au BufNewFile,BufRead /*.rasi setf css
+
+"--------------------------------------------------------------------------------
+" ,s trigger substitute syntax
+"--------------------------------------------------------------------------------
+nnoremap <Leader>s :%s/
 
 "--------------------------------------------------------------------------------
 " This is for configure lightline bufferline
@@ -108,6 +120,8 @@ Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'thomasfaingnaert/vim-lsp-snippets'
 Plug 'thomasfaingnaert/vim-lsp-ultisnips'
+Plug 'kyuhi/vim-emoji-complete'
+Plug 'chrisbra/unicode.vim'
 call plug#end()
 
 "--------------------------------------------------------------------------------
@@ -156,30 +170,39 @@ endif
 "--------------------------------------------------------------------------------
 "LSP
 "--------------------------------------------------------------------------------
-if executable('pyls')
-	au User lsp_setup call lsp#register_server({
-		\ 'name': 'pyls',
-		\ 'cmd': {server_info->['pyls']},
-		\ 'whitelist': ['python'],
-		\ })
+"if executable('pyls')
+"	au User lsp_setup call lsp#register_server({
+"		\ 'name': 'pyls',
+"		\ 'cmd': {server_info->['pyls']},
+"		\ 'whitelist': ['python'],
+"		\ })
+"endif
+
+"if executable('typescript-language-server')
+"	au User lsp_setup call lsp#register_server({
+"		\ 'name': 'javascript support using typescript-language-server',
+"		\ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"		\ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
+"		\ 'whitelist': ['javascript', 'javascript.jsx', 'javascriptreact'],
+"		\ })
+"endif
+
+if executable('go-langserver')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'go-langserver',
+        \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
+        \ 'whitelist': ['go'],
+        \ })
+    autocmd BufWritePre *.go LspDocumentFormatSync
 endif
 
-if executable('typescript-language-server')
-	au User lsp_setup call lsp#register_server({
-		\ 'name': 'javascript support using typescript-language-server',
-		\ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-		\ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
-		\ 'whitelist': ['javascript', 'javascript.jsx', 'javascriptreact'],
-		\ })
-endif
+""--------------------------------------------------------------------------------
+"" Manual invoke linter using external command
+""--------------------------------------------------------------------------------
+"augroup Linting
+"	autocmd BufWritePost *.js AsyncRun eslint %
+"augroup END
 
-"--------------------------------------------------------------------------------
-" Manual invoke linter using external command
-"--------------------------------------------------------------------------------
-augroup Linting
-	autocmd BufWritePost *.js AsyncRun eslint %
-augroup END
-
-augroup vimrc
-	autocmd QuickFixCmdPost * botright copen 8
-augroup END
+"augroup vimrc
+"	autocmd QuickFixCmdPost * botright copen 8
+"augroup END
