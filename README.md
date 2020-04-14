@@ -157,7 +157,7 @@ sudo pacman -Syyu adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
 ```
 
 # Neofetch
-Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/]
+Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/)
 
 # Nvim
 Everyone will have their own sets of .vimrc/.init.vim, I do have a list of plugins that I think is convenient to have. Maybe you will find something you need but didnt know exist. 🤔 
