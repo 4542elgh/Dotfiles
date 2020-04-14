@@ -29,7 +29,7 @@ Enough said here's the install
 sudo pacman -Syyu i3-gaps
 ```
 
-# (Terminator)[https://gnometerminator.blogspot.com/p/introduction.html]
+# [Terminator](https://gnometerminator.blogspot.com/p/introduction.html)
 I use Terminator as my terminal emulator. I give up on configuring uRXVT, because its hard if not possible, to configure Powerlevel10k on it. Terminator Powerlevel10K out of the box, and my config file is 3 lines. 
 
 https://gnometerminator.blogspot.com/p/introduction.html
@@ -118,7 +118,7 @@ bindsym $mod+shift+a --release exec cd $HOME/Pictures && import $(date +'%m%d%Y%
 ```
 Change the cd to the path where you want to save your screenshot capture.
 
-# (yay)[https://github.com/Jguer/yay]
+# [yay](https://github.com/Jguer/yay)
 But seriously, yay is what I use to manage AUR (Arch User Repository)<br/>
 If you want to compile your own PKGBUILD
 You can Google the AUR of your package
@@ -157,7 +157,7 @@ sudo pacman -Syyu adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
 ```
 
 # Neofetch
-Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at (/r/UnixPorn[https://www.reddit.com/r/unixporn/]
+Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/]
 
 # Nvim
 Everyone will have their own sets of .vimrc/.init.vim, I do have a list of plugins that I think is convenient to have. Maybe you will find something you need but didnt know exist. 🤔 
