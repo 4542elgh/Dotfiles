@@ -4,6 +4,7 @@
 export BAT_CONFIG_PATH="${HOME}/.config/bat/config"
 
 export EDITOR="vim"
+export env_editor="vim"
 export XDG_CONFIG_HOME="${HOME}/.config"
 
 # PG CLI

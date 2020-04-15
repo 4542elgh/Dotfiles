@@ -3,12 +3,12 @@ This repo contain config files which can be syslinked to home directory using GN
 
 This README.md contain all the setup instructions so I dont have to Google every single software
 
-# SUDO
-Arch does not come with sudo, just like Debian. So... Lets install it.
+# sudo
+arch does not come with sudo, just like Debian. So... Lets install it.
 ```bash
-sudo pacman -Syyu sudo
+sudo pacman -S sudo
 ```
-Wait... How can you sudo if you dont have sudo installed???🤔
+Wait... How can you sudo if you dont have sudo installed???🤔<br/>
 Use su, which should be the default user.
 You will need to uncomment 1 line and add a new line in `visudo` config file
 ```bash
@@ -19,14 +19,20 @@ If you are a normal user, try set the env var on the fly by using this
 ```bash
 sudo EDITOR=vim visudo
 ```
+If you experience an error like thie `visudo: no editor found (editor path = /usr/bin/vi)`<br/>
+Try setting the default editor in sudoer file
+First enter editing mode using above command, then add the following line to the end of the `sudoers` file
+```bash
+Defaults editor=/usr/bin/vim # Replace Vim with your favorite editor
+```
 
-# i3-gaps
+# [i3-gaps](https://github.com/Airblader/i3)
 i3 will make full use of your screen real estates. It is as simple as that.
 Add some config and you will never leave i3 even though it is not the conventional floating window manager.
 I use gaps so it has a bit more asthetic feel 
 Enough said here's the install
 ```bash
-sudo pacman -Syyu i3-gaps
+sudo pacman -S i3-gaps
 ```
 
 # [Terminator](https://gnometerminator.blogspot.com/p/introduction.html)
@@ -34,10 +40,10 @@ I use Terminator as my terminal emulator. I give up on configuring uRXVT, becaus
 
 https://gnometerminator.blogspot.com/p/introduction.html
 ```bash
-sudo pacman -Syyu terminator
+sudo pacman -S terminator
 ```
 
-# Compton/Picom
+# [Compton/Picom](https://github.com/yshui/picom)
 Transparency is purely for asthetic, but it makes your Windows Manager so much more appealing! I only made my terminal have transparency, but feel free to make it however you like.
 ```bash
 sudo pacman -S picom
@@ -51,17 +57,17 @@ Put this line in your i3 config
 exec --no-startup-id picom -b
 ```
 
-# Stow
+# [Stow](https://www.gnu.org/software/stow/)
 It is much easier to manage your dotfiles with Stow. Stow contain all your config folder in one directory and with a simple `stow zsh` given that zsh is a folder, stow will system link that folder's content into your home directory. 
 ```bash
-sudo pacman -Syyu stow
+sudo pacman -S stow
 ```
 
 # ZSH
 I am sure you heard all the good things about ZSH.
 ZSH folder have some sane config I use everyday
 ```bash
-sudo pacman -Syyu zsh
+sudo pacman -S zsh
 ```
 Set current user to use zsh shell
 ```bash
@@ -72,10 +78,10 @@ Use stow to syslink entire zsh folder to your home dir, or create your own .zshr
 stow zsh
 ```
 
-# Clipster & Rofi & Rofi-Clips
+# [Clipster](https://github.com/mrichar1/clipster) & [Rofi](https://github.com/davatorium/rofi) & [Rofi-Clips](https://github.com/gilbertw1/roficlip)
 I was initially searching for a clipboard manager, and I came across clipster, and it is recommended to use with Rofi-Clips add-on for better experience. Then I realize Rofi framework itself is more intuitive to use than dmenu (i3wm default menu selection)
 ```bash
-sudo pacman -Syyu rofi
+sudo pacman -S rofi
 yay clipster
 ```
 You will need to start clipster daemon, for now you can use the `-d` flag.
@@ -101,7 +107,7 @@ Rofi out of the box act as a search engine for applications (again, its a replac
 Roficlip which I alias to clip, will take all copied items and store in a plain text file. (See Github for it's location)
 Press Ctrl+J/K to move up and down, ENTER to copy the highlighted item into PRIMARY & CLIPBOARD selection.
 
-# Image Capture
+# Image Capture (ImageMagick + xclip)
 On the topic of clipboard, capturing monitor image to clipboard or save as file is really useful.
 No additional software needed, ImageMagick will take screen capture and save to your home directory. 
 To capture image into clipboard, there is xclip to do it.
@@ -132,7 +138,7 @@ cd ~/Downloads/yay
 makepkg -sicr
 ```
 
-# bumblebee-status
+# [bumblebee-status](https://github.com/tobi-wan-kenobi/bumblebee-status)
 Trust me, I have tried SO hard to get powerline running on my bar. Bumblebee is the one work out of the box, and easily configurable (Python)
 ```bash
 yay bumblebee-status
@@ -142,40 +148,41 @@ Bumblebee status is defined in i3 config file under `bar` attribute.
 
 # Fonts
 I personally use 4 fonts
-`DejaVu [Nerdfont](https://www.nerdfonts.com)` for all the glyph goodies, 
+[DejaVu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DejaVuSansMono) part of the [Nerdfont](https://www.nerdfonts.com) family - Nerdfonts have glyph for COOLER CLI.<br/>
+BUT IT DOES NOT MAKE YOU A 10X DEVELOPER
 ```bash
 yay nerd-fonts-dejavu-complete
 ```
-`tff-joypixels` for emojis
+[tff-joypixels](https://www.joypixels.com/download) for emojis
 ```bash
 yay ttf-joypixels
 ```
-Chinese support: `dobe-source-han-sans-cn-fonts` and `dobe-source-han-sans-tw-fonts`
+Chinese support: [adobe-source-han-sans-cn-fonts](https://fonts.adobe.com/fonts/source-han-sans-simplified-chinese) and [adobe-source-han-sans-tw-fonts](https://fonts.adobe.com/fonts/source-han-sans-traditional-chinese)
 CN is for Simplified Chinese, and TW is for Traditional Chinese
 ```bash
-sudo pacman -Syyu adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
+sudo pacman -S adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
 ```
 
-# Neofetch
+# [Neofetch](https://github.com/dylanaraps/neofetch)
 Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/)
 
-# Nvim
+# [Nvim](https://github.com/neovim/neovim)
 Everyone will have their own sets of .vimrc/.init.vim, I do have a list of plugins that I think is convenient to have. Maybe you will find something you need but didnt know exist. 🤔 
 ```bash
-sudo pacman -Syyu nvim
+sudo pacman -S nvim
 ```
-I use vim-plug, install that would be really helpful
+I use [vim-plug](https://github.com/junegunn/vim-plug) to manage vim plugins, install that would be really helpful
 ```bash
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 
 # Input Methods
-If you are using Chinese input method, then `fcitx` framework will be a good option
+If you are using Chinese input method, then [fcitx](https://fcitx-im.org/wiki/Fcitx) framework will be a good option
 Additionally, you will need to install **one** of the chinese input methods, the one I use is **fcitx-sunpinyin**
 You can find a full list of input methods from the [Official Arch Wiki](https://wiki.archlinux.org/index.php/fcitx)
 ```bash
-sudo pacman -Syyu fcitx fcitx-sunpinyin
+sudo pacman -S fcitx fcitx-sunpinyin
 ```
 You can switch to fcitx by pressing `Ctrl-[Space]`
 
@@ -186,7 +193,7 @@ Bluez-utils - Provide bluetoothctl for CLI interface
 pulseaudio-alsa - ALSA is a frontend interface for pulseaudio server
 pulseaudio-bluetooth - Interact with bluetooth device
 ```bash
-sudo pacman -Syyu bluez bluez-utils pulseaudio-alsa pulseaudio-bluetooth
+sudo pacman -S bluez bluez-utils pulseaudio-alsa pulseaudio-bluetooth
 ```
 Enable bluetooth service
 ```bash
@@ -237,7 +244,7 @@ AutoEnable=true
 ```
 Enjoy! 🤣
 
-# mps-Youtube
+# [mps-Youtube](https://github.com/mps-youtube/mps-youtube)
 I ususally code with some music on. So here it is, a CLI util just for listening to Youtube music.
 You do need to have python3 installed.
 ```bash
@@ -250,7 +257,7 @@ set api_key <YOUR_API_KEY>
 ```
 MPlayer is the music player MPS-Youtube uses, be sure to install that
 ```bash
-sudo pacman -Syyu mplayer
+sudo pacman -S mplayer
 ```
 Set your new music player
 ```bash
@@ -259,14 +266,14 @@ set player mplayer
 
 # File search
 There are times I want to do a quick lookup of a file. Either by filename or file content
-I use fzf, mlocate (lookup thr filename), and ag (lookup thr file content)
+I use [fzf](https://github.com/junegunn/fzf), [mlocate](https://pagure.io/mlocate) (lookup through filename), and [ag (the silver searcher)](https://github.com/ggreer/the_silver_searcher) (lookup through file content)
 FZF is async, fuzzy, interactive search engine that also provide file preview.
 ```bash
-sudo pacman -Syyu fzf
+sudo pacman -S fzf
 ```
 mlocate is just searching through a predetermine db tree and return you the result.
 ```bash
-sudo pacman -Syyu mlocate
+sudo pacman -S mlocate
 ```
 mlocate require you to populate the database before doing any searches. It is also recommended to repopulate your database once a while to have most up to date tree.
 ```bash
@@ -274,11 +281,11 @@ sudo updatedb # This will update the database search tree
 ```
 ag - The silver searcher - is a super fast content searcher 
 ```bash
-sudo pacman -Syyu ag
+sudo pacman -S ag
 ```
 
 # Programming Languages
-# NPM
+# [NPM](https://nodejs.org/en/)
 
 ## Global NPM without Sudo
 Global NPM packages should not use sudo command. (Use NPM in user's own home directory)
@@ -305,10 +312,11 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 ```
 
 # Make CAPS_LOCK Great Again!
-I use karabinar for MacOSX to map Caps_Lock to both Ctrl[Hold] and Esc[Press]. After some investigation, I think this is what I am happy with.
-You will need `xcape` and `caps2esc`
+I use [karabinar](https://karabiner-elements.pqrs.org/) for MacOSX to map Caps_Lock to both Ctrl[Hold] and Esc[Press].<br/>
+For Linux, it is a bit more work. After some investigation, I think this is what I am happy with.
+You will need [xcape](https://github.com/alols/xcape) and [caps2esc](https://github.com/oblitum/caps2esc)
 ```bash
-sudo pacman -Syyu xcape
+sudo pacman -S xcape
 yay interception-tools caps2esc
 ```
 Make a file named `udevmon.yaml` in /etc folder

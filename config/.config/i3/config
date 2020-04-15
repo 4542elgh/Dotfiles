@@ -6,7 +6,7 @@
 #
 
 # i3 config file (v4)
-#
+
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
@@ -218,12 +218,26 @@ bar {
 	status_command /usr/bin/bumblebee-status -m bluetooth nic disk:root cpu memory date time pasource arch-update -p root.path=/ time.format="%H:%M:%S" date.format="%a, %b %d %Y" -t iceberg-rainbow
 }
 
+# Gap between window
 gaps inner 5
 gaps outer 5
 
-new_window 1pixel
+# Move between workspace does not mess up
+mouse_warping none
 
+# Resize Window hotkey
+bindsym $mod+Ctrl+h resize shrink width 1 px or 1 ppt
+bindsym $mod+Ctrl+j resize grow height 1 px or 1 ppt
+bindsym $mod+Ctrl+k resize shrink height 1 px or 1 ppt
+bindsym $mod+Ctrl+l resize grow width 1 px or 1 ppt
+
+# Eliminate title bar in i3
+default_border none
+
+# Start fehbg to restore wallpaper
 exec sh ~/.fehbg 
+# If fehbg executable (on first run) then set image manually
+# exec sh feh --bg-fill ~/Dotfiles/Wallpaper1.jpg --bg-fill ~/Dotfiles/Wallpaper2.jpg
 exec --no-startup-id fcitx -d
 exec --no-startup-id picom -b
 exec --no-startup-id clipster -d --config="/home/evan/.config/clipster/config"
