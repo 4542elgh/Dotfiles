@@ -3,6 +3,11 @@ This repo contain config files which can be syslinked to home directory using GN
 
 This README.md contain all the setup instructions so I dont have to Google every single software
 
+I think it is important to note that this repo should be cloned under `~/Dotfiles` Directory
+```bash
+mkdir -p ~/Dotfiles && git clone https://github.com/4542elgh/Dotfiles ~/Dotfiles
+```
+
 # sudo
 arch does not come with sudo, just like Debian. So... Lets install it.
 ```bash
@@ -20,7 +25,7 @@ If you are a normal user, try set the env var on the fly by using this
 sudo EDITOR=vim visudo
 ```
 If you experience an error like thie `visudo: no editor found (editor path = /usr/bin/vi)`<br/>
-Try setting the default editor in sudoer file
+Try setting the default editor in sudoer file.
 First enter editing mode using above command, then add the following line to the end of the `sudoers` file
 ```bash
 Defaults editor=/usr/bin/vim # Replace Vim with your favorite editor
@@ -29,7 +34,7 @@ Defaults editor=/usr/bin/vim # Replace Vim with your favorite editor
 # [i3-gaps](https://github.com/Airblader/i3)
 i3 will make full use of your screen real estates. It is as simple as that.
 Add some config and you will never leave i3 even though it is not the conventional floating window manager.
-I use gaps so it has a bit more asthetic feel 
+I use gaps so it has a bit more asthetic feel.
 Enough said here's the install
 ```bash
 sudo pacman -S i3-gaps
@@ -48,23 +53,39 @@ Transparency is purely for asthetic, but it makes your Windows Manager so much m
 ```bash
 sudo pacman -S picom
 ```
-Grab my picom config folder and stow it into your home directory. Be sure to change Terminator to your terminal application name
+Grab my picom config folder and stow it into your home directory. Be sure to change Terminator to your terminal application name.
 ```bash
 stow picom
 ```
-Put this line in your i3 config
+Put this line in your i3 config.
 ```bash
 exec --no-startup-id picom -b
 ```
 
 # [Stow](https://www.gnu.org/software/stow/)
-It is much easier to manage your dotfiles with Stow. Stow contain all your config folder in one directory and with a simple `stow zsh` given that zsh is a folder, stow will system link that folder's content into your home directory. 
+I think it is important to note that this repo should be cloned under `~/Dotfiles` Directory
+```bash
+mkdir -p ~/Dotfiles && git clone https://github.com/4542elgh/Dotfiles ~/Dotfiles
+```
+
+It is much easier to manage your dotfiles with Stow. Dotfiles contain all your config folder in one directory and with a simple `stow zsh` given that zsh is a folder, stow will symoblic link that ***folder's content*** into `stow zsh` execution directory's parent.<br/>
+Given the following structure in `/home/evan`
+```
+evan
+|_Dotfiles
+  |_zsh
+    |_.zshrc
+    |_.zsh_alias
+```
+If I `stow zsh` inside Dotfiles folder. it will take the content of zsh folder, and place it 1 folder above Dotfiles. Which is my home directory. This way I applied my latest `.zshrc` and `.zsh_alias` with a simple command rather copy and paste from repo's file.
+
+Whatever changes I made in the symlink will be referring back to the `Dotfiles/zsh` file as well. So your file in `Dotfiles` are always the source of truth.
 ```bash
 sudo pacman -S stow
 ```
 
 # ZSH
-I am sure you heard all the good things about ZSH.
+I am sure you heard all the good things about ZSH. It support Powerlevel10K which I believe is the best prompt out there. It also support a variety of plugins (you can grab some [Oh My ZSH!](https://github.com/ohmyzsh/ohmyzsh/) plugins without installing the entire framework). 
 ZSH folder have some sane config I use everyday
 ```bash
 sudo pacman -S zsh
@@ -77,6 +98,19 @@ Use stow to syslink entire zsh folder to your home dir, or create your own .zshr
 ```bash
 stow zsh
 ```
+
+# [Antibody](https://github.com/getantibody/antibody)
+There are more than a dozen ZSH plugin manager to choose from. However, I find Antibody offer the best speed. It loads plugins statically, saving time on first boot.
+Install Antibody is easy:
+```bash
+curl -sfL git.io/antibody | sh -s - -b /usr/local/bin
+```
+I already implement all the speed up suggest in their website into `.zshrc` which did improve boot up speed quite a lot.
+After you done adding plugins to `zsh_plugins.txt` (re)generate the plugins is easy
+```bash
+antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
+```
+Then it is as easy as `source ~/.zsh_plugins.sh` to get all the plugins running.
 
 # [Clipster](https://github.com/mrichar1/clipster) & [Rofi](https://github.com/davatorium/rofi) & [Rofi-Clips](https://github.com/gilbertw1/roficlip)
 I was initially searching for a clipboard manager, and I came across clipster, and it is recommended to use with Rofi-Clips add-on for better experience. Then I realize Rofi framework itself is more intuitive to use than dmenu (i3wm default menu selection)
@@ -166,12 +200,13 @@ sudo pacman -S adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
 # [Neofetch](https://github.com/dylanaraps/neofetch)
 Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/)
 
-# [Nvim](https://github.com/neovim/neovim)
+# [Neovim](https://github.com/neovim/neovim)
 Everyone will have their own sets of .vimrc/.init.vim, I do have a list of plugins that I think is convenient to have. Maybe you will find something you need but didnt know exist. 🤔 
 ```bash
 sudo pacman -S nvim
 ```
-I use [vim-plug](https://github.com/junegunn/vim-plug) to manage vim plugins, install that would be really helpful
+# [vim-plug](https://github.com/junegunn/vim-plug) 
+I use vim-plug to manage vim plugins, install that would be really helpful. If not you will not be able to install any vim plugins
 ```bash
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
