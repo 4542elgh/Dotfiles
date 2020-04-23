@@ -48,3 +48,7 @@ alias clip="roficlip"
 alias ffmpeg="ffmpeg -f x11grab -s 1920x1080 -r 25 -i :0.0+1920,0 output.mp4"
 
 alias covid='watch -c -n600 "curl -s -L covid19.trackercli.com/US"'
+
+alias dunstrestart="killall dunst;notify-send foo"
+
+alias usb='cd /run/media/$USER'

@@ -7,6 +7,8 @@ export EDITOR="vim"
 export env_editor="vim"
 export XDG_CONFIG_HOME="${HOME}/.config"
 
+KEYTIMEOUT=1
+
 # PG CLI
 export PGGSSENCMODE="disable"
 

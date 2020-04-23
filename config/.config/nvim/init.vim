@@ -90,6 +90,7 @@ cnoreabbrev snipedit UltiSnipsEdit
 "This is the begining of Vim-Plug
 "--------------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-surround'
 Plug 'mkitt/tabline.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'easymotion/vim-easymotion'
@@ -109,6 +110,8 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mileszs/ack.vim'
 Plug 'ervandew/supertab'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim'
 
 "--------------------------------------------------------------------------------
 " Vim Native Language Server Protocol

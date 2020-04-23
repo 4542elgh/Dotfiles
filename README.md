@@ -32,6 +32,7 @@ Defaults editor=/usr/bin/vim # Replace Vim with your favorite editor
 ```
 
 # [i3-gaps](https://github.com/Airblader/i3)
+![i3-gaps screenshot](./img/i3-gaps.png)
 i3 will make full use of your screen real estates. It is as simple as that.
 Add some config and you will never leave i3 even though it is not the conventional floating window manager.
 I use gaps so it has a bit more asthetic feel.
@@ -39,11 +40,53 @@ Enough said here's the install
 ```bash
 sudo pacman -S i3-gaps
 ```
+Add the following to your `~/.config/i3/config` file to enable gap
+```bash
+gaps inner 5
+gaps outer 5
+```
+Enjoy the productivity!🤗
+
+# [i3lock-color](https://github.com/Raymo111/i3lock-color)
+`i3lock-color` offer a prettier lock than slock. I use `i3lock-color` with [xidlehook](https://github.com/jD91mZM2/xidlehook) to manage lock due to inactivity. <br/>
+The advantage of `xildehook` is it will prevent locking if you are playing music or have fullscreen application running. This is what made `xautolock` SOOOO hard to configure.😡
+
+### Installation
+i3lock-color is simple
+```bash
+yay i3lock-color
+```
+xidlehook is installed through cargo (Rust Package Manager), you might find `nix-env` more convenient.
+```bash
+cargo install xidelhook # If you are going with Cargo
+nix-env -iA xidlehook # If you are going with nix-env
+```
+
+### Scripting
+I made 2 scripts so it is easier to get a beauitful lock screen up and running in seconds.<br/>
+`Lock.sh` is setting i3lock-color with (transparency & dual kawase blur) (I spent 3 min looking up this blur algorithm). <br/><br/>
+You should be able to tweak some text color
+In order to trigger `i3lock-color` after a period inactivity, `xidlehook` can be used. <br/><br/>
+In `xidlehook.sh`, there are several parameters you want to tweak.
+* `SECONDARY_DISPLAY` variable - If you do not have a secondary monitor, comment/delete this variable. You will also need to remove the lines containing `xrandr --output "$SECONDARY_DISPLAY"`
+* `timer` variable - Change it to the time in miliseconds you like.
+
+### Linking and executable
+Last but not least, make them executable `chmod +x lock.sh && chmod +x xidlehook.sh` <br/>
+Symbolic link those 2 files to /usr/bin directory.
+```bash
+ln lock.sh /usr/bin/lock #Note I removed the .sh so I dont need to type .sh each time
+ln xidlehook.sh /usr/bin/xidlehook
+```
+Now it is simple as putting it to your i3 config file.
+```bash
+exec --no-startup-id xidlehook
+```
+Lock screen just look so clean.🤭
 
 # [Terminator](https://gnometerminator.blogspot.com/p/introduction.html)
 I use Terminator as my terminal emulator. I give up on configuring uRXVT, because its hard if not possible, to configure Powerlevel10k on it. Terminator Powerlevel10K out of the box, and my config file is 3 lines. 
 
-https://gnometerminator.blogspot.com/p/introduction.html
 ```bash
 sudo pacman -S terminator
 ```
@@ -61,6 +104,44 @@ Put this line in your i3 config.
 ```bash
 exec --no-startup-id picom -b
 ```
+
+# [GlassCord - Dual Kawase Blur Discord](https://github.com/AryToNeX/Glasscord)
+![i3-gaps screenshot](./img/glasscord.png)<br/>
+Install Discord first.
+```bash
+yay discord
+```
+Next, you will need to install one of the three custom CSS Loader<br/>
+* [BandagedBD](https://github.com/rauenzi/BetterDiscordApp)
+* [BeautifulDiscord](https://github.com/leovoel/BeautifulDiscord)
+* [EnhancedDiscord](https://github.com/joe27g/EnhancedDiscord)
+
+I use BandagedBD, so the steps to inject BandagedBD would be as follow.
+They have a CTL tool to help you install, simply execute the lines one by one
+```bash
+curl -O https://raw.githubusercontent.com/bb010g/betterdiscordctl/master/betterdiscordctl
+chmod +x betterdiscordctl
+sudo mv betterdiscordctl /usr/local/bin
+```
+It is always a good idea to update to latest stable build by `sudo betterdiscordctl upgrade`<br/>
+Then install Bandaged BetterDiscord by typing `betterdiscordctl install`
+If everything goes well, you can start discord and a new prompt popup showing new features of BandagedBD.
+You can confirm you have BandagedBD by going to settings and a new set of options should appear at the very bottom.<br/>
+![i3-gaps screenshot](./img/glasscord_2.png)<br/>
+Go to GlassCord repo's release tab and download the latest glasscord.asar
+
+Then place it under `~/.config/discord/VERSION_NUMBER/modules/discord_desktop_core/`
+In the same directory edit the `index.js` file. Add a new line at the very top of the file
+```javascript
+require('./glasscord.asar');
+```
+
+Last but not least make sure xprop is installed.
+```bash
+sudo pacman -S xorg-xprop
+```
+
+Restart Discord and you should have a Dual Kawase Blur Discord. 😏
 
 # [Stow](https://www.gnu.org/software/stow/)
 I think it is important to note that this repo should be cloned under `~/Dotfiles` Directory
@@ -113,6 +194,7 @@ antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
 Then it is as easy as `source ~/.zsh_plugins.sh` to get all the plugins running.
 
 # [Clipster](https://github.com/mrichar1/clipster) & [Rofi](https://github.com/davatorium/rofi) & [Rofi-Clips](https://github.com/gilbertw1/roficlip)
+![i3-gaps screenshot](./img/rofi.png)<br/>
 I was initially searching for a clipboard manager, and I came across clipster, and it is recommended to use with Rofi-Clips add-on for better experience. Then I realize Rofi framework itself is more intuitive to use than dmenu (i3wm default menu selection)
 ```bash
 sudo pacman -S rofi
@@ -135,7 +217,7 @@ Make sure you have the following dependencies
 ```bash
 wget https://github.com/4542elgh/roficlip/blob/master/roficlip # Download file from github
 chmod +x roficlip # Set execute permission
-sudo mv roficlip /bin # This step can be avoid if you set PATH to contain the folder containing roficlip
+sudo mv roficlip /usr/bin # This step can be avoid if you set PATH to contain the folder containing roficlip
 ```
 Rofi out of the box act as a search engine for applications (again, its a replacement for dmenu)
 Roficlip which I alias to clip, will take all copied items and store in a plain text file. (See Github for it's location)
@@ -198,9 +280,17 @@ sudo pacman -S adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
 ```
 
 # [Neofetch](https://github.com/dylanaraps/neofetch)
+![i3-gaps screenshot](./img/neofetch.png)<br/>
 Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/)
 
+Installing is simple
+```bash
+sudo pacman -S neofetch
+```
+If you want to display image, make sure you have `w3m` installed and `stow` neofetch files into `~/.config` directory
+
 # [Neovim](https://github.com/neovim/neovim)
+![i3-gaps screenshot](./img/neovim.png)<br/>
 Everyone will have their own sets of .vimrc/.init.vim, I do have a list of plugins that I think is convenient to have. Maybe you will find something you need but didnt know exist. 🤔 
 ```bash
 sudo pacman -S nvim
@@ -212,7 +302,40 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 
-# Input Methods
+# [Ranger](https://github.com/ranger/ranger)
+![i3-gaps screenshot](./img/ranger.png)<br/>
+It suppose to be a file explorer. However, I mainly use it for image/pdf preview. With some help from `w3m` it is a fast and simple explorer to use.
+```bash
+sudo pacman -S ranger
+```
+[Image Preview Integration](https://github.com/ranger/ranger/wiki/Image-Previews)
+You will need to install `w3mimgdisplay`
+```bash
+sudo pacman -S w3m
+```
+Or you can just `stow` my dotfile, which will do the same thing. (You will still need to install w3m)
+```bash
+stow ranger
+```
+PDF preview is done using `Zathura` and plugin `zathura-pdf-poppler`
+```bash
+sudo pacman -S zathura zathura-pdf-poppler
+```
+Then edit `scope.sh`
+find `handle_image()` and uncomment `application/pdf` entry
+You should able to preview PDF at this point.😃
+
+# [Grip](https://github.com/joeyespo/grip)
+![i3-gaps screenshot](./img/grip.png)<br/>
+I write this markdown with Vim and previewed in Grip, a Github preview server written in Python3.
+It is as simple as `grip README.md` and a localhost will serve your markdown file rendered same way as Github does.
+Install is easy
+```bash
+pip3 install grip
+```
+
+# [Fcitx](https://github.com/fcitx/fcitx5)
+![i3-gaps screenshot](./img/fcitx.png) Input prompt is not transparent, screenshot made its shot half way during fcitx disappearing<br/>
 If you are using Chinese input method, then [fcitx](https://fcitx-im.org/wiki/Fcitx) framework will be a good option
 Additionally, you will need to install **one** of the chinese input methods, the one I use is **fcitx-sunpinyin**
 You can find a full list of input methods from the [Official Arch Wiki](https://wiki.archlinux.org/index.php/fcitx)
@@ -220,6 +343,14 @@ You can find a full list of input methods from the [Official Arch Wiki](https://
 sudo pacman -S fcitx fcitx-sunpinyin
 ```
 You can switch to fcitx by pressing `Ctrl-[Space]`
+
+# Removable Devices auto-mount
+I use udisk2 along with Udiskie to achieve mounting on login. Unfortunately Udiskie does not support mounting to custom path. I just create an alias to /run/media/$USER. 
+Install is simple as always
+```bash
+sudo pacman -S udisk2 udiskie
+```
+Then run `udiskie` will get your removable devices mounted. Nice and simple. 💪
 
 # Bluetooth
 ## Dependencies
@@ -280,6 +411,7 @@ AutoEnable=true
 Enjoy! 🤣
 
 # [mps-Youtube](https://github.com/mps-youtube/mps-youtube)
+![i3-gaps screenshot](./img/mpsyt.png)<br/>
 I ususally code with some music on. So here it is, a CLI util just for listening to Youtube music.
 You do need to have python3 installed.
 ```bash
@@ -302,6 +434,7 @@ set player mplayer
 # File search
 There are times I want to do a quick lookup of a file. Either by filename or file content
 I use [fzf](https://github.com/junegunn/fzf), [mlocate](https://pagure.io/mlocate) (lookup through filename), and [ag (the silver searcher)](https://github.com/ggreer/the_silver_searcher) (lookup through file content)
+![i3-gaps screenshot](./img/fzf.png)<br/>
 FZF is async, fuzzy, interactive search engine that also provide file preview.
 ```bash
 sudo pacman -S fzf

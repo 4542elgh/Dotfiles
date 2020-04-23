@@ -3,7 +3,6 @@
 #
 # Should you change your keyboard layout some time, delete
 # this file and re-run i3-config-wizard(1).
-#
 
 # i3 config file (v4)
 
@@ -44,7 +43,7 @@ floating_modifier $mod
 bindsym $mod+Return exec terminator
 
 # kill focused window
-bindsym $mod+Shift+q kill
+# bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run
@@ -87,21 +86,19 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+# bindsym $mod+s layout stacking
+# bindsym $mod+w layout tabbed
+# bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
 #bindsym $mod+space focus mode_toggle
-bindsym $mod+space exec rofi -show drun
+bindsym $mod+space exec rofi -show run
 
 # focus the parent container
 # bindsym $mod+a focus parent
-bindsym $mod+a --release exec import png:- | xclip -selection clipboard -t image/png
-bindsym $mod+shift+a --release exec cd $HOME/Pictures && import $(date +'%m%d%Y%H%M%S').png
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -211,12 +208,18 @@ bindsym $mod+r mode "resize"
 # 	status_command i3blocks
 # }
 
-bar {
-	font pango:Inconsolata 10
-	position top
-	tray_output none
-	status_command /usr/bin/bumblebee-status -m bluetooth nic disk:root cpu memory date time pasource arch-update -p root.path=/ time.format="%H:%M:%S" date.format="%a, %b %d %Y" -t iceberg-rainbow
-}
+#---------------------------------------- 
+# Custom Scripts
+#---------------------------------------- 
+bindsym $mod+a --release exec import png:- | xclip -selection clipboard -t image/png
+bindsym $mod+shift+a --release exec cd $HOME/Pictures && import $(date +'%m%d%Y%H%M%S').png
+
+# bar {
+# 	font pango:Inconsolata 10
+# 	position top
+# 	tray_output none
+# 	status_command /usr/bin/bumblebee-status -m bluetooth nic disk:root cpu memory date time pasource arch-update -p interval=1 root.path=/ time.format="%H:%M:%S" date.format="%a, %b %d %Y" -t iceberg-rainbow
+# }
 
 # Gap between window
 gaps inner 5
@@ -225,11 +228,14 @@ gaps outer 5
 # Move between workspace does not mess up
 mouse_warping none
 
+# kill a window
+bindsym $mod+w kill
+
 # Resize Window hotkey
-bindsym $mod+Ctrl+h resize shrink width 1 px or 1 ppt
-bindsym $mod+Ctrl+j resize grow height 1 px or 1 ppt
-bindsym $mod+Ctrl+k resize shrink height 1 px or 1 ppt
-bindsym $mod+Ctrl+l resize grow width 1 px or 1 ppt
+bindsym $mod+Ctrl+h resize shrink width 40 px or 4 ppt
+bindsym $mod+Ctrl+j resize grow height 40 px or 4 ppt
+bindsym $mod+Ctrl+k resize shrink height 40 px or 4 ppt
+bindsym $mod+Ctrl+l resize grow width 40 px or 4 ppt
 
 # Eliminate title bar in i3
 default_border none
@@ -237,8 +243,29 @@ default_border none
 # Start fehbg to restore wallpaper
 exec sh ~/.fehbg 
 # If fehbg executable (on first run) then set image manually
-# exec sh feh --bg-fill ~/Dotfiles/Wallpaper1.jpg --bg-fill ~/Dotfiles/Wallpaper2.jpg
+# exec sh feh --bg-fill ~/Dotfiles/wallpaper/wallpaper1.jpg --bg-fill ~/Dotfiles/wallpaper/wallpaper2.jpg
+
+# Auto mount removeable devices
+exec --no-startup-id udiskie
+
+# Start fcitx input method
 exec --no-startup-id fcitx -d
+
+# Transparent Compositing
 exec --no-startup-id picom -b
+
+# Searchable clipboard history
 exec --no-startup-id clipster -d --config="/home/evan/.config/clipster/config"
+
+# Remap Ctrl to Esc, there is another script to remap Esc to Cap Lock, as a result, this will result Esc To CAP_LOCKS when pressed, and Ctrl to CAP_LOCKS when hold.
 exec --no-startup-id xcape -e 'Control_L=Escape'
+
+# Trigger i3lock after 10 min, script is symbolic link to /bin folder
+exec --no-startup-id xidlelock
+
+# Start polybar with Powerline Theme
+exec --no-startup-id polybar -c ~/.config/polybar/config primary &
+exec --no-startup-id polybar -c ~/.config/polybar/config secondary &
+
+exec --no-startup-id udisksctl mount -b /dev/sdb1
+

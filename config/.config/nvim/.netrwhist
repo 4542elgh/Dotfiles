@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =8
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='/etc/X11/xorg.conf.d'
 let g:netrw_dirhist_8='/usr/share/bumblebee-status/themes'
 let g:netrw_dirhist_7='/home/evan/Downloads/powerline/powerline/bindings/i3'
 let g:netrw_dirhist_6='/home/evan/Downloads/powerline/powerline/bindings'
