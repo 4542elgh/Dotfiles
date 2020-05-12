@@ -94,6 +94,7 @@ noremap <Right> <Nop>
 cnoreabbrev ag Ack!
 cnoreabbrev language set syntax=
 cnoreabbrev snipedit UltiSnipsEdit
+cnoreabbrev vimrc edit ~/.config/nvim/init.vim 
 
 "--------------------------------------------------------------------------------
 "This is the begining of Vim-Plug
@@ -122,18 +123,6 @@ Plug 'ervandew/supertab'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 
-"--------------------------------------------------------------------------------
-" Vim Native Language Server Protocol
-"--------------------------------------------------------------------------------
-Plug 'SirVer/ultisnips'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'thomasfaingnaert/vim-lsp-snippets'
-Plug 'thomasfaingnaert/vim-lsp-ultisnips'
-Plug 'kyuhi/vim-emoji-complete'
-Plug 'chrisbra/unicode.vim'
 call plug#end()
 
 "--------------------------------------------------------------------------------
