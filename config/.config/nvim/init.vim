@@ -52,7 +52,7 @@ let g:EasyMotion_smartcase = 1
 "--------------------------------------------------------------------------------
 "This is for CtrlP
 "--------------------------------------------------------------------------------
-nnoremap ; :CtrlP<CR>
+nnoremap ' :CtrlP<CR>
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'results:100' 
