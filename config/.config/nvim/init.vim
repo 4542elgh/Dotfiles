@@ -62,10 +62,7 @@ let g:ctrlp_match_window = 'results:100'
 "--------------------------------------------------------------------------------
 nmap <Leader>p :NERDTreeToggle<CR>
 
-"--------------------------------------------------------------------------------
-" Leader Key shortcut
-"--------------------------------------------------------------------------------
-nmap <Leader>r :reg<CR> 
+nmap <Leader>y "*y
 "--------------------------------------------------------------------------------
 " Buffer toggle
 "--------------------------------------------------------------------------------
@@ -122,6 +119,8 @@ Plug 'mileszs/ack.vim'
 Plug 'ervandew/supertab'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
+Plug 'neoclide/coc.nvim'
+Plug 'ervandew/supertab'
 
 call plug#end()
 
@@ -168,26 +167,6 @@ if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
-"--------------------------------------------------------------------------------
-"LSP
-"--------------------------------------------------------------------------------
-"if executable('pyls')
-"	au User lsp_setup call lsp#register_server({
-"		\ 'name': 'pyls',
-"		\ 'cmd': {server_info->['pyls']},
-"		\ 'whitelist': ['python'],
-"		\ })
-"endif
-
-"if executable('typescript-language-server')
-"	au User lsp_setup call lsp#register_server({
-"		\ 'name': 'javascript support using typescript-language-server',
-"		\ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-"		\ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
-"		\ 'whitelist': ['javascript', 'javascript.jsx', 'javascriptreact'],
-"		\ })
-"endif
-
 if executable('go-langserver')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'go-langserver',
@@ -197,13 +176,21 @@ if executable('go-langserver')
     autocmd BufWritePre *.go LspDocumentFormatSync
 endif
 
-""--------------------------------------------------------------------------------
-"" Manual invoke linter using external command
-""--------------------------------------------------------------------------------
-"augroup Linting
-"	autocmd BufWritePost *.js AsyncRun eslint %
-"augroup END
+"--------------------------------------------------------------------------------
+" COC Snippets Keybind
+"--------------------------------------------------------------------------------
+" <Tab>: completion
+inoremap <silent><expr> <Tab>
+    \ pumvisible() ? "\<C-N>" :
+    \ s:check_back_space() ? "\<Tab>" :
+    \ coc#refresh()
 
-"augroup vimrc
-"	autocmd QuickFixCmdPost * botright copen 8
-"augroup END
+" <CR>: confirm completion, or insert <CR>
+inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~ '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
