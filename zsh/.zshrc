@@ -11,7 +11,6 @@ KEYTIMEOUT=1
 
 # PG CLI
 export PGGSSENCMODE="disable"
-
 export ZSH="$HOME"
 
 # This is for global node package
@@ -44,6 +43,15 @@ else
 	compinit -C;
 fi;
 # zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Tab complete directory case insensitive
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Change directory without cd
+setopt autocd 
+
+# Dont record duplicate
+setopt histignorealldups
 
 # Got that sweet Arch logo and system info showing on new instance
 neofetch

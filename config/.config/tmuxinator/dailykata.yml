@@ -1,0 +1,11 @@
+# /Users/evanliu/.config/tmuxinator/dailykata.yml
+
+name: dailykata
+root: ~/Desktop/Daily Kata Challenge
+
+windows:
+  - editor:
+      layout: even-horizontal
+      panes:
+        - vim .
+        - blank

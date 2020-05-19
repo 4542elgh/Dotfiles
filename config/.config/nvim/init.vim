@@ -1,4 +1,4 @@
-let mapleader=","
+let mapleader=" "
 filetype plugin indent on 
 syntax on
 set nu
@@ -30,6 +30,11 @@ au BufNewFile,BufRead /*.rasi setf css
 nnoremap <Leader>s :%s/
 
 "--------------------------------------------------------------------------------
+" Exit terminal mode
+"--------------------------------------------------------------------------------
+tnoremap <Esc> <C-\><C-n>
+
+"--------------------------------------------------------------------------------
 " This is for configure lightline bufferline
 "--------------------------------------------------------------------------------
 set showtabline=2
@@ -56,6 +61,11 @@ nnoremap ' :CtrlP<CR>
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'results:100' 
+
+"--------------------------------------------------------------------------------
+" Floaterm
+"--------------------------------------------------------------------------------
+nmap <Leader>t :FloatermToggle<CR>
 
 "--------------------------------------------------------------------------------
 " NerdTree
@@ -86,12 +96,16 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 
 "--------------------------------------------------------------------------------
-"Alias in command mode
+" Abbrev in command mode
 "--------------------------------------------------------------------------------
 cnoreabbrev ag Ack!
 cnoreabbrev language set syntax=
 cnoreabbrev snipedit UltiSnipsEdit
 cnoreabbrev vimrc edit ~/.config/nvim/init.vim 
+cnoreabbrev sourcethis source %
+cnoreabbrev termlist CocList floaterm
+cnoreabbrev fzf FloatermNew fzf --preview 'bat --theme=darkula --color=always {}'
+cnoreabbrev ranger FloatermNew ranger
 
 "--------------------------------------------------------------------------------
 "This is the begining of Vim-Plug
@@ -121,6 +135,8 @@ Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'neoclide/coc.nvim'
 Plug 'ervandew/supertab'
+Plug 'voldikss/vim-floaterm'
+Plug 'francoiscabrol/ranger.vim'
 
 call plug#end()
 
@@ -138,6 +154,12 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 " Start indent Guide
 "--------------------------------------------------------------------------------
 let g:indent_guides_enable_on_vim_startup = 1
+
+"--------------------------------------------------------------------------------
+" Replace Netrw with ranger
+"--------------------------------------------------------------------------------
+let g:NERDTreeHijackNetrw = 0 "add this line if you use NERDTree
+let g:ranger_replace_netrw = 1 "open ranger when vim open a directory
 
 "--------------------------------------------------------------------------------
 "This is for lightline tabline
@@ -179,18 +201,22 @@ endif
 "--------------------------------------------------------------------------------
 " COC Snippets Keybind
 "--------------------------------------------------------------------------------
-" <Tab>: completion
-inoremap <silent><expr> <Tab>
-    \ pumvisible() ? "\<C-N>" :
-    \ s:check_back_space() ? "\<Tab>" :
-    \ coc#refresh()
-
-" <CR>: confirm completion, or insert <CR>
-inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
 function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1] =~ '\s'
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 let g:coc_snippet_next = '<tab>'
+
+imap <C-Enter> <Plug>(coc-snippets-expand)
+
+nnoremap cA c$
+nnoremap cI c^
+
+

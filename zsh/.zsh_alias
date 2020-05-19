@@ -4,10 +4,13 @@ alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
 # Start tmux in 256 colors
 alias tmux='TERM=xterm-256color tmux -f "${XDG_CONFIG_HOME}"/tmux/tmux.conf'
 alias tmuxconfig="vim ~/.tmux.conf"
+alias tmuxnew="tmux new -s"
+alias tmuxa="tmux attach-session -t"
+alias tmuxkill="tmux kill-session -t"
 
 alias top="htop"
 alias tree="tree -aC"
-alias cat="bat" 
+alias cat="bat"
 
 alias ll="exa --long -a"
 alias ls="exa --long"
@@ -39,6 +42,20 @@ alias sourcezsh="antibody bundle < ~/.zsh_plugins > ~/.zsh_plugins.sh"
 
 # FZF with file preview
 alias fzf="fzf --preview 'head -1000 {}'"
+alias fzfag="ag --nobreak --nonumbers --noheading . | fzf --preview 'head -1000 {}'"
+
+# Git Clear
+alias gitclear="git rm -r --cached ."
+
+# Terminal Color test
+function colortest(){
+	for i in {0..255} ; do
+    printf "\x1b[48;5;%sm%3d\e[0m " "$i" "$i"
+    if (( i == 15 )) || (( i > 15 )) && (( (i-15) % 6 == 0 )); then
+        printf "\n";
+    fi
+	done
+}
 
 # Invoke ImageMagick for taking screenshot and place into clipboard
 alias ss="import png:- | xclip -selection clipboard -t image/png"
