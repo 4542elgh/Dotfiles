@@ -1,4 +1,6 @@
 let mapleader=" "
+
+colorscheme darcula
 filetype plugin indent on 
 syntax on
 set nu
@@ -8,6 +10,7 @@ set ignorecase
 set smartcase
 set tabstop=2
 set shiftwidth=2
+set showtabline=2
 set hidden
 set cursorcolumn
 set cursorline
@@ -26,24 +29,17 @@ behave mswin
 nnoremap ; :
 
 "--------------------------------------------------------------------------------
-" Rofi file extensions interpret as css syntax
-"--------------------------------------------------------------------------------
-au BufNewFile,BufRead /*.rasi setf css
-
-"--------------------------------------------------------------------------------
 " ,s trigger substitute syntax
 "--------------------------------------------------------------------------------
 nnoremap <Leader>s :%s/
 
 "--------------------------------------------------------------------------------
-" Exit terminal mode
+" Faster delete
 "--------------------------------------------------------------------------------
-tnoremap <Esc> <C-\><C-n>
-
-"--------------------------------------------------------------------------------
-" This is for configure lightline bufferline
-"--------------------------------------------------------------------------------
-set showtabline=2
+nnoremap cA c$
+nnoremap cI c^
+nnoremap dA d$
+nnoremap dI d^
 
 "--------------------------------------------------------------------------------
 " Switch window pane
@@ -63,22 +59,40 @@ let g:EasyMotion_smartcase = 1
 "--------------------------------------------------------------------------------
 "This is for CtrlP
 "--------------------------------------------------------------------------------
-nnoremap ' :CtrlP<CR>
-let g:ctrlp_map = '<c-p>'
+nnoremap ' :CtrlP<CR> 
+let g:ctrlp_map = "'"
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'results:100' 
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 "--------------------------------------------------------------------------------
 " Floaterm
 "--------------------------------------------------------------------------------
 nmap <Leader>t :FloatermToggle<CR>
 
+tnoremap <Esc> <C-\><C-n>
+"--------------------------------------------------------------------------------
+" Terminal Mode have weird mapping, dont use <C-m> or <C-[>
+"--------------------------------------------------------------------------------
+tnoremap <silent> <C-n> <C-\><C-n>:FloatermNew<CR>
+tnoremap <silent> <C-l> <C-\><C-n>:FloatermPrev<CR>
+
 "--------------------------------------------------------------------------------
 " NerdTree
 "--------------------------------------------------------------------------------
-nmap <Leader>p :NERDTreeToggle<CR>
+nmap <C-n> :NERDTreeToggle<CR>
+
+" after a re-source, fix syntax matching issues (concealing brackets):
+if exists('g:loaded_webdevicons')
+	call webdevicons#refresh()
+endif
+
+let NERDTreeShowLineNumbers=1
+let NERDTreeShowHidden=1
+autocmd FileType nerdtree setlocal relativenumber
 
 nmap <Leader>y "*y
+
 "--------------------------------------------------------------------------------
 " Buffer toggle
 "--------------------------------------------------------------------------------
@@ -108,10 +122,20 @@ cnoreabbrev ag Ack!
 cnoreabbrev language set syntax=
 cnoreabbrev snipedit UltiSnipsEdit
 cnoreabbrev vimrc edit ~/.config/nvim/init.vim 
+cnoreabbrev zshrc edit ~/.zshrc
 cnoreabbrev sourcethis source %
-cnoreabbrev termlist CocList floaterm
-cnoreabbrev fzf FloatermNew fzf --preview 'bat --theme=darkula --color=always {}'
-cnoreabbrev ranger FloatermNew ranger
+
+if executable('fzf')
+	cnoreabbrev fzf FloatermNew fzf --preview 'bat --theme=darkula --color=always {}'
+endif
+
+if executable('ranger')
+	cnoreabbrev ranger FloatermNew ranger
+endif
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 "--------------------------------------------------------------------------------
 "This is the begining of Vim-Plug
@@ -143,13 +167,26 @@ Plug 'neoclide/coc.nvim'
 Plug 'ervandew/supertab'
 Plug 'voldikss/vim-floaterm'
 Plug 'francoiscabrol/ranger.vim'
+Plug 'preservim/nerdtree'
 
 call plug#end()
 
 "--------------------------------------------------------------------------------
-"Set vim editor theme to Jetbrains Darcula 
+" Let coc install plugins
 "--------------------------------------------------------------------------------
-colorscheme darcula
+let g:coc_global_extensions = [
+			\ 'coc-json',
+			\ 'coc-tsserver',
+			\ 'coc-html',
+			\ 'coc-css',
+			\ 'coc-yaml',
+			\ 'coc-highlight',
+			\ 'coc-snippets',
+			\ 'coc-vetur',
+			\ 'coc-lists',
+			\ 'coc-angular',
+			\ 'coc-eslint',
+			\ 'coc-prettier']
 
 "--------------------------------------------------------------------------------
 " SuperTAB loop in order (Default is reverse order)
@@ -177,9 +214,11 @@ let g:lightline#bufferline#filename_modifier = ':t'
 
 let g:lightline                  = {}
 let g:lightline.separator        = { 'left': '', 'right': '' }
-let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
+let g:lightline.tabline          = {'left': [['buffers']], 'right': [['%{fugitive#statusline()}']]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
+let g:lightline.active = {'left' : [ [ 'mode', 'paste'  ],[ 'gitbranch', 'readonly', 'filename', 'modified'  ] ] }
+let g:lightline.component_function = {'gitbranch': 'FugitiveHead'}
 
 "--------------------------------------------------------------------------------
 "This is for Anyfold's plugin to auto start
@@ -187,22 +226,6 @@ let g:lightline.component_type   = {'buffers': 'tabsel'}
 autocmd Filetype * AnyFoldActivate 
 set foldlevelstart=99
 let g:indentLine_enabled =1 
-
-"--------------------------------------------------------------------------------
-"This is for Ack.vim to use ag(faster) to search through file content
-"--------------------------------------------------------------------------------
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-
-if executable('go-langserver')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'go-langserver',
-        \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
-        \ 'whitelist': ['go'],
-        \ })
-    autocmd BufWritePre *.go LspDocumentFormatSync
-endif
 
 "--------------------------------------------------------------------------------
 " COC Snippets Keybind
@@ -220,9 +243,10 @@ endfunction
 
 let g:coc_snippet_next = '<tab>'
 
-imap <C-Enter> <Plug>(coc-snippets-expand)
+imap <C-j> <Plug>(coc-snippets-expand)
 
-nnoremap cA c$
-nnoremap cI c^
-
-
+"--------------------------------------------------------------------------------
+" Change file detection
+"--------------------------------------------------------------------------------
+au BufNewFile,BufRead /*.jsx set filetype=javascript.jsx
+au BufNewFile,BufRead /*.rasi setf css

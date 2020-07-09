@@ -1,2 +1,5 @@
 config/.config/nvim/.netrwhist
 config/.config/karabiner/automatic_backups/
+__pycache__
+config/.config/coc/
+config/.config/configstore/

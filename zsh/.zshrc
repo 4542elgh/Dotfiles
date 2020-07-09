@@ -3,8 +3,8 @@
 
 export BAT_CONFIG_PATH="${HOME}/.config/bat/config"
 
-export EDITOR="vim"
-export env_editor="vim"
+export EDITOR="nvim"
+export env_editor="nvim"
 export XDG_CONFIG_HOME="${HOME}/.config"
 
 KEYTIMEOUT=1
@@ -25,6 +25,8 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="/opt/miniconda3/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.7.0/bin:$PATH"
+export PATH="/usr/lib/node_modules/npm:$PATH"
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

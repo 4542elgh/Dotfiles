@@ -8,12 +8,13 @@ alias tmuxnew="tmux new -s"
 alias tmuxa="tmux attach-session -t"
 alias tmuxkill="tmux kill-session -t"
 
+# System stuff
+alias ls="lsd -lah"
+alias clr="clear"
 alias top="htop"
-alias tree="tree -aC"
-alias cat="bat"
 
-alias ll="exa --long -a"
-alias ls="exa --long"
+# Ranger
+alias r=". ranger"
 
 # Docker related alias
 alias di="docker images"
