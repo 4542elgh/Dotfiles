@@ -33,6 +33,7 @@ alias terminatorconfig="vim ~/.config/terminator/config"
 alias picomconfig="vim ~/.config/picom/picom.conf"
 alias bumblebeeconfig="cd /usr/share/bumblebee-status"
 
+alias weather="weather.sh"
 # Local PG SQL Client
 alias pglocal="pgcli -h localhost -p 5432 -U evanliu"
 

@@ -16,6 +16,7 @@ set cursorcolumn
 set cursorline
 set splitright
 set splitbelow
+set updatetime=100
 
 "--------------------------------------------------------------------------------
 " Windows integration
@@ -76,6 +77,7 @@ tnoremap <Esc> <C-\><C-n>
 "--------------------------------------------------------------------------------
 tnoremap <silent> <C-n> <C-\><C-n>:FloatermNew<CR>
 tnoremap <silent> <C-l> <C-\><C-n>:FloatermPrev<CR>
+tnoremap <silent> <C-w> <C-\><C-n>:FloatermKill<CR>
 
 "--------------------------------------------------------------------------------
 " NerdTree
@@ -89,6 +91,7 @@ endif
 
 let NERDTreeShowLineNumbers=1
 let NERDTreeShowHidden=1
+let g:NERDTreeIgnore = ['node_modules']
 autocmd FileType nerdtree setlocal relativenumber
 
 nmap <Leader>y "*y
@@ -124,6 +127,9 @@ cnoreabbrev snipedit UltiSnipsEdit
 cnoreabbrev vimrc edit ~/.config/nvim/init.vim 
 cnoreabbrev zshrc edit ~/.zshrc
 cnoreabbrev sourcethis source %
+cnoreabbrev Gdiff Gdiffsplit
+"Vsplit current file from 3 commits ago
+cnoreabbrev Ghead Gvsplit HEAD~3:% 
 
 if executable('fzf')
 	cnoreabbrev fzf FloatermNew fzf --preview 'bat --theme=darkula --color=always {}'
@@ -141,33 +147,33 @@ endif
 "This is the begining of Vim-Plug
 "--------------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
-Plug 'tpope/vim-surround'
-Plug 'mkitt/tabline.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'easymotion/vim-easymotion'
-Plug 'pseewald/vim-anyfold'
-Plug 'honza/vim-snippets'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'moll/vim-bbye'
-Plug 'nathanaelkane/vim-indent-guides'
+
 Plug 'alvan/vim-closetag'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'doums/darcula'
+Plug 'easymotion/vim-easymotion'
+Plug 'ervandew/supertab'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
-Plug 'skywind3000/asyncrun.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mileszs/ack.vim'
-Plug 'ervandew/supertab'
-Plug 'francoiscabrol/ranger.vim'
-Plug 'rbgrouleff/bclose.vim'
+Plug 'mkitt/tabline.vim'
+Plug 'mhinz/vim-signify'
+Plug 'moll/vim-bbye'
+Plug 'nathanaelkane/vim-indent-guides'
 Plug 'neoclide/coc.nvim'
-Plug 'ervandew/supertab'
-Plug 'voldikss/vim-floaterm'
-Plug 'francoiscabrol/ranger.vim'
+Plug 'posva/vim-vue'
 Plug 'preservim/nerdtree'
+Plug 'pseewald/vim-anyfold'
+Plug 'rbgrouleff/bclose.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'voldikss/vim-floaterm'
 
 call plug#end()
 
