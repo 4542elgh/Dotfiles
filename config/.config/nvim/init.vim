@@ -8,15 +8,15 @@ set relativenumber
 set termguicolors
 set ignorecase
 set smartcase
-set tabstop=2
-set shiftwidth=2
-set showtabline=2
+set tabstop     = 2
+set shiftwidth  = 2
+set showtabline = 2
 set hidden
 set cursorcolumn
 set cursorline
 set splitright
 set splitbelow
-set updatetime=100
+set updatetime  = 100
 
 "--------------------------------------------------------------------------------
 " Windows integration
@@ -61,9 +61,9 @@ let g:EasyMotion_smartcase = 1
 "This is for CtrlP
 "--------------------------------------------------------------------------------
 nnoremap ' :CtrlP<CR> 
-let g:ctrlp_map = "'"
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_match_window = 'results:100' 
+let g:ctrlp_map           = "'"
+let g:ctrlp_cmd           = 'CtrlP'
+let g:ctrlp_match_window  = 'results:100'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 "--------------------------------------------------------------------------------
@@ -89,8 +89,8 @@ if exists('g:loaded_webdevicons')
 	call webdevicons#refresh()
 endif
 
-let NERDTreeShowLineNumbers=1
-let NERDTreeShowHidden=1
+let NERDTreeShowLineNumbers = 1
+let NERDTreeShowHidden      = 1
 let g:NERDTreeIgnore = ['node_modules']
 autocmd FileType nerdtree setlocal relativenumber
 
@@ -157,6 +157,8 @@ Plug 'francoiscabrol/ranger.vim'
 Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-peekaboo'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mileszs/ack.vim'
 Plug 'mkitt/tabline.vim'
@@ -200,6 +202,15 @@ let g:coc_global_extensions = [
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 "--------------------------------------------------------------------------------
+" Easy Align mapping
+"--------------------------------------------------------------------------------
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+"
+" " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+"--------------------------------------------------------------------------------
 " Start indent Guide
 "--------------------------------------------------------------------------------
 let g:indent_guides_enable_on_vim_startup = 1
@@ -207,7 +218,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 "--------------------------------------------------------------------------------
 " Replace Netrw with ranger
 "--------------------------------------------------------------------------------
-let g:NERDTreeHijackNetrw = 0 "add this line if you use NERDTree
+let g:NERDTreeHijackNetrw  = 0 "add this line if you use NERDTree
 let g:ranger_replace_netrw = 1 "open ranger when vim open a directory
 
 "--------------------------------------------------------------------------------
@@ -218,20 +229,20 @@ let g:lightline#bufferline#shorten_path      = 0
 let g:lightline#bufferline#unnamed           = '[No Name]'
 let g:lightline#bufferline#filename_modifier = ':t'
 
-let g:lightline                  = {}
-let g:lightline.separator        = { 'left': '', 'right': '' }
-let g:lightline.tabline          = {'left': [['buffers']], 'right': [['%{fugitive#statusline()}']]}
-let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
-let g:lightline.component_type   = {'buffers': 'tabsel'}
-let g:lightline.active = {'left' : [ [ 'mode', 'paste'  ],[ 'gitbranch', 'readonly', 'filename', 'modified'  ] ] }
-let g:lightline.component_function = {'gitbranch': 'FugitiveHead'}
+let g:lightline                              = {}
+let g:lightline.separator                    = { 'left': '', 'right': '' }
+let g:lightline.tabline                      = {'left': [['buffers']], 'right': [['%{fugitive#statusline()}']]}
+let g:lightline.component_expand             = {'buffers': 'lightline#bufferline#buffers'}
+let g:lightline.component_type               = {'buffers': 'tabsel'}
+let g:lightline.active                       = {'left' : [ [ 'mode', 'paste'  ],[ 'gitbranch', 'readonly', 'filename', 'modified'  ] ] }
+let g:lightline.component_function           = {'gitbranch': 'FugitiveHead'}
 
 "--------------------------------------------------------------------------------
 "This is for Anyfold's plugin to auto start
 "--------------------------------------------------------------------------------
 autocmd Filetype * AnyFoldActivate 
-set foldlevelstart=99
-let g:indentLine_enabled =1 
+set foldlevelstart       = 99
+let g:indentLine_enabled = 1
 
 "--------------------------------------------------------------------------------
 " COC Snippets Keybind
