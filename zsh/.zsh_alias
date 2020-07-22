@@ -43,8 +43,8 @@ alias pglocal="pgcli -h localhost -p 5432 -U evanliu"
 alias sourcezsh="antibody bundle < ~/.zsh_plugins > ~/.zsh_plugins.sh"
 
 # FZF with file preview
-alias fzf="fzf --preview 'head -1000 {}'"
-alias fzfag="ag --nobreak --nonumbers --noheading . | fzf --preview 'head -1000 {}'"
+alias fzf="find . | grep -Ev '.git|node_modules' | fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+alias ag="ag --hidden -l | fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'" 
 
 # Git Clear
 alias gitclear="git rm -r --cached ."

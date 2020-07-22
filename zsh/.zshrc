@@ -70,11 +70,11 @@ source ~/.zsh_plugins.sh
 # Load my alias
 source ~/.zsh_alias
 
+# export $FZF_DEFAULT_COMMAND="find ."
+# export $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+
 # This is to switch environmental variables if there is a .env file
 # source ~/.autoenv/activate.sh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # This is for coloring ls in FreeBSD distro
 unset LSCOLORS
@@ -88,3 +88,7 @@ setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history 
 
 # Ignore the following directive when executing `history` command
 export HISTORY_IGNORE="(history|clear|exit|ls|cd|pwd|exit|cd ..)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+source ~/.p10k.zsh

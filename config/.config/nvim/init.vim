@@ -8,15 +8,15 @@ set relativenumber
 set termguicolors
 set ignorecase
 set smartcase
-set tabstop     = 2
-set shiftwidth  = 2
-set showtabline = 2
+set tabstop=2
+set shiftwidth=2
+set showtabline=2
 set hidden
 set cursorcolumn
 set cursorline
 set splitright
 set splitbelow
-set updatetime  = 100
+set updatetime=100
 
 "--------------------------------------------------------------------------------
 " Windows integration
@@ -131,14 +131,6 @@ cnoreabbrev Gdiff Gdiffsplit
 "Vsplit current file from 3 commits ago
 cnoreabbrev Ghead Gvsplit HEAD~3:% 
 
-if executable('fzf')
-	cnoreabbrev fzf FloatermNew fzf --preview 'bat --theme=darkula --color=always {}'
-endif
-
-if executable('ranger')
-	cnoreabbrev ranger FloatermNew ranger
-endif
-
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
@@ -207,7 +199,7 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 "
-" " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
 "--------------------------------------------------------------------------------
@@ -241,7 +233,7 @@ let g:lightline.component_function           = {'gitbranch': 'FugitiveHead'}
 "This is for Anyfold's plugin to auto start
 "--------------------------------------------------------------------------------
 autocmd Filetype * AnyFoldActivate 
-set foldlevelstart       = 99
+set foldlevelstart=99
 let g:indentLine_enabled = 1
 
 "--------------------------------------------------------------------------------
