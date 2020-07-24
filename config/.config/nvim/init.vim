@@ -146,10 +146,10 @@ Plug 'doums/darcula'
 Plug 'easymotion/vim-easymotion'
 Plug 'ervandew/supertab'
 Plug 'francoiscabrol/ranger.vim'
+Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'mileszs/ack.vim'
@@ -168,6 +168,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'voldikss/vim-floaterm'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 call plug#end()
 
