@@ -166,7 +166,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
 Plug 'voldikss/vim-floaterm'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 

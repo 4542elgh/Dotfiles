@@ -56,7 +56,7 @@ setopt autocd
 setopt histignorealldups
 
 # Got that sweet Arch logo and system info showing on new instance
-neofetch
+# neofetch
 
 # ZSH enable history
 HISTFILE=~/.zsh_history
