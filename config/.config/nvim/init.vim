@@ -5,7 +5,7 @@ filetype plugin indent on
 syntax on
 set nu
 set relativenumber
-set termguicolors
+" set termguicolors
 set ignorecase
 set smartcase
 set tabstop=2

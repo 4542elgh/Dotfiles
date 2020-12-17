@@ -29,7 +29,7 @@ alias zshrc="vim ~/.zshrc"
 alias zalias="vim ~/.zsh_alias"
 
 alias i3config="vim ~/.config/i3/config"
-alias terminatorconfig="vim ~/.config/terminator/config"
+alias termiterc="vim ~/.config/termite/config"
 alias picomconfig="vim ~/.config/picom/picom.conf"
 alias bumblebeeconfig="cd /usr/share/bumblebee-status"
 

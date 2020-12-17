@@ -2,8 +2,6 @@
 # zmodload zsh/zprof
 
 export BAT_CONFIG_PATH="${HOME}/.config/bat/config"
-
-export EDITOR="nvim"
 export env_editor="nvim"
 export XDG_CONFIG_HOME="${HOME}/.config"
 
@@ -34,8 +32,6 @@ export NVM_DIR="$HOME/.config/nvm"
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
-
-bindkey -v
 
 # Speed up zsh compinit by only checking cache once a day
 autoload -Uz compinit 
@@ -85,6 +81,10 @@ export CLICOLOR_FORCE=1
 
 setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
 setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
+
+if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+  exec startx
+fi 
 
 # Ignore the following directive when executing `history` command
 export HISTORY_IGNORE="(history|clear|exit|ls|cd|pwd|exit|cd ..)"

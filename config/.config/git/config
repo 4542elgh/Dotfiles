@@ -4,3 +4,6 @@
 	  prompt = false
 [mergetool "vimdiff"]
 	  cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[user]
+	email = 4542elgh@gmail.com
+	name = 4542elgh

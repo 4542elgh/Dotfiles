@@ -40,7 +40,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec terminator
+bindsym $mod+Return exec st 
 
 # kill focused window
 # bindsym $mod+Shift+q kill
@@ -60,8 +60,8 @@ bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
-bindsym $mod+Down exec amixer set 'Master' 5%- 
-bindsym $mod+Up exec amixer set 'Master' 5%+
+bindsym $mod+Down exec pactl -- set-sink-volume 1 -5% 
+bindsym $mod+Up exec pactl -- set-sink-volume 1 +5%
 bindsym $mod+Right focus right
 
 # move focused window
@@ -253,6 +253,9 @@ exec --no-startup-id fcitx -d
 
 # Transparent Compositing
 exec --no-startup-id picom -b
+
+# Transparent Compositing
+exec --no-startup-id redshift
 
 # Searchable clipboard history
 exec --no-startup-id clipster -d --config="/home/evan/.config/clipster/config"

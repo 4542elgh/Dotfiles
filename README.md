@@ -91,6 +91,38 @@ I use Terminator as my terminal emulator. I give up on configuring uRXVT, becaus
 sudo pacman -S terminator
 ```
 
+# MIME
+`MIME` is a way to tell what `.desktop` application to use to open a spcific link/file/etc.<br/>
+Terminal use MIME to determine what browser to open the links.<br/>
+It probably defaults to firefox, but if you want another program to open you links, you can do the following.
+```bash
+xdg-mime default chromium.desktop x-scheme-handler/http
+xdg-mime default chromium.desktop x-scheme-handler/https 
+```
+
+# Sound/ALSA/PulseAudio
+First we need to add a few libraries
+```
+pacman -S pulseaudio pulseaudio-alsa alsa-firmware alsa-utils
+```
+Then try turning on volume in `pavucontrol`
+If that does not work then get your device id by typing
+```
+aplay -l
+```
+Remember your device id and put it in .asoundrc (Sample file in Dotfile folder) and `stow` it.
+Then open `alsamixer` and select your device, PCH can be one of them. Then unmute them by pressing M
+If that doesnt work, try Arch Wiki
+
+For volume control get your device string by this command
+```bash
+pacmd list-sources | grep -e 'index:' -e device.string -e 'name:'
+```
+open i3 config and change the @MOD+up and @MOD+down with
+```bash
+pactl -- set-sink-volume <YOUR_DEVICE_STRING> +5%
+```
+
 # [Compton/Picom](https://github.com/yshui/picom)
 Transparency is purely for asthetic, but it makes your Windows Manager so much more appealing! I only made my terminal have transparency, but feel free to make it however you like.
 ```bash
@@ -278,6 +310,11 @@ CN is for Simplified Chinese, and TW is for Traditional Chinese
 ```bash
 sudo pacman -S adobe-source-han-sans-cn-fonts adobe-source-han-sans-tw-fonts
 ```
+To make sure you are inputing the correct name for your config file, do the following to check:
+```bash
+fc-list | grep "your font name"
+```
+and the name after your font's name is the name you want to put in config file, for DejaVuSansMono.ttf, I should input `DejaVu Sans Mono` as my font name.
 
 # [Neofetch](https://github.com/dylanaraps/neofetch)
 ![i3-gaps screenshot](./img/neofetch.png)<br/>
@@ -309,11 +346,11 @@ It suppose to be a file explorer. However, I mainly use it for image/pdf preview
 sudo pacman -S ranger
 ```
 [Image Preview Integration](https://github.com/ranger/ranger/wiki/Image-Previews)
-You will need to install `w3mimgdisplay`
+You will need to install `ueberzug`
 ```bash
-sudo pacman -S w3m
+pip3 install ueberzug
 ```
-Or you can just `stow` my dotfile, which will do the same thing. (You will still need to install w3m)
+Or you can just `stow` my dotfile, which will do the same thing. (You will still need to install ueberzug)
 ```bash
 stow ranger
 ```
@@ -482,10 +519,9 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 # Make CAPS_LOCK Great Again!
 I use [karabinar](https://karabiner-elements.pqrs.org/) for MacOSX to map Caps_Lock to both Ctrl[Hold] and Esc[Press].<br/>
 For Linux, it is a bit more work. After some investigation, I think this is what I am happy with.
-You will need [xcape](https://github.com/alols/xcape) and [caps2esc](https://github.com/oblitum/caps2esc)
+You will need [interception-caps2esc-no-caps-git](https://aur.archlinux.org/packages/interception-caps2esc-nocaps-git/) note this version is different to the original interception-caps2esc as the original one break vim in some circumstances(like this README.md).
 ```bash
-sudo pacman -S xcape
-yay interception-tools caps2esc
+yay interception-caps2esc-nocaps-git
 ```
 Make a file named `udevmon.yaml` in /etc folder
 ```yaml
@@ -496,12 +532,12 @@ Make a file named `udevmon.yaml` in /etc folder
 ```
 Start the service with
 ```bash
-sudo systemctl enable udevmon
 sudo systemctl start udevmon
 ```
-At this point you should have ESC mapped to Caps_Lock.
-Now put the following line in your i3 config to set xcape on boot
+TEST THE SERVICE FIRST BEFORE ENABLE IT ON BOOT.<br/>
+Otherwise if it does not work, you will need to use your rescue USB to remove the service since the service autostart.<br/>
+If you feel its good to go 
 ```bash
-xcape -e 'Control_L=Escape'
-With those tweaks, you should have Esc for Press, and Ctrl for Hold
+sudo systemctl enable udevmon
 ```
+At this point you should have ESC mapped to Caps_Lock.
