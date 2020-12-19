@@ -44,6 +44,8 @@ textProgram:	fortune
 textURL:	https://en.wikipedia.org/w/index.php?title=Special:NewPages&feed=rss
 
 programs:								      \
+"ATV4-2k" atv4-2k \n\
+"ATV4-4k" atv4-4k \n\
 				maze -root				    \n\
   GL: 				superquadrics -root			    \n\
 				attraction -root			    \n\
