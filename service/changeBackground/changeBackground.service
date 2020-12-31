@@ -1,0 +1,8 @@
+[Unit]
+Description=Change Background every 10 minutes
+
+[Service]
+#Environmental variable
+Environment=DISPLAY=:0 
+ExecStart=/bin/bash /usr/local/bin/changeBackground
+User=evanliu

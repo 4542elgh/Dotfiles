@@ -3,3 +3,12 @@ config/.config/karabiner/automatic_backups/
 __pycache__
 config/.config/coc/
 config/.config/configstore/
+config/.config/emacs/elpa
+config/.config/emacs/eshell
+config/.config/emacs/auto-save-list
+config/.config/emacs/url
+util/cpu_usage/target/
+util/openweather/bin/
+util/openweather/*.log
+util/openweather/include
+util/openweather/lib

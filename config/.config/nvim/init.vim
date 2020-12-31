@@ -17,6 +17,10 @@ set cursorline
 set splitright
 set splitbelow
 set updatetime=100
+set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
+
+let g:deoplete#enable_at_startup = 1
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "--------------------------------------------------------------------------------
 " Windows integration
@@ -144,7 +148,7 @@ Plug 'alvan/vim-closetag'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'doums/darcula'
 Plug 'easymotion/vim-easymotion'
-Plug 'ervandew/supertab'
+" Plug 'ervandew/supertab'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -157,7 +161,16 @@ Plug 'mkitt/tabline.vim'
 Plug 'mhinz/vim-signify'
 Plug 'moll/vim-bbye'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'neoclide/coc.nvim'
+" Plug 'neoclide/coc.nvim'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'sebastianmarkow/deoplete-rust'
+Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'posva/vim-vue'
 Plug 'preservim/nerdtree'
 Plug 'pseewald/vim-anyfold'
@@ -240,20 +253,20 @@ let g:indentLine_enabled = 1
 "--------------------------------------------------------------------------------
 " COC Snippets Keybind
 "--------------------------------------------------------------------------------
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-let g:coc_snippet_next = '<tab>'
-
-imap <C-j> <Plug>(coc-snippets-expand)
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+"
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
+"
+" let g:coc_snippet_next = '<tab>'
+"
+" imap <C-j> <Plug>(coc-snippets-expand)
 
 "--------------------------------------------------------------------------------
 " Change file detection

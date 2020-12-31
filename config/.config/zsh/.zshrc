@@ -1,9 +1,23 @@
 # Start ZSH in debug mode to test speed
 # zmodload zsh/zprof
+export env_editor="nvim"
+export EDITOR="nvim"
 
 export BAT_CONFIG_PATH="${HOME}/.config/bat/config"
-export env_editor="nvim"
 export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_DATA_HOME="${HOME}/.local/share"
+
+# Define XDG Config file
+export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+export XINITRC="$XDG_CONFIG_HOME"/X11/.xinitrc
+export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/.pythonstartup
+
+# Define XDG Data for program specific data files
+export NVM_DIR="$XDG_DATA_HOME"/nvm
+export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
+export GOPATH="$XDG_DATA_HOME"/go
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 
 KEYTIMEOUT=1
 
@@ -55,16 +69,16 @@ setopt histignorealldups
 neofetch
 
 # ZSH enable history
-HISTFILE=~/.zsh_history
+HISTFILE=$XDG_CONFIG_HOME/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
 
 # load all Antibody plugins
-source ~/.zsh_plugins.sh
+source $XDG_CONFIG_HOME/zsh/.zsh_plugins.sh
 
 # Load my alias
-source ~/.zsh_alias
+source $XDG_CONFIG_HOME/zsh/.zsh_alias
 
 # export $FZF_DEFAULT_COMMAND="find ."
 # export $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
@@ -82,13 +96,13 @@ export CLICOLOR_FORCE=1
 setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
 setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
 
+# StartX for X.org xinit
 if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
-  exec startx
+  exec startx "$XDG_CONFIG_HOME/X11/.xinitrc"
 fi 
 
 # Ignore the following directive when executing `history` command
 export HISTORY_IGNORE="(history|clear|exit|ls|cd|pwd|exit|cd ..)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-source ~/.p10k.zsh
+source $XDG_CONFIG_HOME/p10k/.p10k.zsh

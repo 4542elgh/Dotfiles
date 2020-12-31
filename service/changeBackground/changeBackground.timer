@@ -1,0 +1,14 @@
+[Unit]
+Description=Change background every 10 minutes
+
+[Timer]
+# Run this service for the first time 5 minutes after boot
+OnBootSec=5min 
+# This will run relative to the time it last run
+OnUnitActiveSec=15min 
+
+[Install]
+# This timer will start when timer target is initialized. This timer is run after Basic target is initiated and before Graphical target is initialized
+# WantedBy=timers.target
+WantedBy=graphical.target
+

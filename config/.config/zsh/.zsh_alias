@@ -1,9 +1,11 @@
 # Start a server in this directory using python simple http server.
 alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
 
+alias wget="wget --hsts-file="$XDG_CACHE_HOME/wget-hsts""
+
 # Start tmux in 256 colors
 alias tmux='TERM=xterm-256color tmux -f "${XDG_CONFIG_HOME}"/tmux/tmux.conf'
-alias tmuxconfig="vim ~/.tmux.conf"
+alias tmuxconfig="vim $XDG_CONFIG_HOME/tmux/.tmux.conf"
 alias tmuxnew="tmux new -s"
 alias tmuxa="tmux attach-session -t"
 alias tmuxkill="tmux kill-session -t"
@@ -11,7 +13,7 @@ alias tmuxkill="tmux kill-session -t"
 # System stuff
 alias ls="lsd -lah"
 alias clr="clear"
-alias top="htop"
+alias top="gotop"
 
 # Ranger
 alias r=". ranger"
@@ -23,14 +25,19 @@ alias dps="docker ps -a"
 
 # Vim related alias
 alias vim="nvim"
-alias vimrc="vim ~/.config/nvim/init.vim"
+alias vimrc="vim $XDG_CONFIG_HOME/nvim/init.vim"
 
-alias zshrc="vim ~/.zshrc"
-alias zalias="vim ~/.zsh_alias"
+# ZSH related files
+alias zshrc="vim $XDG_CONFIG_HOME/zsh/.zshrc"
+alias zalias="vim $XDG_CONFIG_HOME/zsh/.zsh_alias"
 
-alias i3config="vim ~/.config/i3/config"
-alias termiterc="vim ~/.config/termite/config"
-alias picomconfig="vim ~/.config/picom/picom.conf"
+# i3WM
+alias i3config="vim $XDG_CONFIG_HOME/i3/config"
+alias i3barconfig="vim $XDG_CONFIG_HOME/i3bar/i3bar.sh"
+alias xinitrc="vim $XDG_CONFIG_HOME/X11/.xinitrc"
+alias statusrc="vim $XDG_CONFIG_HOME/py3status/config"
+alias termiterc="vim $XDG_CONFIG_HOME/termite/config"
+alias picomconfig="vim $XDG_CONFIG_HOME/picom/picom.conf"
 alias bumblebeeconfig="cd /usr/share/bumblebee-status"
 
 alias weather="weather.sh"
@@ -40,7 +47,7 @@ alias pglocal="pgcli -h localhost -p 5432 -U evanliu"
 # input ~/.zsh_plugins into antibody, then pump the output to ~/.zsh_plugins.sh file.
 # zshrc will source ~/.zsh_plugins.sh file and statically load those plugins.
 # This needs to be done everytime you have add a new line to the .zsh_plugins file.
-alias sourcezsh="antibody bundle < ~/.zsh_plugins > ~/.zsh_plugins.sh"
+alias antibodygen="antibody bundle < ~/.zsh_plugins > ~/.zsh_plugins.sh"
 
 # FZF with file preview
 alias fzf="find . | grep -Ev '.git|node_modules' | fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
@@ -71,3 +78,6 @@ alias covid='watch -c -n600 "curl -s -L covid19.trackercli.com/US"'
 alias dunstrestart="killall dunst;notify-send foo"
 
 alias usb='cd /run/media/$USER'
+
+# Edit Dotfile README
+alias readme="vim ~/Dotfiles/README.md"

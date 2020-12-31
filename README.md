@@ -384,9 +384,14 @@ You can switch to fcitx by pressing `Ctrl-[Space]`
 # [Enable number lock](https://wiki.archlinux.org/index.php/Activating_numlock_on_bootup)
 By default, tty terminal does not enable number lock. You will need to install a package for tty to turn on number lock at login.
 ```bash
-yay systemd-numlockontty
-systemctl enable numLockOnTty
+sudo pacman -S numlockx
 ```
+and in your .xinitrc, add an entry before `exec i3`
+```bash
+numlockx &
+```
+
+Remember that & just means to run this in background, dont block current process.
 
 # Removable Devices auto-mount
 I use udisk2 along with Udiskie to achieve mounting on login. Unfortunately Udiskie does not support mounting to custom path. I just create an alias to /run/media/$USER. 

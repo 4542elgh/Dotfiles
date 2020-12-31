@@ -1,0 +1,13 @@
+[Unit]
+Description=Get new weather from OpenWeatherMap, change location in python script
+
+[Timer]
+# Run this service for the first time 5 minutes after boot
+OnBootSec=5min 
+# This will run relative to the time it last run
+OnUnitActiveSec=1h
+
+[Install]
+# This timer will start when timer target is initialized. This timer is run after Basic target is initiated and before Graphical target is initialized
+WantedBy=graphical.target
+

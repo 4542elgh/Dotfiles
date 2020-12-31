@@ -1,0 +1,7 @@
+[Unit]
+Description=Fetch available packages but not install them
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/bin/bash /usr/local/bin/fetchAvailablePackages

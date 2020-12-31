@@ -1,0 +1,12 @@
+[Unit]
+Description=Fetch available packages but not install them
+
+[Timer]
+# Everyday at 2PM
+OnCalendar=*-*-* 14:00:00
+# If missed, run on boot
+Persistent=true
+
+[Install]
+# This timer will start when timer target is initialized. This timer is run after Basic target is initiated and before Graphical target is initialized
+WantedBy=timers.target

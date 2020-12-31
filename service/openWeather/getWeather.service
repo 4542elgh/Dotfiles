@@ -1,0 +1,6 @@
+[Unit]
+Description=Get new weather from OpenWeatherMap, change location in python script
+
+[Service]
+Environment=XDG_CONFIG_HOME="/home/evanliu/.config/"
+ExecStart=/home/evanliu/Dotfiles/util/openweather/bin/python /home/evanliu/Dotfiles/util/openweather/weather.py
