@@ -286,45 +286,6 @@
   (persp-mode)
 )
 
-(defun efs/org-mode-setup ()
-  (org-indent-mode)
-  (variable-pitch-mode 1)
-  (visual-line-mode 1))
-
-
-  ;; Set faces for heading levels
-  (dolist (face '((org-level-1 . 1.2)
-                  (org-level-2 . 1.1)
-                  (org-level-3 . 1.05)
-                  (org-level-4 . 1.0)
-                  (org-level-5 . 1.1)
-                  (org-level-6 . 1.1)
-                  (org-level-7 . 1.1)
-                  (org-level-8 . 1.1)))
-)
-
-(use-package org
-  :hook (org-mode . efs/org-mode-setup)
-  :config
-  (setq org-ellipsis " ▾")
-)
-
-(use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
-
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
-
-(use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
-
-(add-hook 'org-mode-hook '(lambda () (setq display-line-numbers-type nil)))
-
 ;; (use-package evil-magit
 ;;   :after magit
 ;; )
@@ -338,8 +299,8 @@
 ;; )
 
 ; Define shortcuts
-(global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.org")))
-(global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
+(global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
+(global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/elpa/spaceline-20201016.1043/spaceline.el")))
 (global-set-key (kbd "C-c t") 'eshell)
 
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -355,7 +316,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(elcord evil-magit magit counsel-projectile key-chord swiper ivy use-package jetbrains-darcula-theme evil)))
-(custom-set-faces)
+(custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.

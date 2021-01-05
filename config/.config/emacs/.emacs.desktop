@@ -1,0 +1,103 @@
+;; -*- mode: emacs-lisp; lexical-binding:t; coding: utf-8-emacs; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Mon Jan  4 18:01:43 2021
+;; Desktop file format version 208
+;; Emacs version 27.1
+
+;; Global section:
+(setq desktop-saved-frameset (vector 'frameset 1 '(24563 51335 82850 778000) '(desktop . "208") "evanliu@archlinux" nil nil (list (list (list '(minibuffer . t) '(undecorated) '(override-redirect) '(font . "-PfEd-DejaVu Sans Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1") '(font-parameter . "DejaVu Sans Mono 11") '(border-width . 0) '(internal-border-width . 0) '(right-divider-width . 0) '(bottom-divider-width . 0) '(vertical-scroll-bars) '(horizontal-scroll-bars) '(foreground-color . "#a9b7c6") '(background-color . "#2b2b2b") '(mouse-color . "black") '(border-color . "black") '(screen-gamma) '(line-spacing) '(left-fringe . 8) '(right-fringe . 8) '(no-special-glyphs) '(scroll-bar-foreground) '(scroll-bar-background) '(menu-bar-lines . 1) '(tab-bar-lines . 0) '(height . 53) '(tool-bar-lines . 1) '(title) '(wait-for-wm . t) '(tool-bar-position . top) '(inhibit-double-buffering) '(icon-type . t) '(auto-raise) '(auto-lower) '(cursor-type . box) '(scroll-bar-width . 16) '(scroll-bar-height . 16) '(alpha) '(no-focus-on-map) '(no-accept-focus) '(fullscreen) '(visibility . t) '(skip-taskbar) '(z-group) '(display-type . color) '(background-mode . dark) '(cursor-color . "white") '(sticky) '(environment) '(powerline-cache) '(last-focus-update) '(tabs (current-tab (name . "init.el") (explicit-name))) '(frameset--id . "5355-D39A-22E1-EA22") '(frameset--mini t . t) '(modeline . t) '(unsplittable) '(icon-name) '(display . ":0") '(explicit-name) '(lsp-ui-doc-buffer . "Unprintable entity") '(persp--modestring "[" #("main" 0 4 (face persp-selected-face)) "]") '(persp--recursive) '(persp--last) (desktop-list* 'persp--curr (record 'perspective "main" '("Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity") nil nil '(24563 51331 922376 39000) '(24563 51331 922376 674000) "Unprintable entity" (let ((mk (make-marker))) (add-hook 'desktop-delay-hook (lambda nil (set-marker mk 7031 (get-buffer "init.el")))) mk))) '(persp--hash . "Unprintable entity") '(width . 103) '(left . 9) '(top . 33)) '((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 72) (min-pixel-width . 90) (min-pixel-height-ignore . 36) (min-pixel-width-ignore . 36) (min-pixel-height-safe . 18) (min-pixel-width-safe . 18)) 'leaf '(pixel-width . 949) '(pixel-height . 952) '(total-width . 105) '(total-height . 53) '(normal-height . 1.0) '(normal-width . 1.0) '(buffer "init.el" (selected . t) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 7031) (start . 6790)) '(prev-buffers ("*eshell*" 1 33) ("init.el" 6364 7031) ("index.js<TinyFlow>" 1 98) ("*Messages*" 1 2452) ("*scratch*" 1 1) ("*jsts-ls::stderr*" 1 1) ("*jsts-ls*" 1 1) ("*lsp-log*" 1 1) ("*json-ls::stderr*" 1 1) ("*json-ls*" 1 1) ("LICENSE" 1 1) ("index.js<cli>" 1 74) ("COPYING" 1 30778) ("package.json" 1 68) ("package-lock.json" 1 3))))))
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring '(#("node_mo" 0 7 (isearch-case-fold-search nil)) #("treemacs" 0 8 (isearch-case-fold-search nil))))
+(setq register-alist '((48 . #("(global-set-key (kbd \"<f1>\") (lambda() (interactive)(find-file \"~/.config/emacs/init.el\")))\n" 0 1 (face (rainbow-delimiters-depth-1-face) fontified t yank-handler (evil-yank-line-handler nil t)) 1 16 (fontified t yank-handler (evil-yank-line-handler nil t)) 16 17 (face (rainbow-delimiters-depth-2-face) fontified t yank-handler (evil-yank-line-handler nil t)) 17 21 (fontified t yank-handler (evil-yank-line-handler nil t)) 21 27 (face font-lock-string-face fontified t yank-handler (evil-yank-line-handler nil t)) 27 28 (face (rainbow-delimiters-depth-2-face) fontified t yank-handler (evil-yank-line-handler nil t)) 28 29 (fontified t yank-handler (evil-yank-line-handler nil t)) 29 30 (face (rainbow-delimiters-depth-2-face) fontified t yank-handler (evil-yank-line-handler nil t)) 30 36 (face font-lock-keyword-face fontified t yank-handler (evil-yank-line-handler nil t)) 36 37 (face (rainbow-delimiters-depth-3-face) fontified t yank-handler (evil-yank-line-handler nil t)) 37 38 (face (rainbow-delimiters-depth-3-face) fontified t yank-handler (evil-yank-line-handler nil t)) 38 39 (fontified t yank-handler (evil-yank-line-handler nil t)) 39 40 (face (rainbow-delimiters-depth-3-face) fontified t yank-handler (evil-yank-line-handler nil t)) 40 51 (face font-lock-keyword-face fontified t yank-handler (evil-yank-line-handler nil t)) 51 52 (face (rainbow-delimiters-depth-3-face) fontified t yank-handler (evil-yank-line-handler nil t)) 52 53 (face (rainbow-delimiters-depth-3-face) fontified t yank-handler (evil-yank-line-handler nil t)) 53 58 (fontified t yank-handler (evil-yank-line-handler nil t)) 58 63 (fontified t yank-handler (evil-yank-line-handler nil t)) 63 88 (face font-lock-string-face fontified t yank-handler (evil-yank-line-handler nil t)) 88 89 (face (rainbow-delimiters-depth-3-face) fontified t yank-handler (evil-yank-line-handler nil t)) 89 90 (face (rainbow-delimiters-depth-2-face) fontified t yank-handler (evil-yank-line-handler nil t)) 90 91 (face (rainbow-delimiters-depth-1-face) fontified t yank-handler (evil-yank-line-handler nil t)) 91 92 (fontified t yank-handler (evil-yank-line-handler nil t))))))
+(setq file-name-history '(#("/home/evanliu/Dotfiles/" 0 23 (ivy-index 14)) #("/home/evanliu/.config/emacs/" 0 28 (ivy-index 0))))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  "/home/evanliu/Dotfiles/config/.config/emacs/init.el"
+  "init.el"
+  'emacs-lisp-mode
+  '(eldoc-mode override-global-mode ivy-mode which-key-mode flycheck-mode rainbow-delimiters-mode projectile-mode auto-revert-mode yas-minor-mode)
+  7031
+  '(6907 nil)
+  nil
+  nil
+  '((buffer-display-time 24563 51331 922999 798000) (buffer-file-coding-system . prefer-utf-8-unix) (overwrite-mode))
+  '((mark-ring (6981 8356 7555 7555 7555 7603 7495 7496 6741 6790 6790 6790 7717 6667 6648 6833))))
+
+(desktop-create-buffer 208
+  "/home/evanliu/Dev/TinyFlow/index.js"
+  "index.js"
+  'js-mode
+  '(eldoc-mode override-global-mode ivy-mode which-key-mode flycheck-mode rainbow-delimiters-mode company-mode projectile-mode yas-minor-mode lsp-mode lsp-completion-mode lsp-modeline-code-actions-mode lsp-modeline-diagnostics-mode lsp-modeline-workspace-status-mode lsp-diagnostics-mode)
+  98
+  '(98 nil)
+  nil
+  nil
+  '((buffer-display-time 24563 50891 772008 615000) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (98 98 98 98 98))))
+
+(desktop-create-buffer 208
+  "/home/evanliu/Dev/TinyFlow/package-lock.json"
+  "package-lock.json"
+  'json-mode
+  '(eldoc-mode override-global-mode ivy-mode which-key-mode flycheck-mode rainbow-delimiters-mode projectile-mode yas-minor-mode lsp-mode lsp-modeline-code-actions-mode lsp-modeline-diagnostics-mode lsp-modeline-workspace-status-mode lsp-diagnostics-mode)
+  3
+  '(nil nil)
+  nil
+  nil
+  '((buffer-display-time 24563 42525 617525 788000) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "/home/evanliu/Dev/TinyFlow/package.json"
+  "package.json"
+  'json-mode
+  '(eldoc-mode override-global-mode ivy-mode which-key-mode flycheck-mode rainbow-delimiters-mode projectile-mode yas-minor-mode lsp-mode lsp-modeline-code-actions-mode lsp-modeline-diagnostics-mode lsp-modeline-workspace-status-mode lsp-diagnostics-mode)
+  68
+  '(nil nil)
+  nil
+  nil
+  '((buffer-display-time 24563 42506 555327 622000) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "/usr/share/emacs/27.1/etc/COPYING"
+  "COPYING"
+  'fundamental-mode
+  '(override-global-mode ivy-mode which-key-mode projectile-mode yas-minor-mode view-mode goto-address-mode)
+  30778
+  '(29494 nil)
+  t
+  nil
+  '((buffer-display-time 24563 41767 93209 661000) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (31997 31538))))
+
+(desktop-create-buffer 208
+  "/home/evanliu/Dev/TinyFlow/node_modules/@babel/cli/index.js"
+  "index.js"
+  'js-mode
+  '(eldoc-mode override-global-mode ivy-mode which-key-mode flycheck-mode rainbow-delimiters-mode company-mode projectile-mode yas-minor-mode lsp-mode lsp-completion-mode lsp-modeline-code-actions-mode lsp-modeline-diagnostics-mode lsp-modeline-workspace-status-mode lsp-diagnostics-mode)
+  74
+  '(74 nil)
+  nil
+  nil
+  '((buffer-display-time 24563 41317 608664 188000) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring (75))))
+
+(desktop-create-buffer 208
+  "/home/evanliu/Dev/TinyFlow/node_modules/@babel/cli/LICENSE"
+  "LICENSE"
+  'fundamental-mode
+  '(override-global-mode ivy-mode which-key-mode projectile-mode yas-minor-mode)
+  1
+  '(1 nil)
+  nil
+  nil
+  '((buffer-display-time 24563 50842 571747 421000) (buffer-file-coding-system . undecided-unix) (overwrite-mode))
+  '((mark-ring nil)))
+

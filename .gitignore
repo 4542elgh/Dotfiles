@@ -7,6 +7,7 @@ config/.config/emacs/elpa
 config/.config/emacs/eshell
 config/.config/emacs/auto-save-list
 config/.config/emacs/url
+config/.config/emacs/.cache
 util/cpu_usage/target/
 util/openweather/bin/
 util/openweather/*.log

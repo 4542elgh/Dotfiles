@@ -1,0 +1,1 @@
+("~/Dev/TinyFlow/" "~/Dotfiles/" "~/Dev/TinyFlow/node_modules/@babel/cli/" "~/Dev/TinyFlow/node_modules/@babel/generator/")

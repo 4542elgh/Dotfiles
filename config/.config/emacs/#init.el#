@@ -323,7 +323,6 @@
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
 
-(add-hook 'org-mode-hook '(lambda () (setq display-line-numbers-type nil)))
 
 ;; (use-package evil-magit
 ;;   :after magit

@@ -1,3 +1,6 @@
+#+PROPERTY: header-args:emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp
+
 ;;; init.el --- Initialization file for Emacs
 ;;; Commentary: Emacs Startup File --- initialization for Emacs
 (require 'package)
@@ -323,8 +326,6 @@
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
 
-(add-hook 'org-mode-hook '(lambda () (setq display-line-numbers-type nil)))
-
 ;; (use-package evil-magit
 ;;   :after magit
 ;; )
@@ -360,3 +361,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+
+#+end_src
