@@ -1,8 +1,7 @@
-#+PROPERTY: header-args:emacs-lisp :tangle ./init.el
+#+PROPERTY: header-args:emacs-lisp :tangle ~/ini.el
 * Initialize package manager
 ** package.el
 Package.el is only for downloading use-package, just like IE is only for downloading Chrome
-
 #+begin_src emacs-lisp
 (require 'package)
 
@@ -16,7 +15,6 @@ Package.el is only for downloading use-package, just like IE is only for downloa
 
 ** use-package
 Install use-package if it is not installed then enable it
-
 #+begin_src emacs-lisp
 ;;; If use-pacakge is not installed, instll it first before requiring
 (unless (package-installed-p 'use-package)
@@ -26,10 +24,28 @@ Install use-package if it is not installed then enable it
 (require 'use-package)
 #+end_src
 
+** Use package always ensure
+This ensures all use-packages install on first load or if elpa package does not exist 
+#+begin_src emacs-lisp
+(setq use-package-always-ensure t)
+#+end_src
+
+* Utility Parameters
+** Enable copy to Primary clipboard
+This enable x server to copy and paste text to Primary Clipboard
+#+begin_src emacs-lisp
+(setq x-select-enable-primary t)
+#+end_src
+
+** Auto revert file 
+Refresh file content with newer content on disk
+#+begin_src emacs-lisp
+(setq global-auto-revert-mode t)
+#+end_src
+
 * UI improvements
 ** Welcome/Splash screen
 Add Dashboard splash screen. It is better than default
-
 #+begin_src emacs-lisp
 (use-package dashboard
   :ensure t
@@ -40,34 +56,44 @@ Add Dashboard splash screen. It is better than default
 )
 #+end_src
 
+** Theme
+Intellij Darcula Theme for Emacs
+#+begin_src emacs-lisp
+(use-package jetbrains-darcula-theme
+    :config (load-theme 'jetbrains-darcula t)
+)
+#+end_src
+
 ** Font
 Load font face and font size
-
 #+begin_src emacs-lisp
 (set-frame-font "DejaVu Sans Mono 11" nil t)
 #+end_src
 
 ** Line Number
+*** Global
 Set number lines for all modes and line number type to relative
-
 #+begin_src emacs-lisp
 (global-display-line-numbers-mode)
 (setq display-line-numbers-type 'relative)
 #+end_src
 
+*** eshell 
+Do not show line number for eshell
+#+begin_src emacs-lisp
+(use-package eshell
+    :init (add-hook 'eshell-mode-hook
+        (lambda () (setq-local display-line-numbers-type nil))
+    )
+)
+#+end_src
+
 ** Load newer file 
 Always load newer modified version of elpa package if you did modify it on your own. This does NOT download newer package via use-package
-
 #+begin_src emacs-lisp
 (setq load-prefer-newer t)
 #+end_src
 
-** Use package always ensure
-This ensures all use-packages install on first load or if elpa package does not exist 
-
-#+begin_src emacs-lisp
-(setq use-package-always-ensure t)
-#+end_src
 ** Scroll bar 
 Hide scroll bar
 #+begin_src emacs-lisp
@@ -76,13 +102,142 @@ Hide scroll bar
 
 ** Cursor
 Solid cursor, default is blinking
-
 #+begin_src emacs-lisp
 (blink-cursor-mode 0)
 #+end_src
 
-* LSP 
-** LSP Mode
+** Spaceline
+
+*** Powerline status bar
+Base package
+#+begin_src emacs-lisp
+(use-package spaceline
+    :config (spaceline-emacs-theme)
+)
+#+end_src
+
+*** Include time in spaceline
+Add time to mode line
+#+begin_src emacs-lisp
+(setq display-time-24hr-format t) 
+(setq display-time-format "%H:%M:%S")        ; add seconds
+(setq display-time-default-load-average nil)
+(setq display-time-interval 1)               ; update every second
+(display-time-mode 1)                 ; show time in mode line on startup
+#+end_src
+
+** Nyan Mode
+Nyan Cat progress bar
+#+begin_src emacs-lisp
+(use-package nyan-mode
+    :config (setq nyan-mode t)
+)
+#+end_src
+
+** Ivy
+*** Ivy
+Minibuffer framework so things dont take up the entire window
+#+begin_src emacs-lisp
+  (use-package ivy
+    :defer 0.1
+    :diminish
+    :config (ivy-mode)
+    (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-next-line)
+    (define-key ivy-minibuffer-map (kbd "C-k") #'ivy-previous-line)
+    ; Swiper mapped C-K to kill buffer, need to remap that to previous line
+    (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
+    (define-key ivy-switch-buffer-map (kbd "C-x") #'ivy-switch-buffer-kill)
+  )
+  
+#+end_src
+
+*** Ivy Rich
+Display additional information, see counsel-switch-buffer for example
+#+begin_src emacs-lisp
+  (use-package ivy-rich
+    :init (ivy-rich-mode 1)
+  )
+#+end_src
+
+*** Counsel
+Command mode with smart search and use ivy minibuffer framework
+#+begin_src emacs-lisp
+  (use-package counsel
+    :after ivy
+    :config
+      (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
+  )
+#+end_src
+
+*** Swiper 
+Search in file for specific keyword
+#+begin_src emacs-lisp
+  (use-package swiper
+    :after ivy
+    :bind (
+      ("C-p" . swiper)
+    )
+  )
+#+end_src
+
+* Evil Mode
+** Vim keybinding for Emacs
+Emulate Vim key binding inside Emacs
+#+begin_src emacs-lisp
+  (use-package evil
+    :init
+      ; Need this for evil-collection to work properly
+      (setq evil-want-keybinding nil)
+      ; Evil mode set Ctrl-U to scroll up.
+      (setq evil-want-C-u-scroll t)
+      (setq evil-want-C-i-jump nil)
+      (setq evil-normal-state-tag "NORMAL")
+      (setq evil-insert-state-tag "INSERT")
+      (setq evil-visual-state-tag "VISUAL")
+      ; Define undo-redo system, otherwise redo wont work
+      (setq evil-undo-system 'undo-fu)
+    :config
+      ; Remap colon and semicolon
+      (define-key evil-motion-state-map ";" #'evil-ex)
+      (define-key evil-motion-state-map ":" #'evil-repeat-find-char)
+      ;; C-p is used for Swiper, so we need to unbind it from evil
+      (define-key evil-normal-state-map (kbd "C-p") nil)
+      (define-key evil-emacs-state-map (kbd "C-z") nil)
+      ;; (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
+      ;; (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
+      ;; (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
+      ;; (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
+
+      (evil-mode) 
+  )
+#+end_src
+
+** Evil collection
+Vim bindings for other applications, default is only for text editor
+#+begin_src emacs-lisp
+(use-package evil-collection
+    :after evil
+    :config (evil-collection-init)
+)
+#+end_src
+
+** Evil Commentary
+Use gcc for comment/uncomment line of code
+#+begin_src emacs-lisp
+(use-package evil-commentary
+    :config (evil-commentary-mode)
+)
+#+end_src
+
+** undo-fu
+Undo Redo system for evil mode (Emacs 28 should have build-in undo-redo system)
+#+begin_src emacs-lisp
+(use-package undo-fu)
+#+end_src
+
+* Programming
+** LSP 
+*** LSP Mode
 Enable Language Server Procotol for the following languages. 
 You will also need to install LSP server separately. 
 A list can be found at: https://emacs-lsp.github.io/lsp-mode/page/languages/
@@ -101,9 +256,8 @@ This package also enable breadcrumb so you will see a header above your line #1
   )
 #+end_src
 
-** LSP UI (VSCode like documentation on right side)
+*** LSP UI (VSCode like documentation on right side)
 VSCode like documentation prompt once you hover your cursor onto a function
-
 #+begin_src emacs-lisp
   (use-package lsp-ui
     :ensure t
@@ -112,9 +266,8 @@ VSCode like documentation prompt once you hover your cursor onto a function
   )
 #+end_src
 
-** Tuning
+*** Tuning
 Improving LSP default parameters and potentially speed up LSP load and run time
-
 #+begin_src emacs-lisp
 ; --- LSP tuning starts 
 (setq gc-cons-threshold 100000000)
@@ -123,301 +276,227 @@ Improving LSP default parameters and potentially speed up LSP load and run time
 (setq lsp-log-io nil) 
 ; --- LSP tuning ends 
 #+end_src
-** 
-** 
-** 
-* Use-Packages
+
+** Flycheck
 #+begin_src emacs-lisp
-    ;; (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-    ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-    (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+(use-package flycheck
+    :config
+        (global-flycheck-mode)
+        (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
+)
+#+end_src
 
-    ; This enables copy by cursor selection
-    (setq x-select-enable-primary t)
+** Company Mode
+#+begin_src emacs-lisp
+(use-package company)
+#+end_src
 
+** Yasnippets
+#+begin_src emacs-lisp
+(use-package yasnippet
+    :after lsp-mode
+    :config (yas-global-mode 1)
+    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
+)
 
-    ; Remove number line when in eshell mode
-    (add-hook 'eshell-mode-hook
-      (lambda () (setq-local display-line-numbers-type nil))
-    )
+(use-package yasnippet-snippets
+    :after yasnippet
+)
+#+end_src
 
-    ; Flycheck for emacs init is annoying, disable it for now
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
+** Treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :config
+      (treemacs-follow-mode t)
+      (treemacs-filewatch-mode t)
+  )
 
-    ;; mode line time stamp
-    (setq display-time-24hr-format t)
-    (setq display-time-format "%H:%M:%S")        ; add seconds
-    (setq display-time-default-load-average nil)
-    (setq display-time-interval 1)               ; update every second
-    (display-time-mode 1)                 ; show time in mode line on startup
+  (use-package treemacs-evil
+    :after treemacs evil
+  )
 
-    ; Set evil state tags
-    (setq evil-normal-state-tag "NORMAL")
-    (setq evil-insert-state-tag "INSERT")
-    (setq evil-visual-state-tag "VISUAL")
+  (use-package treemacs-projectile
+    :after treemacs projectile
+  )
 
-    ;;; Install Darcula theme, download it if not presented
-    (use-package jetbrains-darcula-theme
-      :config (load-theme 'jetbrains-darcula t)
-    )
+  (use-package lsp-treemacs
+    :after treemacs
+    :config
+    (lsp-treemacs-sync-mode 1)
+  )
 
-    ;;; Install evil mode, VIM KEY BIND LETS GOOOOOO
-    (use-package evil
-      :init
-        (setq evil-want-keybinding nil)
-        ; Evil mode set Ctrl-U to scroll up. Make sure to put this before require evil mode
-        (setq evil-want-C-u-scroll t)
-        (setq evil-want-C-i-jump nil)
-        (setq evil-undo-system 'undo-fu)
-      :config
-        (evil-mode) 
-    )
+  (use-package json-mode)
 
-    (use-package evil-collection
-      :after evil
-      :config (evil-collection-init)
-    )
+#+end_src
 
-    ;; (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
-    ;; (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
-    ;; (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
-    ;; (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
+** Projectile
+#+begin_src emacs-lisp
+(use-package projectile
+    :diminish projectile-mode
+    :config 
+        (projectile-mode)
+	(add-to-list 'projectile-globally-ignored-directories "node_modules")
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap ("C-c p" . projectile-command-map)
+    :init
+        (when (file-directory-p "~/Dev")
+        (setq projectile-project-search-path '("~/Dev")))
+	(setq projectile-indexing-method 'native)
+        (setq projectile-switch-project-action #'projectile-dired)
+)
 
-    ;;; unbind Evil Mode Ctrl-P to swiper (this needs to be at least after Evil Mode loaded)
-    (define-key evil-normal-state-map (kbd "C-p") nil)
-    (define-key evil-emacs-state-map (kbd "C-z") nil)
+(use-package counsel-projectile
+    :config (counsel-projectile-mode)
+)
+#+end_src
 
-    ;;; Auto complete commands
-    (use-package ivy
-      :defer 0.1
-      :diminish
-      :config (ivy-mode)
-      (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-next-line)
-      (define-key ivy-minibuffer-map (kbd "C-k") #'ivy-previous-line)
-      ; Swiper mapped C-K to kill buffer, need to remap that to previous line
-      (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
-      (define-key ivy-switch-buffer-map (kbd "C-x") #'ivy-switch-buffer-kill)
-    )
+** Magit
+#+begin_src emacs-lisp
+(use-package magit)
+#+end_src
 
-    (use-package ivy-rich
-      :init (ivy-rich-mode 1)
-    )
+** Rainbow Delimiters
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+)
+#+end_src
 
-    (use-package counsel
-      :after ivy
-      :config
-        (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
-    )
+* Perspective
+Persist window layout and separate buffers to correspoding projects between emacs sessions
+#+begin_src emacs-lisp
+(use-package perspective
+    :config (persp-mode)
+)
+#+end_src
 
-    (use-package swiper
-      :after ivy
-      :bind (
-        ("C-p" . swiper)
-      )
-    )
+* Elcord
+Add Rich Presence to Discord, show off your emac sessions
+#+begin_src emacs-lisp
+  ;; (use-package elcord
+  ;;   :config (elcord-mode)
+  ;; )
+#+end_src
 
-    (use-package which-key
-      :config (which-key-mode)
-    )
+* Key binding
+** Generally good to have
+*** Remap abort in progress comand to ESC
+#+begin_src emacs-lisp
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+#+end_src
 
-    (use-package helpful
-      :custom
-      (counsel-describe-function-function #'helpful-callable)
-      (counsel-describe-variable-function #'helpful-variable)
-      :bind
-      ([remap describe-function] . counsel-describe-function)
-      ([remap describe-command] . helpful-command)
-      ([remap describe-variable] . counsel-describe-variable)
-      ([remap describe-key] . helpful-key) 
-    )
+** Global Function Keys
+#+begin_src emacs-lisp
+; Define shortcuts
+(global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.org")))
+(global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
+#+end_src
 
-    (use-package flycheck
-      :config
-      (global-flycheck-mode)
-    )
+** Global Ctrl-c Keys
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c t") 'eshell)
+(global-set-key (kbd "C-c a") 'counsel-linux-app)
+(global-set-key (kbd "C-c b") 'counsel-switch-buffer)
+(global-set-key (kbd "C-c m") 'counsel-evil-marks)
+(global-set-key (kbd "C-c n") 'treemacs)
+#+end_src
 
-    (use-package rainbow-delimiters
-      :init (
-        add-hook 'prog-mode-hook #'rainbow-delimiters-mode
-      )
-    )
-
-    (use-package key-chord
+** Key chord
+#+begin_src emacs-lisp
+  (use-package key-chord
       :ensure t
       :config (key-chord-mode 1)
       (key-chord-define-global " x" 'counsel-M-x)
-      (key-chord-define-global " a" 'counsel-linux-app)
-      (key-chord-define-global "xb" 'delete-window)
-      ;; (key-chord-define-global " b" 'counsel-switch-buffer)
-      (key-chord-define-global "cc" 'comment-line)
-      (key-chord-define-global " n" 'treemacs)
-      ;; (key-chord-define-global " t" 'eshell)
       (key-chord-define-global " p" 'counsel-projectile-rg)
-    )
+  )
+#+end_src
 
-    (use-package spaceline
-      :config (spaceline-emacs-theme)
-    )
+* Hooks
+Open json mode when open file ending in .json
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+#+end_src
 
-  (use-package nyan-mode
-    :config (setq nyan-mode t)
+* Org mode
+#+begin_src emacs-lisp
+
+  (defun efs/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (visual-line-mode 1))
+
+
+    ;; Set faces for heading levels
+    (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
   )
 
-    ;; (use-package web-mode
-    ;;   :ensure t
-    ;; )
+  (use-package org
+    :hook (org-mode . efs/org-mode-setup)
+    (org-mode . (lambda () (require 'org-tempo)))
+    :config
+    (setq org-ellipsis " ▾")
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  )
 
-    ;; (use-package lsp-treemacs
-    ;;   :after treemacs
-    ;;   :config
-    ;;   (lsp-treemacs-sync-mode 1)
-    ;; )
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-    ;; (use-package auto-complete
-    ;;   :config (ac-config-default)
-    ;; (setq ac-sources '(ac-source-yasnippet
-    ;; ac-source-abbrev
-    ;; ac-source-words-in-same-mode-buffers))
-    ;; )
+  (defun efs/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
 
-    (use-package yasnippet
-      :after lsp-mode
-      :config (yas-global-mode 1)
-      (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
-    )
+  (use-package visual-fill-column
+    :hook (org-mode . efs/org-mode-visual-fill))
+#+end_src
+* Helpful packages
+** Which key
+When using combo keys, C-c, you can then see a list of possible candidates for that prefix
+#+begin_src emacs-lisp
+(use-package which-key
+    :config (which-key-mode)
+)
 
-    (use-package yasnippet-snippets
-      :after yasnippet
-    )
+#+end_src
 
-    (use-package company
-      ;; :config (add-to-list 'company-backends '(company-yasnippet))
-    )
+** Helpful
+Display a more helpful Help prompt including possible variable and source code for that function/variable
+#+begin_src emacs-lisp
+(use-package helpful
+    :custom
+        (counsel-describe-function-function #'helpful-callable)
+        (counsel-describe-variable-function #'helpful-variable)
+    :bind
+        ([remap describe-function] . counsel-describe-function)
+        ([remap describe-command] . helpful-command)
+        ([remap describe-variable] . counsel-describe-variable)
+        ([remap describe-key] . helpful-key) 
+)
+#+end_src
 
-    (use-package undo-fu)
-
-    (use-package projectile
-      :diminish projectile-mode
-      :config (projectile-mode)
-      :custom ((projectile-completion-system 'ivy))
-      :bind-keymap
-      ("C-c p" . projectile-command-map)
-      :init
-      (when (file-directory-p "~/Dev")
-        (setq projectile-project-search-path '("~/Dev")))
-      (setq projectile-switch-project-action #'projectile-dired)
-    )
-
-    (use-package counsel-projectile
-      :config (counsel-projectile-mode)
-    )
-
-    (use-package magit)
-
-    (use-package treemacs
-      :config
-        (treemacs-follow-mode t)
-        (treemacs-filewatch-mode t)
-        (add-to-list 'projectile-globally-ignored-directories "node_modules")
-        (setq projectile-indexing-method 'native)
-    )
-
-
-    (use-package treemacs-evil
-      :after treemacs evil
-    )
-
-    (use-package treemacs-projectile
-      :after treemacs projectile
-    )
-
-    (use-package json-mode)
-
-    ;; (use-package elcord
-    ;;   :config (elcord-mode)
-    ;; )
-
-    (use-package perspective
-      :config
-      (persp-mode)
-    )
-
-    (defun efs/org-mode-setup ()
-      (org-indent-mode)
-      (variable-pitch-mode 1)
-      (visual-line-mode 1))
-
-
-      ;; Set faces for heading levels
-      (dolist (face '((org-level-1 . 1.2)
-                      (org-level-2 . 1.1)
-                      (org-level-3 . 1.05)
-                      (org-level-4 . 1.0)
-                      (org-level-5 . 1.1)
-                      (org-level-6 . 1.1)
-                      (org-level-7 . 1.1)
-                      (org-level-8 . 1.1)))
-    )
-
-    (use-package org
-      :hook (org-mode . efs/org-mode-setup)
-      (org-mode . (lambda () (require 'org-tempo)))
-      :config
-      (setq org-ellipsis " ▾")
-      (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-    )
-
-    (use-package org-bullets
-      :after org
-      :hook (org-mode . org-bullets-mode)
-      :custom
-      (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
-
-    (defun efs/org-mode-visual-fill ()
-      (setq visual-fill-column-width 100
-            visual-fill-column-center-text t)
-      (visual-fill-column-mode 1))
-
-    (use-package visual-fill-column
-      :hook (org-mode . efs/org-mode-visual-fill))
-
-    (add-hook 'org-mode-hook '(lambda () (setq display-line-numbers-type nil)))
-
-    ;; (use-package evil-magit
-    ;;   :after magit
-    ;; )
-
-    ;; (use-package exwm
-    ;;   :ensure t
-    ;;   :config
-    ;;     (require 'exwm-config)
-    ;;     (exwm-config-default)
-    ;;     (server-start)
-    ;; )
-
-    ; Define shortcuts
-    (global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.org")))
-    (global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
-    (global-set-key (kbd "C-c t") 'eshell)
-    (global-set-key (kbd "C-c b") 'counsel-switch-buffer)
-
-    (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-
-    ; Define Evil mode binding to Vim-Like behavior
-    (define-key evil-motion-state-map ";" #'evil-ex)
-    (define-key evil-motion-state-map ":" #'evil-repeat-find-char)
-
-    (custom-set-variables
-     ;; custom-set-variables was added by Custom.
-     ;; If you edit it by hand, you could mess it up, so be careful.
-     ;; Your init file should contain only one such instance.
-     ;; If there is more than one, they won't work right.
-     '(package-selected-packages
-       '(elcord evil-magit magit counsel-projectile key-chord swiper ivy use-package jetbrains-darcula-theme evil)))
-    (custom-set-faces)
-     ;; custom-set-faces was added by Custom.
-     ;; If you edit it by hand, you could mess it up, so be careful.
-     ;; Your init file should contain only one such instance.
-     ;; If there is more than one, they won't work right.
-
+* System Generated config
+#+begin_src emacs-lisp
+(custom-set-variables
+;; custom-set-variables was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
+'(package-selected-packages
+    '(elcord evil-magit magit counsel-projectile key-chord swiper ivy use-package jetbrains-darcula-theme evil)))
+(custom-set-faces)
+;; custom-set-faces was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
 #+end_src

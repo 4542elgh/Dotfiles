@@ -13,7 +13,11 @@
 
 (require 'use-package)
 
-(add-hook 'emacs-startup-hook 'treemacs)
+(setq use-package-always-ensure t)
+
+(setq x-select-enable-primary t)
+
+;; (setq global-auto-revert-mode t)
 
 (use-package dashboard
   :ensure t
@@ -23,18 +27,106 @@
   (add-to-list 'dashboard-items '(projects . 5))
 )
 
+(use-package jetbrains-darcula-theme
+    :config (load-theme 'jetbrains-darcula t)
+)
+
 (set-frame-font "DejaVu Sans Mono 11" nil t)
 
 (global-display-line-numbers-mode)
 (setq display-line-numbers-type 'relative)
 
-(setq load-prefer-newer t)
+(use-package eshell
+    :init (add-hook 'eshell-mode-hook
+        (lambda () (setq-local display-line-numbers-type nil))
+    )
+)
 
-(setq use-package-always-ensure t)
+(setq load-prefer-newer t)
 
 (scroll-bar-mode -1)
 
 (blink-cursor-mode 0)
+
+(use-package spaceline
+    :config (spaceline-emacs-theme)
+)
+
+(setq display-time-24hr-format t) 
+(setq display-time-format "%H:%M:%S")        ; add seconds
+(setq display-time-default-load-average nil)
+(setq display-time-interval 1)               ; update every second
+(display-time-mode 1)                 ; show time in mode line on startup
+
+(use-package nyan-mode
+    :config (setq nyan-mode t)
+)
+
+(use-package ivy
+  :defer 0.1
+  :diminish
+  :config (ivy-mode)
+  (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-next-line)
+  (define-key ivy-minibuffer-map (kbd "C-k") #'ivy-previous-line)
+  ; Swiper mapped C-K to kill buffer, need to remap that to previous line
+  (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
+  (define-key ivy-switch-buffer-map (kbd "C-x") #'ivy-switch-buffer-kill)
+)
+
+(use-package ivy-rich
+  :init (ivy-rich-mode 1)
+)
+
+(use-package counsel
+  :after ivy
+  :config
+    (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
+)
+
+(use-package swiper
+  :after ivy
+  :bind (
+    ("C-p" . swiper)
+  )
+)
+
+(use-package evil
+  :init
+    ; Need this for evil-collection to work properly
+    (setq evil-want-keybinding nil)
+    ; Evil mode set Ctrl-U to scroll up.
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    (setq evil-normal-state-tag "NORMAL")
+    (setq evil-insert-state-tag "INSERT")
+    (setq evil-visual-state-tag "VISUAL")
+    ; Define undo-redo system, otherwise redo wont work
+    (setq evil-undo-system 'undo-fu)
+  :config
+    ; Remap colon and semicolon
+    (define-key evil-motion-state-map ";" #'evil-ex)
+    (define-key evil-motion-state-map ":" #'evil-repeat-find-char)
+    ;; C-p is used for Swiper, so we need to unbind it from evil
+    (define-key evil-normal-state-map (kbd "C-p") nil)
+    (define-key evil-emacs-state-map (kbd "C-z") nil)
+    ;; (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
+    ;; (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
+    ;; (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
+    ;; (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
+
+    (evil-mode) 
+)
+
+(use-package evil-collection
+    :after evil
+    :config (evil-collection-init)
+)
+
+(use-package evil-commentary
+    :config (evil-commentary-mode)
+)
+
+(use-package undo-fu)
 
 (use-package lsp-mode
   :hook (
@@ -60,222 +152,61 @@
 (setq lsp-log-io nil) 
 ; --- LSP tuning ends
 
-;; (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
-
-  ; This enables copy by cursor selection
-  (setq x-select-enable-primary t)
-
-
-  ; Remove number line when in eshell mode
-  (add-hook 'eshell-mode-hook
-    (lambda () (setq-local display-line-numbers-type nil))
-  )
-
-  ; Set startup screen is eshell
-  (setq initial-buffer-choice 'eshell)
-
-  ; Flycheck for emacs init is annoying, disable it for now
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
-
-  ;; mode line time stamp
-  (setq display-time-24hr-format t)
-  (setq display-time-format "%H:%M:%S")        ; add seconds
-  (setq display-time-default-load-average nil)
-  (setq display-time-interval 1)               ; update every second
-  (display-time-mode 1)                 ; show time in mode line on startup
-
-  ; Set evil state tags
-  (setq evil-normal-state-tag "NORMAL")
-  (setq evil-insert-state-tag "INSERT")
-  (setq evil-visual-state-tag "VISUAL")
-
-  ;;; Install Darcula theme, download it if not presented
-  (use-package jetbrains-darcula-theme
-    :config (load-theme 'jetbrains-darcula t)
-  )
-
-  ;;; Install evil mode, VIM KEY BIND LETS GOOOOOO
-  (use-package evil
-    :init
-      (setq evil-want-keybinding nil)
-      ; Evil mode set Ctrl-U to scroll up. Make sure to put this before require evil mode
-      (setq evil-want-C-u-scroll t)
-      (setq evil-want-C-i-jump nil)
-      (setq evil-undo-system 'undo-fu)
+(use-package flycheck
     :config
-      (evil-mode) 
-  )
-
-  (use-package evil-collection
-    :after evil
-    :config (evil-collection-init)
-  )
-
-  ;; (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
-  ;; (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
-  ;; (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
-  ;; (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
-
-  ;;; unbind Evil Mode Ctrl-P to swiper (this needs to be at least after Evil Mode loaded)
-  (define-key evil-normal-state-map (kbd "C-p") nil)
-  (define-key evil-emacs-state-map (kbd "C-z") nil)
-
-  ;;; Auto complete commands
-  (use-package ivy
-    :defer 0.1
-    :diminish
-    :config (ivy-mode)
-    (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-next-line)
-    (define-key ivy-minibuffer-map (kbd "C-k") #'ivy-previous-line)
-    ; Swiper mapped C-K to kill buffer, need to remap that to previous line
-    (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
-    (define-key ivy-switch-buffer-map (kbd "C-x") #'ivy-switch-buffer-kill)
-  )
-
-  (use-package ivy-rich
-    :init (ivy-rich-mode 1)
-  )
-
-  (use-package counsel
-    :after ivy
-    :config
-      (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
-  )
-
-  (use-package swiper
-    :after ivy
-    :bind (
-      ("C-p" . swiper)
-    )
-  )
-
-  (use-package which-key
-    :config (which-key-mode)
-  )
-
-  (use-package helpful
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key) 
-  )
-
-  (use-package flycheck
-    :config
-    (global-flycheck-mode)
-  )
-
-  (use-package rainbow-delimiters
-    :init (
-      add-hook 'prog-mode-hook #'rainbow-delimiters-mode
-    )
-  )
-
-  (use-package key-chord
-    :ensure t
-    :config (key-chord-mode 1)
-    (key-chord-define-global " x" 'counsel-M-x)
-    (key-chord-define-global " a" 'counsel-linux-app)
-    (key-chord-define-global "xb" 'delete-window)
-    ;; (key-chord-define-global " b" 'counsel-switch-buffer)
-    (key-chord-define-global "cc" 'comment-line)
-    (key-chord-define-global " n" 'treemacs)
-    ;; (key-chord-define-global " t" 'eshell)
-    (key-chord-define-global " p" 'counsel-projectile-rg)
-  )
-
-  (use-package spaceline
-    :config (spaceline-emacs-theme)
-  )
-
-(use-package nyan-mode
-  :config (setq nyan-mode t)
+        (global-flycheck-mode)
+        (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
 )
 
-  ;; (use-package web-mode
-  ;;   :ensure t
-  ;; )
+(use-package company)
 
-  ;; (use-package lsp-treemacs
-  ;;   :after treemacs
-  ;;   :config
-  ;;   (lsp-treemacs-sync-mode 1)
-  ;; )
-
-  ;; (use-package auto-complete
-  ;;   :config (ac-config-default)
-  ;; (setq ac-sources '(ac-source-yasnippet
-  ;; ac-source-abbrev
-  ;; ac-source-words-in-same-mode-buffers))
-  ;; )
-
-  (use-package yasnippet
+(use-package yasnippet
     :after lsp-mode
     :config (yas-global-mode 1)
     (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
-  )
+)
 
-  (use-package yasnippet-snippets
+(use-package yasnippet-snippets
     :after yasnippet
-  )
+)
 
-  (use-package company
-    ;; :config (add-to-list 'company-backends '(company-yasnippet))
-  )
+(use-package treemacs
+  :config
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+)
 
-  (use-package undo-fu)
+(use-package treemacs-evil
+  :after treemacs evil
+)
 
-  (use-package projectile
+(use-package treemacs-projectile
+  :after treemacs projectile
+)
+
+(use-package lsp-treemacs
+  :after treemacs
+  :config
+  (lsp-treemacs-sync-mode 1)
+)
+
+(use-package json-mode)
+
+(use-package projectile
     :diminish projectile-mode
     :config (projectile-mode)
     :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
+    :bind-keymap ("C-c p" . projectile-command-map)
     :init
-    (when (file-directory-p "~/Dev")
-      (setq projectile-project-search-path '("~/Dev")))
-    (setq projectile-switch-project-action #'projectile-dired)
-  )
+        (when (file-directory-p "~/Dev")
+        (setq projectile-project-search-path '("~/Dev")))
+        (setq projectile-switch-project-action #'projectile-dired)
+)
 
-  (use-package counsel-projectile
+(use-package counsel-projectile
     :config (counsel-projectile-mode)
-  )
+)
 
-  (use-package magit)
-
-  (use-package treemacs
-    :config
-      (treemacs-follow-mode t)
-      (treemacs-filewatch-mode t)
-      (add-to-list 'projectile-globally-ignored-directories "node_modules")
-      (setq projectile-indexing-method 'native)
-  )
-
-
-  (use-package treemacs-evil
-    :after treemacs evil
-  )
-
-  (use-package treemacs-projectile
-    :after treemacs projectile
-  )
-
-  (use-package json-mode)
-
-  ;; (use-package elcord
-  ;;   :config (elcord-mode)
-  ;; )
-
-  (use-package perspective
-    :config
-    (persp-mode)
-  )
 
   (defun efs/org-mode-setup ()
     (org-indent-mode)
@@ -316,48 +247,65 @@
   (use-package visual-fill-column
     :hook (org-mode . efs/org-mode-visual-fill))
 
-  (add-hook 'org-mode-hook '(lambda () (setq display-line-numbers-type nil)))
+(use-package magit)
 
-  ;; (use-package evil-magit
-  ;;   :after magit
-  ;; )
+(use-package rainbow-delimiters
+    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+)
 
-  ;; (use-package exwm
-  ;;   :ensure t
-  ;;   :config
-  ;;     (require 'exwm-config)
-  ;;     (exwm-config-default)
-  ;;     (server-start)
-  ;; )
+(use-package perspective
+    :config (persp-mode)
+)
 
-  ; Define shortcuts
-  (global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.org")))
-  (global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
-  (global-set-key (kbd "C-c t") 'eshell)
-  (global-set-key (kbd "C-c b") 'counsel-switch-buffer)
+;; (use-package elcord
+;;   :config (elcord-mode)
+;; )
 
-  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
-  ; Define Evil mode binding to Vim-Like behavior
-  (define-key evil-motion-state-map ";" #'evil-ex)
-  (define-key evil-motion-state-map ":" #'evil-repeat-find-char)
+; Define shortcuts
+(global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.org")))
+(global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
 
-  
+(global-set-key (kbd "C-c t") 'eshell)
+(global-set-key (kbd "C-c a") 'counsel-linux-app)
+(global-set-key (kbd "C-c b") 'counsel-switch-buffer)
+(global-set-key (kbd "C-c m") 'counsel-evil-marks)
+(global-set-key (kbd "C-c n") 'treemacs)
+
+(use-package key-chord
+    :ensure t
+    :config (key-chord-mode 1)
+    (key-chord-define-global " x" 'counsel-M-x)
+    (key-chord-define-global " p" 'counsel-projectile-rg)
+)
+
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
+(use-package which-key
+    :config (which-key-mode)
+)
+
+(use-package helpful
+    :custom
+        (counsel-describe-function-function #'helpful-callable)
+        (counsel-describe-variable-function #'helpful-variable)
+    :bind
+        ([remap describe-function] . counsel-describe-function)
+        ([remap describe-command] . helpful-command)
+        ([remap describe-variable] . counsel-describe-variable)
+        ([remap describe-key] . helpful-key) 
+)
+
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(elcord evil-magit magit counsel-projectile key-chord swiper ivy use-package jetbrains-darcula-theme evil)))
-  
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
+;; custom-set-variables was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
+'(package-selected-packages
+    '(elcord evil-magit magit counsel-projectile key-chord swiper ivy use-package jetbrains-darcula-theme evil)))
+(custom-set-faces)
+;; custom-set-faces was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
