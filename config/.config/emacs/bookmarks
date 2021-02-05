@@ -3,12 +3,12 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("init.org"
- (filename . "~/dotfile/config/.config/emacs/init.org")
+ (filename . "~/.config/emacs/init.org")
  (front-context-string . "  (add-hook 'esh")
  (rear-context-string . " in eshell mode\n")
  (position . 4986))
 ("init.el"
- (filename . "~/dotfile/config/.config/emacs/init.el")
+ (filename . "~/.config/emacs/init.el")
  (front-context-string . "\n; --- LSP tunin")
  (rear-context-string . "s lsp-ui-mode\n)\n")
  (position . 1658))
