@@ -1,141 +1,217 @@
-(require 'package)
+(defvar bootstrap-version)
+(let (
+  (bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+  (bootstrap-version 5)
+  )
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+      (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el" 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)
+    )
+  )
+  (load bootstrap-file nil 'nomessage)
+)
 
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+;; For emacs 27 and above
+(setq package-enable-at-startup nil)
 
-(package-initialize)
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
-;;; If use-pacakge is not installed, instll it first before requiring
-(unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
+(tool-bar-mode -1)
 
-(require 'use-package)
+(scroll-bar-mode -1)
 
-(setq use-package-always-ensure t)
+(blink-cursor-mode 0)
 
-(setq x-select-enable-primary t)
-
-(setq global-auto-revert-mode t)
-
-(desktop-save-mode 1)
+(setq byte-compile-warnings '(cl-functions))
 
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
-(use-package exec-path-from-shell)
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
 
-(when (memq window-system '(mac))
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+
+(setq x-select-enable-primary t)
+
+(add-hook 'emacs-startup-hook 'toggle-frame-maximized)
+
+(setq global-auto-revert-mode t)
+
+(setq backup-directory-alist
+  `((".*" . ,temporary-file-directory))
+)
+(setq auto-save-file-name-transforms
+  `((".*" ,temporary-file-directory t))
+)
+
+(electric-pair-mode)
+(add-hook 'prog-mode-hook 'show-paren-mode)
+(custom-set-faces
+ '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold)))))
+
+(use-package exec-path-from-shell
+  :config (setq exec-path-from-shell-arguments nil)
+)
+
+(when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize)
 )
-
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-projects-backend 'projectile)
-  (add-to-list 'dashboard-items '(projects . 5))
-)
-
-(use-package jetbrains-darcula-theme
-    :config (load-theme 'jetbrains-darcula t)
-)
-
-(set-frame-font "DejaVu Sans Mono 11" nil t)
-
-(use-package all-the-icons)
 
 (global-display-line-numbers-mode)
 (setq display-line-numbers-type 'relative)
 
-(add-hook 'prog-mode-hook #'hs-minor-mode)
-
-(setq company-idle-delay 0)
-(setq company-minimum-prefix-length 2)
-
-(use-package eshell
-    :init (add-hook 'eshell-mode-hook
-        (lambda () (setq-local display-line-numbers-type nil))
-    )
-)
-
-(setq dired-listing-switches "-lXGh --group-directories-first")
-
 (setq load-prefer-newer t)
 
-(scroll-bar-mode -1)
+(setq display-time-24hr-format t)            ; 24 hours 
+(setq display-time-format "%H:%M:%S")        ; add seconds
+(setq display-time-default-load-average nil) ; 
+(setq display-time-interval 1)               ; update every second
+(display-time-mode 1)                        ; show time in mode line on startup
 
-(menu-bar-mode -1)
+(setq gc-cons-threshold (* 128 1024 1024)) ;; 128MB
+(setq garbage-collection-messages t)
 
-(tool-bar-mode -1) 
+;; (setq dired-listing-switches "-aBhl  --group-directories-first")
 
-(blink-cursor-mode 0)
+(set-frame-font "DejaVu Sans Mono 16" nil t)
+
+(use-package emojify
+  :config (global-emojify-mode 1)
+)
+
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+  '(col-highlight ((t (:background "#313335"))))
+  '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold))))
+)
+
+(use-package vterm)
+
+(use-package all-the-icons)
+
+(use-package jetbrains-darcula-theme
+  :config (load-theme 'jetbrains-darcula t)
+)
 
 (use-package spaceline
-    :config (spaceline-emacs-theme)
+  :config (spaceline-emacs-theme)
 )
 
-(setq display-time-24hr-format t) 
-(setq display-time-format "%H:%M:%S")        ; add seconds
-(setq display-time-default-load-average nil)
-(setq display-time-interval 1)               ; update every second
-(display-time-mode 1)                 ; show time in mode line on startup
-
-(use-package centaur-tabs
-    :demand
-    :config
-        (centaur-tabs-mode t)
-        (setq centaur-tabs-set-modified-marker t)
-        (setq centaur-tabs-set-icons t)
-        (setq centaur-tabs-style "bar")
-        (setq centaur-tabs-set-bar 'left)
-        (centaur-tabs-change-fonts "DejaVu Sans Mono" 120)
-        (centaur-tabs-group-by-projectile-project)
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode)
 )
 
-(use-package nyan-mode
-    :config (setq nyan-mode t)
+(use-package smart-tabs-mode)
+
+(use-package rainbow-delimiters
+  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 )
+
+(use-package workgroups)
+
+(use-package col-highlight
+  :config (column-highlight-mode)
+)
+
+(global-hl-line-mode 1)
+
+(use-package golden-ratio-scroll-screen)
+
+(use-package gse-number-rect
+  :straight (gse-number-rect :type git :host github :repo "4542elgh/gse-number-rect")
+)
+
+(use-package ace-jump-mode)
 
 (use-package ivy
   :defer 0.1
   :diminish
-  :config (ivy-mode)
-  (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-next-line)
-  (define-key ivy-minibuffer-map (kbd "C-k") #'ivy-previous-line)
-  ; Swiper mapped C-K to kill buffer, need to remap that to previous line
-  (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
-  (define-key ivy-switch-buffer-map (kbd "C-x") #'ivy-switch-buffer-kill)
+  :config
+    (ivy-mode)
+    (define-key ivy-mode-map          (kbd "C-c b") #'nil)
+    (define-key ivy-minibuffer-map    (kbd "C-j")   #'ivy-next-line)
+    (define-key ivy-minibuffer-map    (kbd "C-k")   #'ivy-previous-line)
+    ; Swiper mapped C-K to kill buffer, need to remap that to previous line
+    (define-key ivy-switch-buffer-map (kbd "C-k")   #'ivy-previous-line)
+    (define-key ivy-switch-buffer-map (kbd "C-x")   #'ivy-switch-buffer-kill)
 )
 
-(use-package ivy-prescient)
+;; (use-package ivy-rich
+;;   :init (ivy-rich-mode 1)
+;; )
 
-(use-package ivy-rich
-  :init (ivy-rich-mode 1)
+(use-package ivy-prescient
+  :config (ivy-prescient-mode)
+)
+
+(use-package ivy-posframe
+  :config
+    (ivy-posframe-mode 1)
+
+    (setq ivy-posframe-parameters '(
+      (left-fringe  . 8)
+      (right-fringe . 8)
+      )
+    )
+
+    (setq ivy-posframe-height-alist '(
+      (swiper                 . 15)
+      (find-file              . 20)
+      (counsel-ag             . 15)
+      (counsel-projectile-ag  . 30)
+      (counsel-evil-registers . 30)
+      (t                      . 25)
+      )
+    )
+
+    (setq ivy-posframe-display-functions-alist '(
+      (complete-symbol . ivy-posframe-display-at-point)
+      (counsel-M-x     . ivy-posframe-display-at-frame-center)
+      (t               . ivy-posframe-display-at-frame-center))
+    )
+
+    (defun ivy-posframe-get-size () 
+      "The default functon used by `ivy-posframe-size-function'."
+      (list
+        :height 30
+        :width 100
+        :min-height (or ivy-posframe-min-height (round (* (frame-height) 0.6)))
+        :min-width  (or ivy-posframe-min-width  (round (* (frame-width) 0.62)))
+      )
+    )
 )
 
 (use-package counsel
-    :after ivy
-    :config
-        (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
-)
-
-(use-package counsel-projectile
-  :bind (
-	("C-P" . counsel-projectile-rg)
-	)
-  :config (counsel-projectile-mode)
+  :after ivy
+  :config
+    (setq ivy-initial-inputs-alist nil)
 )
 
 (use-package swiper
   :after ivy
-  :bind (
-    ("C-p" . swiper)
-  )
+  :bind (("C-p" . swiper))
 )
 
-(setq auth-sources '((:source "~/.authinfo.gpg")))
+(use-package spotify
+  :config
+  (setq counsel-spotify-client-secret "YOUR SPOTIFY SECRET")
+  (setq counsel-spotify-client-id "YOUR SPOTIFY ID")
+)
+
+(use-package ivy-youtube
+  :config
+    (setq ivy-youtube-key "YOUR API KEY")
+)
+
+(use-package pdf-tools)
 
 (use-package evil
   :init
@@ -153,205 +229,31 @@
     ; Remap colon and semicolon
     (define-key evil-motion-state-map ";" #'evil-ex)
     (define-key evil-motion-state-map ":" #'evil-repeat-find-char)
-    ;; C-p is used for Swiper, so we need to unbind it from evil
+    ;; unbind from evil
     (define-key evil-normal-state-map (kbd "C-p") nil)
-    (define-key evil-emacs-state-map (kbd "C-z") nil)
-    ;; (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
-    ;; (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
-    ;; (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
-    ;; (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
-
+    (define-key evil-normal-state-map (kbd "C-n") nil)
+    (define-key evil-emacs-state-map  (kbd "C-z") nil)
+    (define-key evil-normal-state-map (kbd "<SPC>") nil)
+    (define-key evil-normal-state-map (kbd "C-b") 'bookmark-jump)
+    (define-key evil-normal-state-map (kbd "C-m") 'counsel-evil-marks)
+    (define-key evil-normal-state-map (kbd "\"")  'counsel-evil-registers)
+    (define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
+    (define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
+    (define-key evil-emacs-state-map  (kbd "C-I") 'gse-number-rectangle)
     (evil-mode) 
 )
 
-(use-package evil-collection
-    :after evil
-    :config (evil-collection-init)
-)
-
-(use-package evil-commentary
-    :config (evil-commentary-mode)
-)
-
-(use-package evil-easymotion
+(use-package evil-leader
   :config
-  (evilem-default-keybindings "SPC")
-  (evilem-define (kbd "SPC w") 'evil-forward-WORD-begin)
-  (evilem-define (kbd "SPC W") 'evil-backward-WORD-begin)
-)
-
-(use-package undo-fu)
-
-(use-package mu4e
-    :ensure nil
-    :config
-
-    ;; This is set to 't' to avoid mail syncing issues when using mbsync
-    (setq mu4e-change-filenames-when-moving t)
-
-    ;; Refresh mail using isync every 1 minutes
-    (setq mu4e-update-interval (* 1 60))
-    (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-maildir "~/Mail")
-
-    (setq mu4e-drafts-folder "/[Gmail]/Drafts")
-    (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
-    (setq mu4e-refile-folder "/[Gmail]/All Mail")
-    (setq mu4e-trash-folder  "/[Gmail]/Trash")
-
-    (setq mu4e-maildir-shortcuts
-        '(("/Inbox"             . ?i)
-          ("/[Gmail]/Sent Mail" . ?s)
-          ("/[Gmail]/Trash"     . ?t)
-          ("/[Gmail]/Drafts"    . ?d)
-          ("/[Gmail]/All Mail"  . ?a))
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key
+      "b" 'switch-to-buffer
+      "t" 'vterm
+      "w" 'ace-jump-char-mode
+      "x" 'counsel-M-x
     )
 )
-
-(use-package mu4e-alert
-    :config
-    (mu4e-alert-set-default-style 'libnotify)
-    (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-)
-
-(use-package counsel-spotify
-    :config
-    (setq counsel-spotify-client-id (auth-source-pick-first-password :host "client.spotify.com" :user "4542elgh@gmail.com"))	
-    (setq counsel-spotify-client-secret (auth-source-pick-first-password :host "secret.spotify.com" :user "4542elgh@gmail.com"))
-)
-
-(use-package docker
-  :ensure t
-  :bind ("C-c d" . docker))
-
-(use-package dockerfile-mode)
-
-(use-package markdown-mode 
-    :commands (markdown-mode gfm-mode) 
-    :mode (("README\\.md\\'" . gfm-mode) ("\\.md\\'" . markdown-mode) ("\\.markdown\\'" . markdown-mode)) 
-    :init (setq markdown-command "multimarkdown") 
-    :config (custom-set-variables '(markdown-command "/usr/bin/pandoc"))
-)
-
-(use-package json-mode)
-
-(use-package js2-mode
-  
-:config
-    (setq js2-mode-show-parse-errors nil)
-    (setq js2-mode-show-strict-warnings nil)  
-)
-
-(use-package lsp-mode
-    :hook (
-        (mhtml-mode . lsp)
-        (js-mode . lsp)
-        (lsp-mode . lsp-enable-which-key-integration)
-    )
-    :commands (lsp lsp-deferred)
-    :custom (lsp-headerline-breadcrumb-enable t)
-)
-
-(use-package lsp-ui
-    :ensure t
-    :after lsp-mode
-    :commands lsp-ui-mode
-)
-
-(use-package evil-surround
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package ivy-posframe
-  :diminish ivy-posframe-mode
-  :hook (ivy-mode . ivy-posframe-mode)
-  :config
-  (setq ivy-posframe-height-alist '(
-				    (swiper . 15)
-                                    (find-file . 20)
-                                    (counsel-ag . 15)
-                                    (counsel-projectile-ag . 30)
-                                    (t      . 25)
-				    )
-   )
-
-  (setq ivy-posframe-display-functions-alist
-        '(
-	  ;; (swiper          . ivy-posframe-display-at-window-center)
-          (complete-symbol . ivy-posframe-display-at-point)
-          ;;(counsel-M-x     . ivy-posframe-display-at-window-bottom-left)
-          (counsel-M-x     . ivy-posframe-display-at-frame-center)
-          (t               . ivy-posframe-display-at-frame-center)))
-
-    (defun ivy-posframe-get-size ()
-    "The default functon used by `ivy-posframe-size-function'."
-    (list
-    :height 30
-    :width 100
-    :min-height (or ivy-posframe-min-height (round (* (frame-height) 0.6)))
-    :min-width (or ivy-posframe-min-width (round (* (frame-width) 0.62)))
-    )
-    )
-  (ivy-posframe-mode 1)
-)
-
-; --- LSP tuning starts 
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
-(setq lsp-idle-delay 0.500)
-(setq lsp-log-io nil) 
-; --- LSP tuning ends
-
-(use-package flycheck
-    :config
-        (global-flycheck-mode)
-        (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
-)
-
-(use-package company
-  :init
-  (setq company-backends
-   '(company-files company-bbdb company-semantic company-cmake company-capf company-clang company-files
-		   (company-dabbrev-code company-gtags company-etags company-keywords)
-		   company-oddmuse company-dabbrev))
-)
-
-(use-package yasnippet
-    :after lsp-mode
-    :config (yas-global-mode 1)
-    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
-)
-
-(use-package yasnippet-snippets
-    :after yasnippet
-)
-
-(use-package prettier-js
-  :config
-  (add-hook 'js2-mode-hook 'prettier-js-mode)
-  (add-hook 'json-mode-hook 'prettier-js-mode)
-)
-
-(use-package treemacs
-    :config
-        (treemacs-follow-mode t)
-        (treemacs-filewatch-mode t)
-)
-
-(use-package treemacs-evil
-    :after treemacs evil
-)
-
-(use-package treemacs-projectile
-    :after treemacs projectile
-)
-
-(use-package lsp-treemacs
-    :after treemacs
-    :config (lsp-treemacs-sync-mode 1)
-)
-
-(use-package treemacs-all-the-icons)
 
 (use-package evil-multiedit
   :config
@@ -360,179 +262,342 @@
 
     ;; Match the word under cursor (i.e. make it an edit region). Consecutive presses will
     ;; incrementally add the next unmatched match.
-    (define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-symbol-and-next)
+    (define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
     ;; Match selected region.
-    (define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-match-symbol-and-next)
+    (define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
 
     ;; Same as M-d but in reverse.
-    (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-prev)
-    (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-prev)
+    (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
+    (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
+
+    ;; OPTIONAL: If you prefer to grab symbols rather than words, use
+    ;; `evil-multiedit-match-symbol-and-next` (or prev).
+
+    ;; Restore the last group of multiedit regions.
+    (define-key evil-visual-state-map (kbd "C-M-D") 'evil-multiedit-restore)
+
+    ;; RET will toggle the region under the cursor
+    (define-key evil-multiedit-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+
+    ;; ...and in visual mode, RET will disable all fields outside the selected region
+    (define-key evil-motion-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+
+    ;; For moving between edit regions
+    (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
+    (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
+    (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
+    (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
 
     ;; Ex command that allows you to invoke evil-multiedit with a regular expression, e.g.
     (evil-ex-define-cmd "ie[dit]" 'evil-multiedit-ex-match)
 )
 
-
-(use-package autopair
-  :config (autopair-global-mode)
-  (add-hook 'highlight-parentheses-mode-hook
-          '(lambda ()
-             (setq autopair-handle-action-fns
-                   (append
-					(if autopair-handle-action-fns
-						autopair-handle-action-fns
-					  '(autopair-default-handle-action))
-					'((lambda (action pair pos-before)
-						(hl-paren-color-update)))))))
+(use-package evil-collection
+  :after evil
+  :config
+    (evil-collection-init)
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "S" 'dired-do-symlink
+      "s" 'hydra-dired-quick-sort/body
+      "C" 'dired-do-compress
+      "c" 'dired-do-copy
+      "h" 'dired-up-directory
+      "l" 'dired-find-file
+    )
 )
 
-(use-package indent-guide
-  :config (indent-guide-global-mode)
+(use-package evil-commentary
+  :config (evil-commentary-mode)
 )
 
-(use-package projectile
-    :diminish projectile-mode
-    :config 
-        (projectile-mode)
-        (add-to-list 'projectile-globally-ignored-directories "node_modules")
-    :custom ((projectile-completion-system 'ivy))
-    :bind-keymap ("C-c p" . projectile-command-map)
-    :init
-        (when (file-directory-p "~/Dev")
-        (setq projectile-project-search-path '("~/Dev")))
-        (setq projectile-indexing-method 'native)
-        (setq projectile-switch-project-action #'projectile-dired)
+(use-package evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys)
+    (define-key org-mode-map (kbd "C-c C-a") nil)
 )
 
-(use-package counsel-projectile
-    :config (counsel-projectile-mode)
+(use-package undo-fu)
+
+(use-package lsp-mode
+  :hook (
+    (mhtml-mode . lsp)
+    (js-mode    . lsp)
+    (lsp-mode   . lsp-enable-which-key-integration)
+  )
+  :commands (lsp lsp-deferred)
+  :custom   (lsp-headerline-breadcrumb-enable t)
+  :config 
+    ;; Tuning lsp for better performance
+    (setq gc-cons-threshold       100000000)
+    (setq read-process-output-max (* 1024 1024)) ;; 1mb
+    (setq lsp-idle-delay          0.500)
+    (setq lsp-log-io              nil) 
+)
+
+(use-package lsp-ui
+  :after lsp-mode
+  :commands lsp-ui-mode
+)
+
+(use-package flycheck
+  :config
+    (global-flycheck-mode)
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
+)
+
+(use-package yasnippet
+  :after lsp-mode
+  :config
+    (yas-global-mode 1)
+    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
+)
+
+(use-package yasnippet-snippets
+  :after yasnippet
+)
+
+(use-package yafolding
+  :hook (prog-mode . yafolding-mode)
+)
+
+(use-package treemacs
+  :after treemacs-all-the-icons
+  :hook (treemacs-mode . (lambda() (display-line-numbers-mode -1)))
+  :config
+    (treemacs-follow-mode    t)
+    (treemacs-filewatch-mode t)
+    (treemacs-load-theme     "all-the-icons")
+)
+
+(use-package treemacs-evil
+  :after treemacs evil
+)
+
+(use-package treemacs-all-the-icons)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+)
+
+(use-package lsp-treemacs
+  :after treemacs
+  :config (lsp-treemacs-sync-mode 1)
+)
+
+(use-package js
+  :config (setq js-indent-level 2)
+)
+
+(use-package json-mode
+  :config (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+)
+
+(use-package flutter)
+(use-package dart-mode
+  :hook (dart-mode . (lambda () (add-hook 'after-save-hook 'flutter-run-or-hot-reload nil)))
+)
+
+(use-package lsp-dart
+  :hook (dart-mode . lsp)
+)
+
+;; (add-hook 'dart-mode-hook
+;; (lambda ()
+;;     (add-hook 'after-save-hook 'flutter-run-or-hot-reload nil)
+;; )
+;; )
+
+(use-package csharp-mode)
+
+(use-package yaml-mode)
+
+(use-package docker
+	:bind ("C-c d" . docker)
+)
+
+(use-package dockerfile-mode
+  :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+)
+
+(use-package undo-tree
+  :config (global-undo-tree-mode)
 )
 
 (use-package magit)
 
-(use-package rainbow-delimiters
-    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-)
-
-(use-package eyebrowse
-    :config (eyebrowse-mode t)
-)
-
-;; (use-package elcord
-;;   :config (elcord-mode)
-;; )
-
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+(global-set-key (kbd "C-c t")   'eshell)
+(global-set-key (kbd "C-c a")   'counsel-linux-app)
+(global-set-key (kbd "C-c C-a") 'org-agenda)
+(global-set-key (kbd "C-c C-b") 'bookmark-bmenu-list)
+(global-set-key (kbd "C-c b")   'switch-to-buffer)
+(global-set-key (kbd "C-c m")   'counsel-evil-marks)
+(global-set-key (kbd "C-c n")   'treemacs)
+(global-set-key (kbd "C-c x")   'counsel-M-x)
+(global-set-key (kbd "C-c C-p") 'counsel-projectile-rg)
 
-; Define shortcuts
-(global-set-key (kbd "<f1>") (lambda() (interactive)(find-file "~/.config/emacs/init.org")))
-(global-set-key (kbd "<f2>") (lambda() (interactive)(find-file "~/.config/emacs/init.el")))
-
-(global-set-key (kbd "C-c t") 'eshell)
-(global-set-key (kbd "C-c a") 'counsel-linux-app)
-(global-set-key (kbd "C-c b") 'counsel-switch-buffer)
-(global-set-key (kbd "C-c C-b") 'counsel-projectile-switch-to-buffer)
-(global-set-key (kbd "C-c m") 'counsel-evil-marks)
-(global-set-key (kbd "C-c n") 'treemacs)
-(global-set-key (kbd "C-c C-w") 'persp-switch)
-(global-set-key (kbd "C-c x") 'counsel-M-x)
-
-(use-package key-chord
-    :ensure t
-    :config (key-chord-mode 1)
+(use-package projectile
+  :diminish projectile-mode
+  :init
+    (when (file-directory-p "~/Dev")
+      (setq projectile-project-search-path  '("~/Dev"))
+    )
+    (setq projectile-indexing-method        'native)
+    (setq projectile-switch-project-action #'projectile-dired)
+  :config 
+    (projectile-mode)
+    (add-to-list 'projectile-globally-ignored-directories "node_modules")
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap ("C-c p" . projectile-command-map)
 )
 
-(add-hook 'prog-mode-hook 'hl-line-mode)
-
-(add-hook 'prog-mode-hook 'show-paren-mode)
-
-(add-hook 'markdown-mode-hook 'markdown-live-preview-mode)
-
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-
-(defun efs/org-mode-setup ()
-    (org-indent-mode)
-    ;; (variable-pitch-mode 1)
-    (visual-line-mode 1)
+(use-package counsel-projectile
+  :config (counsel-projectile-mode)
 )
 
-(dolist (face 
-  '(
-    (org-level-1 . 1.2)
-    (org-level-2 . 1.1)
-    (org-level-3 . 1.05)
-    (org-level-4 . 1.0)
-    (org-level-5 . 1.1)
-    (org-level-6 . 1.1)
-    (org-level-7 . 1.1)
-    (org-level-8 . 1.1)
-  ))
-)
-
-(use-package org
-    :init (add-hook 'org-mode-hook (lambda () (setq-local display-line-numbers-type nil)))
+(use-package org 
+    :init (add-hook 'org-mode-hook (lambda () (setq-local display-line-numbers-type nil))) 
     :hook 
-        (org-mode . efs/org-mode-setup)
-        (org-mode . (lambda () (require 'org-tempo)))
-    :config
-        (setq org-ellipsis " ▾")
-        (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-        (add-to-list 'org-structure-template-alist '("js" . "src javascript"))
-        (add-to-list 'org-structure-template-alist '("bash" . "src bash"))
-        (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
+      (org-mode . efs/org-mode-setup) 
+      (org-mode . (lambda () (require 'org-tempo))) 
+      (org-mode . (lambda () (setq display-line-numbers-mode nil))) 
+      (emacs-lisp-mode-hook . (lambda() 
+        (setq-default indent-tabs-mode nil) 
+        (setq-default tab-width 2) 
+        (setq indent-line-function 'insert-tab)
+      )) 
+    :config 
+        (setq org-ellipsis "▼") 
+        (setq org-src-tab-acts-natively nil) 
+        (add-to-list 'org-emphasis-alist           '("*" (:foreground "black" :background "yellow"))) 
+        (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")) 
+        (add-to-list 'org-structure-template-alist '("javascript" . "src javascript")) 
+        (add-to-list 'org-structure-template-alist '("bash" . "src bash")) 
+        (add-to-list 'org-structure-template-alist '("conf" . "src conf"))) 
+(defun efs/org-mode-visual-fill () 
+    (setq visual-fill-column-width 100 visual-fill-column-center-text t) 
+    (visual-fill-column-mode 1)
+) 
+
+(use-package visual-fill-column 
+  :hook (org-mode . efs/org-mode-visual-fill)
 )
 
-(use-package org-roam
-      :after org
-      :hook (org-mode . org-roam-mode)
-      :custom (org-roam-directory "~/.config/emacs/roam")
-      ;; :bind (:map org-roam-mode-map
-      ;;         (("C-c n l" . org-roam)
-      ;;          ("C-c n f" . org-roam-find-file)
-      ;;          ("C-c n g" . org-roam-graph))
-      ;;         :map org-mode-map
-      ;;         (("C-c n i" . org-roam-insert))
-      ;;         (("C-c n I" . org-roam-insert-immediate)))
-      :config
-)
+(defun efs/org-mode-setup () (org-indent-mode))
 
-(use-package org-journal
-  :config
-  (setq org-journal-file-format "%A %F")
-  (setq org-journal-dir "~/.config/emacs/journal")
-)
+(use-package org-super-agenda)
+
+; It needs more configuration, see https://github.com/alphapapa/org-super-agenda
+
+(use-package calfw)
 
 (use-package org-bullets
   :after org
   :hook (org-mode . org-bullets-mode)
 )
 
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100 visual-fill-column-center-text t)
-  (visual-fill-column-mode 1)
+;; (use-package org-roam
+;;       :after org
+;;       :hook (org-mode . org-roam-mode)
+;;       :custom (org-roam-directory "~/.config/emacs/roam")
+;;       ;; :bind (:map org-roam-mode-map
+;;       ;;         (("C-c n l" . org-roam)
+;;       ;;          ("C-c n f" . org-roam-find-file)
+;;       ;;          ("C-c n g" . org-roam-graph))
+;;       ;;         :map org-mode-map
+;;       ;;         (("C-c n i" . org-roam-insert))
+;;       ;;         (("C-c n I" . org-roam-insert-immediate)))
+;; )
+
+(use-package org-journal
+  :config
+    (setq org-journal-file-format "%A %F")
+    (setq org-journal-dir         "~/.config/emacs/journal")
 )
 
-(use-package visual-fill-column
-    :hook (org-mode . efs/org-mode-visual-fill)
+(use-package calendar
+  :config (define-key calendar-mode-map (kbd "C-c j") #'org-journal-read-entry)
 )
 
-(add-hook 'org-mode-hook '(lambda () (setq display-line-numbers-type nil)))
+(setq org-agenda-files '("/Volumes/4542elgh/org/agenda"))
+(setq org-agenda-show-inherited-tags t)
+
+;; (use-package calfw
+;;   :after org
+;;   :config (require 'calfw-org)
+;; )
+
+(use-package ts
+  :straight (ts :type git :host github :repo "alphapapa/ts.el")
+)
+
+(use-package org-ql
+  :straight (org-ql :type git :host github :repo "alphapapa/org-ql")
+)
+
+(use-package alert
+  :straight (alert :type git :host github :repo "jwiegley/alert")
+  :config
+
+    (defcustom alerter-notifier-command (executable-find "alerter")
+    "Path to the terminal-notifier command.
+    From https://github.com/julienXX/terminal-notifier."
+    :type 'file 
+    :group 'alert)
+
+    (defun alerter-notifier-notify (info)
+      (if alerter-notifier-command
+        (let ((args
+               (list
+                 "-sound"   "default"
+                 "-title"   (alert-encode-string (plist-get info :title))
+                 "-message" (concat "\"" (alert-encode-string (plist-get info :message)) "\"")
+               )
+             ))
+            (start-process-shell-command "alerter-process" "test_buffer" (concat "alerter " (mapconcat 'identity args " "))))
+
+        (alert-message-notify info)))
+
+    (alert-define-style 'alerter
+      :title "Notify using terminal-notifier"
+      :notifier #'alerter-notifier-notify
+    )
+
+  (setq alert-default-style 'alerter)
+)
+
+(use-package org-timed-alerts
+  :straight (org-timed-alerts :type git :host github :repo "legalnonsense/org-timed-alerts")
+  :after (org)
+  :custom
+  (org-timed-alerts-alert-function #'alert)
+  (org-timed-alerts-tag-exclusions nil)
+  (org-timed-alerts-warning-times '(-10 -5))
+  (org-timed-alerts-agenda-hook-p t)
+  (org-timed-alert-final-alert-string "IT IS %alert-time\n\n%todo %headline")
+  (org-timed-alert-warning-string (concat "%todo %headline\n at %alert-time\n "
+                                          "it is now %current-time\n "
+                                          "*THIS IS YOUR %warning-time MINUTE WARNING*"))
+  :config
+  (add-hook 'org-mode-hook #'org-timed-alerts-mode)
+)
 
 (use-package which-key
-    :config (which-key-mode)
+  :config (which-key-mode)
 )
 
 (use-package helpful
-    :custom
-        (counsel-describe-function-function #'helpful-callable)
-        (counsel-describe-variable-function #'helpful-variable)
-    :bind
-        ([remap describe-function] . counsel-describe-function)
-        ([remap describe-command] . helpful-command)
-        ([remap describe-variable] . counsel-describe-variable)
-        ([remap describe-key] . helpful-key) 
+  :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+  :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command]  . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key]      . helpful-key) 
 )
 
 (defun align-pipe (start end)
@@ -540,17 +605,3 @@
   (interactive "r")
   (align-regexp start end "\\(\\s-*\\)|" 1 1 t)
 )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(markdown-command "/usr/bin/pandoc")
- '(package-selected-packages
-   '(evil-smartparens smaartparens ivy-posframe evil-surround yasnippet-snippets which-key visual-fill-column use-package undo-fu treemacs-projectile treemacs-evil treemacs-all-the-icons spaceline rainbow-delimiters prettier-js org-roam org-journal org-bullets nyan-mode mu4e-alert magit lsp-ui lsp-treemacs key-chord js2-mode jetbrains-darcula-theme ivy-rich ivy-prescient indent-guide helpful flycheck eyebrowse exec-path-from-shell evil-multiedit evil-mc evil-easymotion evil-commentary evil-collection emojify dockerfile-mode docker dashboard counsel-spotify counsel-projectile company centaur-tabs autopair)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
