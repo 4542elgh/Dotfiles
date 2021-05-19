@@ -19,6 +19,24 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+(use-package esup
+  :config (setq esup-depth 0)
+)
+
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (message "Emacs ready in %s with %d garbage collections."
+      (format "%.2f seconds"
+        (float-time
+          (time-subtract after-init-time before-init-time)
+        )
+      )
+      gcs-done
+    )
+  )
+)
+
 (tool-bar-mode -1)
 
 (scroll-bar-mode -1)
@@ -26,6 +44,13 @@
 (blink-cursor-mode 0)
 
 (setq byte-compile-warnings '(cl-functions))
+
+(setq ad-redefinition-action 'accept)
+
+(setq epa-pinentry-mode 'loopback)
+
+(winner-mode 1)
+(desktop-save-mode 1)
 
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
@@ -42,12 +67,12 @@
 
 (setq global-auto-revert-mode t)
 
-(setq backup-directory-alist
-  `((".*" . ,temporary-file-directory))
-)
-(setq auto-save-file-name-transforms
-  `((".*" ,temporary-file-directory t))
-)
+;; (setq backup-directory-alist
+;;   `((".*" . ,temporary-file-directory))
+;; )
+;; (setq auto-save-file-name-transforms
+;;   `((".*" ,temporary-file-directory t))
+;; )
 
 (electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)
@@ -81,6 +106,7 @@
 (set-frame-font "DejaVu Sans Mono 16" nil t)
 
 (use-package emojify
+  :defer 2
   :config (global-emojify-mode 1)
 )
 
@@ -93,7 +119,9 @@
   '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold))))
 )
 
-(use-package vterm)
+(use-package vterm
+  :defer 2
+)
 
 (use-package all-the-icons)
 
@@ -201,17 +229,37 @@
 )
 
 (use-package spotify
+  :commands spotify-play
   :config
-  (setq counsel-spotify-client-secret "YOUR SPOTIFY SECRET")
-  (setq counsel-spotify-client-id "YOUR SPOTIFY ID")
+    (setq counsel-spotify-client-secret
+      (auth-source-pick-first-password
+        :host "spotifySecret"
+        :user "4542elgh"
+      )
+    )
+    (setq counsel-spotify-client-id
+      (auth-source-pick-first-password
+        :host "spotifyId"
+        :user "4542elgh"
+      )
+    )
 )
 
 (use-package ivy-youtube
+  :commands ivy-youtube
   :config
-    (setq ivy-youtube-key "YOUR API KEY")
+    (setq ivy-youtube-key
+      (auth-source-pick-first-password
+        :host "youtubeAPIKey"
+        :user "4542elgh"
+      )
+    )
+    (setq ivy-youtube-play-at "~/scripts/mpvSingle.sh")
 )
 
-(use-package pdf-tools)
+(use-package pdf-tools
+  :defer 2
+)
 
 (use-package evil
   :init
@@ -293,6 +341,7 @@
 )
 
 (use-package evil-collection
+  :defer 2
   :after evil
   :config
     (evil-collection-init)
@@ -352,7 +401,7 @@
   :after lsp-mode
   :config
     (yas-global-mode 1)
-    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
+    ;; (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
 )
 
 (use-package yasnippet-snippets
@@ -383,16 +432,19 @@
 )
 
 (use-package lsp-treemacs
+  :defer 2
   :after treemacs
   :config (lsp-treemacs-sync-mode 1)
 )
 
 (use-package js
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'")
   :config (setq js-indent-level 2)
 )
 
 (use-package json-mode
-  :config (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+  :mode "\\.json\\'"
+  ;; :config (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 )
 
 (use-package flutter)
@@ -410,7 +462,10 @@
 ;; )
 ;; )
 
-(use-package csharp-mode)
+(use-package csharp-mode
+  :defer 2
+  :mode "\\.cs\\'"
+)
 
 (use-package yaml-mode)
 
@@ -426,15 +481,14 @@
   :config (global-undo-tree-mode)
 )
 
-(use-package magit)
+(use-package magit
+  :defer 2
+)
 
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-(global-set-key (kbd "C-c t")   'eshell)
 (global-set-key (kbd "C-c a")   'counsel-linux-app)
 (global-set-key (kbd "C-c C-a") 'org-agenda)
-(global-set-key (kbd "C-c C-b") 'bookmark-bmenu-list)
 (global-set-key (kbd "C-c b")   'switch-to-buffer)
-(global-set-key (kbd "C-c m")   'counsel-evil-marks)
 (global-set-key (kbd "C-c n")   'treemacs)
 (global-set-key (kbd "C-c x")   'counsel-M-x)
 (global-set-key (kbd "C-c C-p") 'counsel-projectile-rg)
@@ -455,6 +509,8 @@
 )
 
 (use-package counsel-projectile
+  :defer 2
+  :after (counsel projectile)
   :config (counsel-projectile-mode)
 )
 
@@ -488,11 +544,15 @@
 
 (defun efs/org-mode-setup () (org-indent-mode))
 
-(use-package org-super-agenda)
+(use-package org-super-agenda
+  :defer 2
+)
 
 ; It needs more configuration, see https://github.com/alphapapa/org-super-agenda
 
-(use-package calfw)
+(use-package calfw
+  :defer 2
+)
 
 (use-package org-bullets
   :after org
@@ -513,6 +573,7 @@
 ;; )
 
 (use-package org-journal
+  :defer 2
   :config
     (setq org-journal-file-format "%A %F")
     (setq org-journal-dir         "~/.config/emacs/journal")
@@ -531,17 +592,19 @@
 ;; )
 
 (use-package ts
+  :defer 2
   :straight (ts :type git :host github :repo "alphapapa/ts.el")
 )
 
 (use-package org-ql
+  :defer 2
   :straight (org-ql :type git :host github :repo "alphapapa/org-ql")
 )
 
 (use-package alert
+  :defer (org-ql ts)
   :straight (alert :type git :host github :repo "jwiegley/alert")
   :config
-
     (defcustom alerter-notifier-command (executable-find "alerter")
     "Path to the terminal-notifier command.
     From https://github.com/julienXX/terminal-notifier."
@@ -571,7 +634,7 @@
 
 (use-package org-timed-alerts
   :straight (org-timed-alerts :type git :host github :repo "legalnonsense/org-timed-alerts")
-  :after (org)
+  :after (org alert)
   :custom
   (org-timed-alerts-alert-function #'alert)
   (org-timed-alerts-tag-exclusions nil)
@@ -598,6 +661,12 @@
     ([remap describe-command]  . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-key]      . helpful-key) 
+)
+
+(use-package no-littering
+  :config
+    (setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 )
 
 (defun align-pipe (start end)

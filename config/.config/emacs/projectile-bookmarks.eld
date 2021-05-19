@@ -1,1 +1,0 @@
-("~/dotfile/" "~/Dev/Grade_Distribution/")

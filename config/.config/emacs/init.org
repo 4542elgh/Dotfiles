@@ -31,7 +31,31 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 (setq straight-use-package-by-default t)
 #+end_src
 
+* Profiling
+** esup
+#+begin_src emacs-lisp
+(use-package esup
+  :config (setq esup-depth 0)
+)
+#+end_src
 * Build-in packages
+** Show Bootup time
+#+begin_src emacs-lisp
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (message "Emacs ready in %s with %d garbage collections."
+      (format "%.2f seconds"
+        (float-time
+          (time-subtract after-init-time before-init-time)
+        )
+      )
+      gcs-done
+    )
+  )
+)
+#+end_src
+
 ** Disable toolbar
 #+begin_src emacs-lisp
 (tool-bar-mode -1)
@@ -50,6 +74,20 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 ** Disable warning for deprecated cl package
 #+begin_src emacs-lisp
 (setq byte-compile-warnings '(cl-functions))
+#+end_src
+
+** Disable warning for ad-handle-definition
+#+begin_src emacs-lisp
+(setq ad-redefinition-action 'accept)
+#+end_src
+** Use egp to use minibuffer input for password
+#+begin_src emacs-lisp
+(setq epa-pinentry-mode 'loopback)
+#+end_src
+** Save windows and buffers across session
+#+begin_src emacs-lisp
+(winner-mode 1)
+(desktop-save-mode 1)
 #+end_src
 
 ** Set default directory
@@ -89,12 +127,12 @@ Auto refresh buffer when file change outside of Emacs
 
 ** Move autosave and backup to temp folder
 #+begin_src emacs-lisp
-(setq backup-directory-alist
-  `((".*" . ,temporary-file-directory))
-)
-(setq auto-save-file-name-transforms
-  `((".*" ,temporary-file-directory t))
-)
+  ;; (setq backup-directory-alist
+  ;;   `((".*" . ,temporary-file-directory))
+  ;; )
+  ;; (setq auto-save-file-name-transforms
+  ;;   `((".*" ,temporary-file-directory t))
+  ;; )
 #+end_src
 ** Auto ending bracket and highlight
 #+begin_src emacs-lisp
@@ -146,6 +184,12 @@ Auto refresh buffer when file change outside of Emacs
   ;; (setq dired-listing-switches "-aBhl  --group-directories-first")
 #+end_src
 
+* Secrets
+** AuthInfo
+#+begin_src emacs-lisp
+(setq auth-sources '((:source "~/.authinfo.gpg")))
+#+end_src>
+
 * Theme / Color / Program Aid
 ** Font
 #+begin_src emacs-lisp
@@ -154,6 +198,7 @@ Auto refresh buffer when file change outside of Emacs
 ** Emoji
 #+begin_src emacs-lisp
 (use-package emojify
+  :defer 2
   :config (global-emojify-mode 1)
 )
 #+end_src
@@ -170,7 +215,9 @@ Auto refresh buffer when file change outside of Emacs
 #+end_src
 ** Vterm
 #+begin_src emacs-lisp
-(use-package vterm)
+(use-package vterm
+  :defer 2
+)
 #+end_src
 
 ** Icon Pack
@@ -337,26 +384,48 @@ In buffer search with ivy panel
 ** Spotify
 #+begin_src emacs-lisp
 (use-package spotify
+  :commands spotify-play
   :config
-  (setq counsel-spotify-client-secret "YOUR SPOTIFY SECRET")
-  (setq counsel-spotify-client-id "YOUR SPOTIFY ID")
+    (setq counsel-spotify-client-secret
+      (auth-source-pick-first-password
+        :host "spotifySecret"
+        :user "4542elgh"
+      )
+    )
+    (setq counsel-spotify-client-id
+      (auth-source-pick-first-password
+        :host "spotifyId"
+        :user "4542elgh"
+      )
+    )
 )
 #+end_src
 
 ** Ivy Youtube
 We are rolling our own ivy youtube to play music on minimzed mpv player
+This require you to have mpv in your PATH
 #+begin_src emacs-lisp
 (use-package ivy-youtube
+  :commands ivy-youtube
   :config
-    (setq ivy-youtube-key "YOUR API KEY")
+    (setq ivy-youtube-key
+      (auth-source-pick-first-password
+        :host "youtubeAPIKey"
+        :user "4542elgh"
+      )
+    )
+    (setq ivy-youtube-play-at "~/scripts/mpvSingle.sh")
 )
 #+end_src
 
 * PDF
 ** PDF tool
 #+begin_src emacs-lisp
-(use-package pdf-tools)
+(use-package pdf-tools
+  :defer 2
+)
 #+end_src
+
 * Evil
 ** Evil mode
 Vim keybind for Emacs
@@ -451,6 +520,7 @@ Multi cursors
 A collection of evil keybinding for other packages
 #+begin_src emacs-lisp
 (use-package evil-collection
+  :defer 2
   :after evil
   :config
     (evil-collection-init)
@@ -539,7 +609,7 @@ Add error indicators to source code
   :after lsp-mode
   :config
     (yas-global-mode 1)
-    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
+    ;; (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
 )
 #+end_src
 
@@ -593,6 +663,7 @@ Add error indicators to source code
 LSP symbol and dependencies on sidebar
 #+begin_src emacs-lisp
 (use-package lsp-treemacs
+  :defer 2
   :after treemacs
   :config (lsp-treemacs-sync-mode 1)
 )
@@ -602,13 +673,15 @@ LSP symbol and dependencies on sidebar
 ** JS Mode
 #+begin_src emacs-lisp
 (use-package js
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'")
   :config (setq js-indent-level 2)
 )
 #+end_src
 ** JSON Mode
 #+begin_src emacs-lisp
 (use-package json-mode
-  :config (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+  :mode "\\.json\\'"
+  ;; :config (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 )
 #+end_src
 
@@ -632,7 +705,10 @@ LSP symbol and dependencies on sidebar
 
 ** C# 
 #+begin_src emacs-lisp
-(use-package csharp-mode)
+(use-package csharp-mode
+  :defer 2
+  :mode "\\.cs\\'"
+)
 #+end_src
 
 ** YAML
@@ -665,7 +741,9 @@ Visualize undos
 #+end_src
 ** Magit
 #+begin_src emacs-lisp
-  (use-package magit)
+(use-package magit
+  :defer 2
+)
 #+end_src
 
 ;; (add-hook 'kill-emacs-hook #'persp-state-save)
@@ -674,12 +752,9 @@ Visualize undos
 ** Global keys
 #+begin_src emacs-lisp
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-(global-set-key (kbd "C-c t")   'eshell)
 (global-set-key (kbd "C-c a")   'counsel-linux-app)
 (global-set-key (kbd "C-c C-a") 'org-agenda)
-(global-set-key (kbd "C-c C-b") 'bookmark-bmenu-list)
 (global-set-key (kbd "C-c b")   'switch-to-buffer)
-(global-set-key (kbd "C-c m")   'counsel-evil-marks)
 (global-set-key (kbd "C-c n")   'treemacs)
 (global-set-key (kbd "C-c x")   'counsel-M-x)
 (global-set-key (kbd "C-c C-p") 'counsel-projectile-rg)
@@ -706,6 +781,8 @@ Visualize undos
 ** Counsel Projectile
 #+begin_src emacs-lisp
 (use-package counsel-projectile
+  :defer 2
+  :after (counsel projectile)
   :config (counsel-projectile-mode)
 )
 #+end_src
@@ -744,15 +821,19 @@ Org mode with some source expansion
 
 (defun efs/org-mode-setup () (org-indent-mode))
 #+end_src
-** Org Super Mode
+** Org Super Agenda
 #+begin_src emacs-lisp
-(use-package org-super-agenda)
+(use-package org-super-agenda
+  :defer 2
+)
 
 ; It needs more configuration, see https://github.com/alphapapa/org-super-agenda
 #+end_src
 ** Org Calfw
 #+begin_src emacs-lisp
-(use-package calfw)
+(use-package calfw
+  :defer 2
+)
 #+end_src
 ** Org bullet
 Custom bullets for org mode headers
@@ -783,6 +864,7 @@ Support backlink, great for documentation with multiple files
 ** Org journal
 #+begin_src emacs-lisp
 (use-package org-journal
+  :defer 2
   :config
     (setq org-journal-file-format "%A %F")
     (setq org-journal-dir         "~/.config/emacs/journal")
@@ -812,17 +894,19 @@ Calendar view of agenda
 Use alert.el for event trigger, and use alerter for sticky notification
 #+begin_src emacs-lisp
 (use-package ts
+  :defer 2
   :straight (ts :type git :host github :repo "alphapapa/ts.el")
 )
 
 (use-package org-ql
+  :defer 2
   :straight (org-ql :type git :host github :repo "alphapapa/org-ql")
 )
 
 (use-package alert
+  :defer (org-ql ts)
   :straight (alert :type git :host github :repo "jwiegley/alert")
   :config
-
     (defcustom alerter-notifier-command (executable-find "alerter")
     "Path to the terminal-notifier command.
     From https://github.com/julienXX/terminal-notifier."
@@ -852,7 +936,7 @@ Use alert.el for event trigger, and use alerter for sticky notification
 
 (use-package org-timed-alerts
   :straight (org-timed-alerts :type git :host github :repo "legalnonsense/org-timed-alerts")
-  :after (org)
+  :after (org alert)
   :custom
   (org-timed-alerts-alert-function #'alert)
   (org-timed-alerts-tag-exclusions nil)
@@ -890,3 +974,23 @@ Display and organize help command
     ([remap describe-key]      . helpful-key) 
 )
 #+end_src
+
+** No littering
+Define a sane location for package generated files
+#+begin_src emacs-lisp
+(use-package no-littering
+  :config
+    (setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+)
+#+end_src
+
+** Custom Align
+#+begin_src emacs-lisp
+(defun align-pipe (start end)
+  "Align columns by pipe"
+  (interactive "r")
+  (align-regexp start end "\\(\\s-*\\)|" 1 1 t)
+)
+#+end_src
+
