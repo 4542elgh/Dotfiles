@@ -7,6 +7,7 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
+bindkey '^R' history-incremental-search-backward
 
 # Speed up zsh compinit by only checking cache once a day
 autoload -Uz compinit 
@@ -53,5 +54,17 @@ setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 source $XDG_CONFIG_HOME/p10k/.p10k.zsh
+
+vterm_printf(){
+    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}
 
 macchina

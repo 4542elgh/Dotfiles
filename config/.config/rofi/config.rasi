@@ -1,4 +1,11 @@
+/** Basic config file **/
+
 configuration {
-	theme: "glue_pro_blue";
-	show-icons: true;
+  show-icons:         true;
+  icon-theme:         "Papirus";
+	kb-row-down:        "Control+j";
+  kb-row-up:          "Control+k";
+  kb-remove-to-eol:   "";
+  kb-accept-entry:    "Control+m,Return,KP_Enter";
+	terminal:           "alacritty";
 }

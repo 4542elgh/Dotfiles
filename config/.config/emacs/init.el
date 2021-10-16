@@ -41,7 +41,11 @@
 
 (scroll-bar-mode -1)
 
+(menu-bar-mode -1)
+
 (blink-cursor-mode 0)
+
+(setq ring-bell-function'ignore)
 
 (setq byte-compile-warnings '(cl-functions))
 
@@ -121,6 +125,10 @@
 
 (use-package vterm
   :defer 2
+  :config
+  (add-hook 'vterm-mode-hook '(lambda()(column-highlight-mode 0)))
+  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+  (setq vterm-shell "/bin/bash")
 )
 
 (use-package all-the-icons)
@@ -180,42 +188,42 @@
   :config (ivy-prescient-mode)
 )
 
-(use-package ivy-posframe
-  :config
-    (ivy-posframe-mode 1)
+;; (use-package ivy-posframe
+;;   :config
+;;     (ivy-posframe-mode 1)
 
-    (setq ivy-posframe-parameters '(
-      (left-fringe  . 8)
-      (right-fringe . 8)
-      )
-    )
+;;     (setq ivy-posframe-parameters '(
+;;       (left-fringe  . 8)
+;;       (right-fringe . 8)
+;;       )
+;;     )
 
-    (setq ivy-posframe-height-alist '(
-      (swiper                 . 15)
-      (find-file              . 20)
-      (counsel-ag             . 15)
-      (counsel-projectile-ag  . 30)
-      (counsel-evil-registers . 30)
-      (t                      . 25)
-      )
-    )
+;;     (setq ivy-posframe-height-alist '(
+;;       (swiper                 . 15)
+;;       (find-file              . 20)
+;;       (counsel-ag             . 15)
+;;       (counsel-projectile-ag  . 30)
+;;       (counsel-evil-registers . 30)
+;;       (t                      . 25)
+;;       )
+;;     )
 
-    (setq ivy-posframe-display-functions-alist '(
-      (complete-symbol . ivy-posframe-display-at-point)
-      (counsel-M-x     . ivy-posframe-display-at-frame-center)
-      (t               . ivy-posframe-display-at-frame-center))
-    )
+;;     (setq ivy-posframe-display-functions-alist '(
+;;       (complete-symbol . ivy-posframe-display-at-point)
+;;       (counsel-M-x     . ivy-posframe-display-at-frame-center)
+;;       (t               . ivy-posframe-display-at-frame-center))
+;;     )
 
-    (defun ivy-posframe-get-size () 
-      "The default functon used by `ivy-posframe-size-function'."
-      (list
-        :height 30
-        :width 100
-        :min-height (or ivy-posframe-min-height (round (* (frame-height) 0.6)))
-        :min-width  (or ivy-posframe-min-width  (round (* (frame-width) 0.62)))
-      )
-    )
-)
+;;     (defun ivy-posframe-get-size () 
+;;       "The default functon used by `ivy-posframe-size-function'."
+;;       (list
+;;         :height 30
+;;         :width 100
+;;         :min-height (or ivy-posframe-min-height (round (* (frame-height) 0.6)))
+;;         :min-width  (or ivy-posframe-min-width  (round (* (frame-width) 0.62)))
+;;       )
+;;     )
+;; )
 
 (use-package counsel
   :after ivy
@@ -397,6 +405,10 @@
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
 )
 
+(use-package company
+:config (setq comapny-minimum-prefix-length 1 company-idle-delay 0.0)
+)
+
 (use-package yasnippet
   :after lsp-mode
   :config
@@ -532,6 +544,7 @@
         (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")) 
         (add-to-list 'org-structure-template-alist '("javascript" . "src javascript")) 
         (add-to-list 'org-structure-template-alist '("bash" . "src bash")) 
+        (add-to-list 'org-structure-template-alist '("py" . "src python")) 
         (add-to-list 'org-structure-template-alist '("conf" . "src conf"))) 
 (defun efs/org-mode-visual-fill () 
     (setq visual-fill-column-width 100 visual-fill-column-center-text t) 

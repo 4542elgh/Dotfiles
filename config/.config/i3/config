@@ -8,11 +8,11 @@
 
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-set $mod Mod4
+set $mod Mod1
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:monospace 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -40,7 +40,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 # bindsym $mod+Shift+q kill
@@ -101,7 +101,7 @@ bindsym $mod+Shift+f floating toggle
 
 # change focus between tiling / floating windows
 #bindsym $mod+space focus mode_toggle
-bindsym $mod+space exec rofi -show run
+bindsym $mod+space exec /home/evanliu/.config/rofi/launchers/colorful/launcher.sh
 
 bindsym $mod+e exec pcmanfm &
 
@@ -192,12 +192,12 @@ bindsym $mod+r mode "resize"
 
 bar {
 	position top
-	# font pango:DejaVuSan 11
+	font xft:DejaVuSansMono Nerd Font Bold 12
 	# font xft:DejaVu Sans:DejaVuSan 11
-	font xft:DejaVuSansMono Nerd Font Bold 11
+	# font xft:DejaVuSansMono Nerd Font Bold 11
   # status_command exec /home/evanliu/sample.sh
-  status_command exec ${XDG_CONFIG_HOME}/i3bar/i3bar.sh
-
+  # status_command i3blocks
+  status_command i3blocks
 }
 
 # bar {
@@ -238,8 +238,8 @@ bindsym $mod+shift+a --release exec cd $HOME/Pictures && import $(date +'%m%d%Y%
 # }
 
 # Gap between window
-gaps inner 5
-gaps outer 5
+gaps inner 10
+gaps outer 10
 
 # Move between workspace does not mess up
 mouse_warping none
@@ -274,7 +274,7 @@ exec --no-startup-id picom -b
 exec --no-startup-id redshift
 
 # Searchable clipboard history
-exec --no-startup-id clipster -d --config="/home/evan/.config/clipster/config"
+exec --no-startup-id clipster -d --config="/home/evanliu/.config/clipster/config"
 
 # Remap Ctrl to Esc, there is another script to remap Esc to Cap Lock, as a result, this will result Esc To CAP_LOCKS when pressed, and Ctrl to CAP_LOCKS when hold.
 exec --no-startup-id xcape -e 'Control_L=Escape'
@@ -283,8 +283,12 @@ exec --no-startup-id xcape -e 'Control_L=Escape'
 exec --no-startup-id xidlelock
 
 # Start polybar with Powerline Theme
-exec --no-startup-id polybar -c ~/.config/polybar/config primary &
-exec --no-startup-id polybar -c ~/.config/polybar/config secondary &
+# exec --no-startup-id polybar -c ~/.config/polybar/config primary &
+# exec --no-startup-id polybar -c ~/.config/polybar/config secondary &
+
+exec autocutsel &
+exec autocutsel -s PRIMARY &
 
 exec --no-startup-id udisksctl mount -b /dev/sdb1
 
+exec --no-startup-id i3_workspace_names_daemon

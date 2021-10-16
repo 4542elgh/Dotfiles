@@ -3,6 +3,9 @@ alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
 
 alias wget="wget --hsts-file="$XDG_CACHE_HOME/wget-hsts""
 
+alias zip="zipcli"
+alias unzip="unzipcli"
+
 # Start tmux in 256 colors
 alias tmux='TERM=xterm-256color tmux -f "${XDG_CONFIG_HOME}"/tmux/tmux.conf'
 alias tmuxconfig="vim $XDG_CONFIG_HOME/tmux/.tmux.conf"
@@ -14,6 +17,8 @@ alias tmuxkill="tmux kill-session -t"
 alias ls="lsd -lah"
 alias clr="clear"
 alias top="gotop"
+alias cat="bat"
+alias grep="rg --ignore-case"
 
 # Ranger
 alias r=". ranger"
@@ -33,7 +38,7 @@ alias zalias="vim $XDG_CONFIG_HOME/zsh/.zsh_alias"
 
 # i3WM
 alias i3config="vim $XDG_CONFIG_HOME/i3/config"
-alias i3barconfig="vim $XDG_CONFIG_HOME/i3bar/i3bar.sh"
+alias i3blockconfig="vim $XDG_CONFIG_HOME/i3blocks/config"
 alias xinitrc="vim $XDG_CONFIG_HOME/X11/.xinitrc"
 alias statusrc="vim $XDG_CONFIG_HOME/py3status/config"
 alias termiterc="vim $XDG_CONFIG_HOME/termite/config"

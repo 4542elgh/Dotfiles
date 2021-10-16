@@ -19,7 +19,7 @@ set splitbelow
 set updatetime=100
 set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
 
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "--------------------------------------------------------------------------------

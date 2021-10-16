@@ -2,6 +2,7 @@
 # zmodload zsh/zprof
 export env_editor="nvim"
 export EDITOR="nvim"
+export TERMINAL="alacritty"
 
 export BAT_CONFIG_PATH="${HOME}/.config/bat/config"
 export XDG_CONFIG_HOME="${HOME}/.config"
