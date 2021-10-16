@@ -22,5 +22,6 @@ local/**
 **/**/*.egg-info
 config/.config/emacs/*
 !config/.config/emacs/etc
+config/.config/emacs/etc/**/.yas-compiled-snippets.el
 !config/.config/emacs/init.el
 !config/.config/emacs/init.org
