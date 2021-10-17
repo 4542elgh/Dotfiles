@@ -1,29 +1,39 @@
-**/**/.DS_Store
+# Ignore exact file name on all dir and subdir
+.DS_Store
 config/.config/nvim/.netrwhist
 config/.config/karabiner/automatic_backups/
 __pycache__
 config/.config/coc/
-**/secrets.txt
+secrets.txt
 config/.config/configstore/
-config/.config/zsh/.zsh_sessions/**
+config/.config/zsh/.zsh_sessions/
 config/.config/zsh/.zsh_history
 config/.config/zsh/.zcompdump
 config/.config/zsh/.zshrc.backup
 config/.config/isync
 util/cpu_usage/target/
 util/openweather/bin/
+
+# Wildcard file
 util/openweather/*.log
 util/openweather/include
 util/openweather/lib
 util/zipcli/build
 util/zipcli/dist
-local/**
-**/**/venv
-**/**/build
-**/**/dist
-**/**/*.egg-info
+
+# Ignore folder on all dir and subdir
+local/
+venv/
+build/
+dist/
+
+# Wildcard dir
+*.egg-info/
+
+# Ignore this folder, but /* will let you unignore subdir
 config/.config/emacs/*
-!config/.config/emacs/etc
+!config/.config/emacs/etc/
 config/.config/emacs/etc/**/.yas-compiled-snippets.el
+
 !config/.config/emacs/init.el
 !config/.config/emacs/init.org

@@ -184,9 +184,9 @@
 ;;   :init (ivy-rich-mode 1)
 ;; )
 
-(use-package ivy-prescient
-  :config (ivy-prescient-mode)
-)
+;; (use-package ivy-prescient
+;;   :config (ivy-prescient-mode)
+;; )
 
 ;; (use-package ivy-posframe
 ;;   :config
