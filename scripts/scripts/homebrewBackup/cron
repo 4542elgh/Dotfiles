@@ -1,0 +1,1 @@
+0 */6 * * * ~/Dropbox/Apps/Homebrew/backup-homebrew.sh > ~/Dropbox/Apps/Homebrew/restore-homebrew.sh
