@@ -1,3 +1,4 @@
+**/**/.DS_Store
 config/.config/nvim/.netrwhist
 config/.config/karabiner/automatic_backups/
 __pycache__
@@ -8,6 +9,7 @@ config/.config/zsh/.zsh_sessions/**
 config/.config/zsh/.zsh_history
 config/.config/zsh/.zcompdump
 config/.config/zsh/.zshrc.backup
+config/.config/isync
 util/cpu_usage/target/
 util/openweather/bin/
 util/openweather/*.log
