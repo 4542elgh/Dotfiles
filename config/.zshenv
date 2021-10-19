@@ -43,6 +43,7 @@ export PATH="$HOME/.gem/ruby/2.7.0/bin:$PATH"
 export PATH="/usr/lib/node_modules/npm:$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/usr/local/bin:$PATH"
+export PATH="/Users/evanliu/Library/Python/3.10/bin:$PATH"
 
 # GPG Agent
 export GPG_TTY=$(tty)
