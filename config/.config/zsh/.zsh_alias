@@ -87,5 +87,7 @@ alias usb='cd /run/media/$USER'
 # Edit Dotfile README
 alias readme="vim ~/Dotfiles/README.md"
 
+alias gt="git log --graph --all"
+
 alias secretencrypt="gpg --yes --encrypt --armor --recipient 4542elgh@gmail.com ~/secrets/secrets.txt && rm -f ~/secrets/secrets.txt"
 alias secret="gpg --yes --decrypt --output ~/secrets/secrets.txt ~/secrets/secrets.txt.asc && vim ~/secrets/secrets.txt"
