@@ -153,11 +153,11 @@
 
 (use-package workgroups)
 
-(use-package col-highlight
-  :config (column-highlight-mode)
-)
+;; (use-package col-highlight
+;;   :config (column-highlight-mode)
+;; )
 
-(global-hl-line-mode 1)
+;; (global-hl-line-mode 1)
 
 (use-package golden-ratio-scroll-screen)
 
@@ -236,8 +236,7 @@
 ;;   :bind (("C-p" . swiper))
 ;; )
 
-(use-package selectrum-prescient
-)
+(use-package selectrum-prescient)
 
 (use-package selectrum
 :init (selectrum-mode +1)
@@ -251,9 +250,11 @@
 ;; Enable richer annotations using the Marginalia package
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
-  :bind (("M-A" . marginalia-cycle)
-         :map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
+  :bind (
+    ("M-A" . marginalia-cycle)
+    :map minibuffer-local-map
+      ("M-A" . marginalia-cycle)
+  )
 
   ;; The :init configuration is always executed (Not lazy!)
   :init (marginalia-mode)
@@ -262,51 +263,53 @@
 ;; Example configuration for Consult
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
-  :bind (;; C-c bindings (mode-specific-map)
-         ("C-c h" . consult-history)
-         ("C-c m" . consult-mode-command)
-         ("C-c b" . consult-bookmark)
-         ("C-c k" . consult-kmacro)
-         ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ("<help> a" . consult-apropos)            ;; orig. apropos-command
-         ;; M-g bindings (goto-map)
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings (search-map)
-         ("M-s f" . consult-find)
-         ("M-s F" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
+  :bind
+  ;; :bind (;; C-c bindings (mode-specific-map)
+         ;; ("C-c h" . consult-history)
+         ;; ("C-c m" . consult-mode-command)
+         ;; ("C-c b" . consult-bookmark)
+         ;; ("C-c k" . consult-kmacro)
+         ;; ;; C-x bindings (ctl-x-map)
+         ;; ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ;; ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ;; ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ;; ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ;; ;; Custom M-# bindings for fast register access
+         ;; ("M-#" . consult-register-load)
+         ;; ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ;; ("C-M-#" . consult-register)
+         ;; ;; Other custom bindings
+         ;; ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ;; ("<help> a" . consult-apropos)            ;; orig. apropos-command
+         ;; ;; M-g bindings (goto-map)
+         ;; ("M-g e" . consult-compile-error)
+         ;; ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ;; ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ;; ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ;; ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ;; ("C-m" . consult-mark)
+         ;; ("M-g k" . consult-global-mark)
+         ;; ("M-g i" . consult-imenu)
+         ;; ("M-g I" . consult-imenu-multi)
+         ;; ;; M-s bindings (search-map)
+         ;; ("M-s f" . consult-find)
+         ;; ("M-s F" . consult-locate)
+         ;; ("M-s g" . consult-grep)
+         ;; ("M-s G" . consult-git-grep)
+         ;; ("M-s r" . consult-ripgrep)
+         ;; ("\"" . consult-yank-from-kill-ring)
          ("C-p" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s m" . consult-multi-occur)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
+         ("C-S-P" . consult-line-multi)
+         ;; ("M-s m" . consult-multi-occur)
+         ;; ("M-s k" . consult-keep-lines)
+         ;; ("M-s u" . consult-focus-lines)
          ;; Isearch integration
-         ("M-s e" . consult-isearch)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+         ;; ("M-s e" . consult-isearch)
+         ;; :map isearch-mode-map
+         ;; ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+         ;; ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+         ;; ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ;; ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   ;; This is relevant when you use the default completion UI,
@@ -430,9 +433,11 @@
     (define-key evil-normal-state-map (kbd "C-n") nil)
     (define-key evil-emacs-state-map  (kbd "C-z") nil)
     (define-key evil-normal-state-map (kbd "<SPC>") nil)
+    (define-key evil-normal-state-map (kbd "z a") 'yafolding-toggle-element)
     (define-key evil-normal-state-map (kbd "C-b") 'bookmark-jump)
-    (define-key evil-normal-state-map (kbd "C-m") 'counsel-evil-marks)
-    (define-key evil-normal-state-map (kbd "\"")  'counsel-evil-registers)
+    ;; CTRL - M is ASCII version of RET, DO NOT USE IT IN SHORTCUT
+    (define-key evil-normal-state-map (kbd "'") 'consult-mark)
+    (define-key evil-normal-state-map (kbd "\"")  'consult-yank-from-kill-ring)
     (define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
     (define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
     (define-key evil-emacs-state-map  (kbd "C-I") 'gse-number-rectangle)
@@ -447,46 +452,46 @@
       "b" 'switch-to-buffer
       "t" 'vterm
       "w" 'ace-jump-char-mode
-      "x" 'counsel-M-x
+      ;; "x" 'counsel-M-x
     )
 )
 
-(use-package evil-multiedit
-  :config
-    ;; Highlights all matches of the selection in the buffer.
-    (define-key evil-visual-state-map "R" 'evil-multiedit-match-all)
+;; (use-package evil-multiedit
+;;   :config
+;;     ;; Highlights all matches of the selection in the buffer.
+;;     (define-key evil-visual-state-map "R" 'evil-multiedit-match-all)
 
-    ;; Match the word under cursor (i.e. make it an edit region). Consecutive presses will
-    ;; incrementally add the next unmatched match.
-    (define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
-    ;; Match selected region.
-    (define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
+;;     ;; Match the word under cursor (i.e. make it an edit region). Consecutive presses will
+;;     ;; incrementally add the next unmatched match.
+;;     (define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
+;;     ;; Match selected region.
+;;     (define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
 
-    ;; Same as M-d but in reverse.
-    (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
-    (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
+;;     ;; Same as M-d but in reverse.
+;;     (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
+;;     (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
 
-    ;; OPTIONAL: If you prefer to grab symbols rather than words, use
-    ;; `evil-multiedit-match-symbol-and-next` (or prev).
+;;     ;; OPTIONAL: If you prefer to grab symbols rather than words, use
+;;     ;; `evil-multiedit-match-symbol-and-next` (or prev).
 
-    ;; Restore the last group of multiedit regions.
-    (define-key evil-visual-state-map (kbd "C-M-D") 'evil-multiedit-restore)
+;;     ;; Restore the last group of multiedit regions.
+;;     (define-key evil-visual-state-map (kbd "C-M-D") 'evil-multiedit-restore)
 
-    ;; RET will toggle the region under the cursor
-    (define-key evil-multiedit-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+;;     ;; RET will toggle the region under the cursor
+;;     (define-key evil-multiedit-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
 
-    ;; ...and in visual mode, RET will disable all fields outside the selected region
-    (define-key evil-motion-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+;;     ;; ...and in visual mode, RET will disable all fields outside the selected region
+;;     (define-key evil-motion-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
 
-    ;; For moving between edit regions
-    (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
-    (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
-    (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
-    (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
+;;     ;; For moving between edit regions
+;;     (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
+;;     (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
+;;     (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
+;;     (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
 
-    ;; Ex command that allows you to invoke evil-multiedit with a regular expression, e.g.
-    (evil-ex-define-cmd "ie[dit]" 'evil-multiedit-ex-match)
-)
+;;     ;; Ex command that allows you to invoke evil-multiedit with a regular expression, e.g.
+;;     (evil-ex-define-cmd "ie[dit]" 'evil-multiedit-ex-match)
+;; )
 
 (use-package evil-collection
   :defer 2
@@ -660,11 +665,11 @@
   :bind-keymap ("C-c p" . projectile-command-map)
 )
 
-(use-package counsel-projectile
-  :defer 2
-  :after (counsel projectile)
-  :config (counsel-projectile-mode)
-)
+;; (use-package counsel-projectile
+;;   :defer 2
+;;   :after (counsel projectile)
+;;   :config (counsel-projectile-mode)
+;; )
 
 (use-package org 
     :init (add-hook 'org-mode-hook (lambda () (setq-local display-line-numbers-type nil))) 
@@ -809,11 +814,11 @@
   :custom
     (counsel-describe-function-function #'helpful-callable)
     (counsel-describe-variable-function #'helpful-variable)
-  :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command]  . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key]      . helpful-key) 
+  ;; :bind
+    ;; ([remap describe-function] . counsel-describe-function)
+    ;; ([remap describe-command]  . helpful-command)
+    ;; ([remap describe-variable] . counsel-describe-variable)
+    ;; ([remap describe-key]      . helpful-key) 
 )
 
 (use-package no-littering
@@ -826,4 +831,10 @@
   "Align columns by pipe"
   (interactive "r")
   (align-regexp start end "\\(\\s-*\\)|" 1 1 t)
+)
+
+(defun refresh-init (start end)
+"Refresh init.el file"
+  (interactive "r")
+  (load-file "~/.config/emacs/init.el")
 )

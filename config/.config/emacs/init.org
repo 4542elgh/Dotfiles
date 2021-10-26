@@ -278,11 +278,11 @@ Auto refresh buffer when file change outside of Emacs
 
 ** Vertical / Horizontal highlight
 #+begin_src emacs-lisp
-(use-package col-highlight
-  :config (column-highlight-mode)
-)
+  ;; (use-package col-highlight
+  ;;   :config (column-highlight-mode)
+  ;; )
 
-(global-hl-line-mode 1)
+  ;; (global-hl-line-mode 1)
 #+end_src
 ** Scroll with highlight
 #+begin_src emacs-lisp
@@ -328,9 +328,9 @@ More info on Ivy panel
 *** Ivy prescient
 Persist your search result in M-x
 #+begin_src emacs-lisp
-(use-package ivy-prescient
-  :config (ivy-prescient-mode)
-)
+  ;; (use-package ivy-prescient
+  ;;   :config (ivy-prescient-mode)
+  ;; )
 #+end_src
 
 *** Ivy posframe
@@ -394,11 +394,14 @@ In buffer search with ivy panel
 #+end_src
 
 * Selectrum/Marginalia/Embark/Consult
+** Selectrum-Prescient
+Add fuzzy search to Selectrum
 #+begin_src emacs-lisp
-(use-package selectrum-prescient
-)
+(use-package selectrum-prescient)
 #+end_src
 
+** Selectrum
+Alternative to Ivy, work with native completion and minibuffer
 #+begin_src emacs-lisp
 (use-package selectrum
 :init (selectrum-mode +1)
@@ -410,137 +413,146 @@ In buffer search with ivy panel
 )
 #+end_src
 
+** Marginalia
+Add detail to minibuffer entries, like ivy-rich
 #+begin_src emacs-lisp
 ;; Enable richer annotations using the Marginalia package
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
-  :bind (("M-A" . marginalia-cycle)
-         :map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
+  :bind (
+    ("M-A" . marginalia-cycle)
+    :map minibuffer-local-map
+      ("M-A" . marginalia-cycle)
+  )
 
   ;; The :init configuration is always executed (Not lazy!)
   :init (marginalia-mode)
 )
 #+end_src
 
+** Consult
+Search buffer or buffers for string, swiper alternative
 #+begin_src emacs-lisp
-;; Example configuration for Consult
-(use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
-  :bind (;; C-c bindings (mode-specific-map)
-         ("C-c h" . consult-history)
-         ("C-c m" . consult-mode-command)
-         ("C-c b" . consult-bookmark)
-         ("C-c k" . consult-kmacro)
-         ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ("<help> a" . consult-apropos)            ;; orig. apropos-command
-         ;; M-g bindings (goto-map)
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings (search-map)
-         ("M-s f" . consult-find)
-         ("M-s F" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("C-p" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s m" . consult-multi-occur)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+  ;; Example configuration for Consult
+  (use-package consult
+    ;; Replace bindings. Lazily loaded due by `use-package'.
+    :bind
+    ;; :bind (;; C-c bindings (mode-specific-map)
+           ;; ("C-c h" . consult-history)
+           ;; ("C-c m" . consult-mode-command)
+           ;; ("C-c b" . consult-bookmark)
+           ;; ("C-c k" . consult-kmacro)
+           ;; ;; C-x bindings (ctl-x-map)
+           ;; ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ;; ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+           ;; ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ;; ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ;; ;; Custom M-# bindings for fast register access
+           ;; ("M-#" . consult-register-load)
+           ;; ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ;; ("C-M-#" . consult-register)
+           ;; ;; Other custom bindings
+           ;; ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ;; ("<help> a" . consult-apropos)            ;; orig. apropos-command
+           ;; ;; M-g bindings (goto-map)
+           ;; ("M-g e" . consult-compile-error)
+           ;; ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+           ;; ("M-g g" . consult-goto-line)             ;; orig. goto-line
+           ;; ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ;; ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ("C-m" . consult-mark)
+           ;; ("M-g k" . consult-global-mark)
+           ;; ("M-g i" . consult-imenu)
+           ;; ("M-g I" . consult-imenu-multi)
+           ;; ;; M-s bindings (search-map)
+           ;; ("M-s f" . consult-find)
+           ;; ("M-s F" . consult-locate)
+           ;; ("M-s g" . consult-grep)
+           ;; ("M-s G" . consult-git-grep)
+           ;; ("M-s r" . consult-ripgrep)
+           ;; ("\"" . consult-yank-from-kill-ring)
+           ("C-p" . consult-line)
+           ("C-S-P" . consult-line-multi)
+           ;; ("M-s m" . consult-multi-occur)
+           ;; ("M-s k" . consult-keep-lines)
+           ;; ("M-s u" . consult-focus-lines)
+           ;; Isearch integration
+           ;; ("M-s e" . consult-isearch)
+           ;; :map isearch-mode-map
+           ;; ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+           ;; ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+           ;; ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+           ;; ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
 
-  ;; Enable automatic preview at point in the *Completions* buffer.
-  ;; This is relevant when you use the default completion UI,
-  ;; and not necessary for Vertico, Selectrum, etc.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+    ;; Enable automatic preview at point in the *Completions* buffer.
+    ;; This is relevant when you use the default completion UI,
+    ;; and not necessary for Vertico, Selectrum, etc.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
 
-  ;; The :init configuration is always executed (Not lazy)
-  :init
+    ;; The :init configuration is always executed (Not lazy)
+    :init
 
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0
-        register-preview-function #'consult-register-format)
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0
+          register-preview-function #'consult-register-format)
 
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
 
-  ;; Optionally replace `completing-read-multiple' with an enhanced version.
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+    ;; Optionally replace `completing-read-multiple' with an enhanced version.
+    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
 
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
-  :config
+    ;; Configure other variables and modes in the :config section,
+    ;; after lazily loading the package.
+    :config
 
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key (kbd "M-."))
-  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-file consult--source-project-file consult--source-bookmark
-   :preview-key (kbd "M-."))
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key (kbd "M-."))
+    ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme
+     :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-file consult--source-project-file consult--source-bookmark
+     :preview-key (kbd "M-."))
 
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; (kbd "C-+")
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; (kbd "C-+")
 
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-  ;; Optionally configure a function which returns the project root directory.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (project-roots)
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project)))))
-  ;;;; 2. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-root-function #'projectile-project-root)
-  ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-root-function #'vc-root-dir)
-  ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
-)
+    ;; Optionally configure a function which returns the project root directory.
+    ;; There are multiple reasonable alternatives to chose from.
+    ;;;; 1. project.el (project-roots)
+    (setq consult-project-root-function
+          (lambda ()
+            (when-let (project (project-current))
+              (car (project-roots project)))))
+    ;;;; 2. projectile.el (projectile-project-root)
+    ;; (autoload 'projectile-project-root "projectile")
+    ;; (setq consult-project-root-function #'projectile-project-root)
+    ;;;; 3. vc.el (vc-root-dir)
+    ;; (setq consult-project-root-function #'vc-root-dir)
+    ;;;; 4. locate-dominating-file
+    ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+  )
 #+end_src
+
 * MultiMedia
 ** Spotify
 #+begin_src emacs-lisp
@@ -612,9 +624,11 @@ Vim keybind for Emacs
       (define-key evil-normal-state-map (kbd "C-n") nil)
       (define-key evil-emacs-state-map  (kbd "C-z") nil)
       (define-key evil-normal-state-map (kbd "<SPC>") nil)
+      (define-key evil-normal-state-map (kbd "z a") 'yafolding-toggle-element)
       (define-key evil-normal-state-map (kbd "C-b") 'bookmark-jump)
-      (define-key evil-normal-state-map (kbd "C-m") 'counsel-evil-marks)
-      (define-key evil-normal-state-map (kbd "\"")  'counsel-evil-registers)
+      (define-key evil-normal-state-map (kbd "C-m") 'consult-mark)
+      ;; (define-key evil-normal-state-map (kbd "C-m") 'counsel-evil-marks)
+      (define-key evil-normal-state-map (kbd "\"")  'consult-yank-from-kill-ring)
       (define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
       (define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
       (define-key evil-emacs-state-map  (kbd "C-I") 'gse-number-rectangle)
@@ -639,42 +653,42 @@ Vim keybind for Emacs
 ** Evil multi edit
 Multi cursors
 #+begin_src emacs-lisp
-(use-package evil-multiedit
-  :config
-    ;; Highlights all matches of the selection in the buffer.
-    (define-key evil-visual-state-map "R" 'evil-multiedit-match-all)
+  ;; (use-package evil-multiedit
+  ;;   :config
+  ;;     ;; Highlights all matches of the selection in the buffer.
+  ;;     (define-key evil-visual-state-map "R" 'evil-multiedit-match-all)
 
-    ;; Match the word under cursor (i.e. make it an edit region). Consecutive presses will
-    ;; incrementally add the next unmatched match.
-    (define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
-    ;; Match selected region.
-    (define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
+  ;;     ;; Match the word under cursor (i.e. make it an edit region). Consecutive presses will
+  ;;     ;; incrementally add the next unmatched match.
+  ;;     (define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
+  ;;     ;; Match selected region.
+  ;;     (define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
 
-    ;; Same as M-d but in reverse.
-    (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
-    (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
+  ;;     ;; Same as M-d but in reverse.
+  ;;     (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
+  ;;     (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-symbol-and-next)
 
-    ;; OPTIONAL: If you prefer to grab symbols rather than words, use
-    ;; `evil-multiedit-match-symbol-and-next` (or prev).
+  ;;     ;; OPTIONAL: If you prefer to grab symbols rather than words, use
+  ;;     ;; `evil-multiedit-match-symbol-and-next` (or prev).
 
-    ;; Restore the last group of multiedit regions.
-    (define-key evil-visual-state-map (kbd "C-M-D") 'evil-multiedit-restore)
+  ;;     ;; Restore the last group of multiedit regions.
+  ;;     (define-key evil-visual-state-map (kbd "C-M-D") 'evil-multiedit-restore)
 
-    ;; RET will toggle the region under the cursor
-    (define-key evil-multiedit-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+  ;;     ;; RET will toggle the region under the cursor
+  ;;     (define-key evil-multiedit-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
 
-    ;; ...and in visual mode, RET will disable all fields outside the selected region
-    (define-key evil-motion-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+  ;;     ;; ...and in visual mode, RET will disable all fields outside the selected region
+  ;;     (define-key evil-motion-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
 
-    ;; For moving between edit regions
-    (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
-    (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
-    (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
-    (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
+  ;;     ;; For moving between edit regions
+  ;;     (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
+  ;;     (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
+  ;;     (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
+  ;;     (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
 
-    ;; Ex command that allows you to invoke evil-multiedit with a regular expression, e.g.
-    (evil-ex-define-cmd "ie[dit]" 'evil-multiedit-ex-match)
-)
+  ;;     ;; Ex command that allows you to invoke evil-multiedit with a regular expression, e.g.
+  ;;     (evil-ex-define-cmd "ie[dit]" 'evil-multiedit-ex-match)
+  ;; )
 #+end_src
 
 ** Evil collection
@@ -1160,6 +1174,15 @@ Define a sane location for package generated files
   "Align columns by pipe"
   (interactive "r")
   (align-regexp start end "\\(\\s-*\\)|" 1 1 t)
+)
+#+end_src
+
+** Refresh init.el
+#+begin_src emacs-lisp
+(defun refresh-init ()
+"Refresh init.el file"
+  (interactive "r")
+  (load-file "~/.config/emacs/init.el")
 )
 #+end_src
 

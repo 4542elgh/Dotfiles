@@ -2,6 +2,7 @@
 .DS_Store
 config/.config/nvim/.netrwhist
 config/.config/karabiner/automatic_backups/
+config/.config/zsh/.zsh_plugins.sh
 __pycache__
 config/.config/coc/
 secrets.txt
