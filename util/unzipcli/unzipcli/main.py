@@ -1,3 +1,4 @@
+import sys
 import shutil
 import argparse
 import subprocess
@@ -36,7 +37,10 @@ def main():
     elif filename[1] == '7z':
         if shutil.which("7z") is None:
             try:
-                subprocess.check_call("sudo pacman -S p7zip".split())
+                if sys.platform == 'darwin':
+                    subprocess.check_call("brew install p7zip".split())
+                else:
+                    subprocess.check_call("sudo pacman -S p7zip".split())
             except subprocess.CalledProcessError as e:
                 print("Error Occured")
         command = "7z x {0}".format(path)
@@ -49,4 +53,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -1,11 +1,12 @@
 from simple_term_menu import TerminalMenu
+import sys
 import shutil
 import subprocess
 import argparse
 
 def main():
     parser = argparse.ArgumentParser(description="Zip file/dir to type")
-    # without - or --, filename will just default to first value in cli, if you need many positional args then use nargs="+"
+    # without - or -- in 'path', filename will just default to first value in cli, if you need many positional args then use nargs="+"
     parser.add_argument('path', nargs="+" ,help="filename/dir to zip")
     path = parser.parse_args().path
     filename = [filename.split("/")[-1] for filename in path]
@@ -32,9 +33,12 @@ def main():
        subprocess.check_call("tar -cJf {0}.tar.xz {1}".format(compress_file_name, " ".join(path)).split()) 
     elif options[menu_entry_index] == "7z":
         if shutil.which("7z") is None:
-            print("Installing p7zip from Pacman")
+            print("Installing p7zip")
             try:
-                subprocess.check_call("sudo pacman -S p7zip".split())
+                if sys.platform == "darwin":
+                    subprocess.check_call("brew install p7zip".split())
+                else:
+                    subprocess.check_call("sudo pacman -S p7zip".split())
             except subprocess.CalledProcessError as e:
                 print("Error Occured")
         subprocess.check_call("7z a {0}.7z {1}".format(compress_file_name, " ".join(path)).split()) 

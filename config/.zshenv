@@ -44,6 +44,8 @@ export PATH="/usr/lib/node_modules/npm:$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/Users/evanliu/Library/Python/3.10/bin:$PATH"
+export PATH="/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages:$PATH"
+export PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:$PATH"
 
 # GPG Agent
 export GPG_TTY=$(tty)
