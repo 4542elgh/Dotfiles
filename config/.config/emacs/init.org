@@ -626,7 +626,7 @@ Vim keybind for Emacs
       (define-key evil-normal-state-map (kbd "<SPC>") nil)
       (define-key evil-normal-state-map (kbd "z a") 'yafolding-toggle-element)
       (define-key evil-normal-state-map (kbd "C-b") 'bookmark-jump)
-      (define-key evil-normal-state-map (kbd "C-m") 'consult-mark)
+      (define-key evil-normal-state-map (kbd "M") 'consult-mark)
       ;; (define-key evil-normal-state-map (kbd "C-m") 'counsel-evil-marks)
       (define-key evil-normal-state-map (kbd "\"")  'consult-yank-from-kill-ring)
       (define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
