@@ -35,6 +35,7 @@ alias vimrc="vim $XDG_CONFIG_HOME/nvim/init.vim"
 # ZSH related files
 alias zshrc="vim $XDG_CONFIG_HOME/zsh/.zshrc"
 alias zalias="vim $XDG_CONFIG_HOME/zsh/.zsh_alias"
+alias zenv="vim $HOME/.zshenv"
 
 # i3WM
 alias i3config="vim $XDG_CONFIG_HOME/i3/config"

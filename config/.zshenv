@@ -49,9 +49,13 @@ export PATH="/Users/evanliu/Library/Python/3.10/bin:$PATH"
 export GPG_TTY=$(tty)
 export GPGKEY=DA212EEEE9492F1CF7AD6AB976A17195F03AAE73
 
-export NVM_DIR="$XDG_DATA_HOME/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# THIS MIGHT JUST FOR MACOSX
+# export NVM_DIR="$XDG_DATA_HOME/nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # Ignore the following directive when executing `history` command
 export HISTORY_IGNORE="(history|clear|exit|ls|cd|pwd|exit|cd ..)"

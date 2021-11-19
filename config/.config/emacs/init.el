@@ -287,7 +287,7 @@
          ;; ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ;; ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
          ;; ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ;; ("C-m" . consult-mark)
+         ("C-m" . consult-mark)
          ;; ("M-g k" . consult-global-mark)
          ;; ("M-g i" . consult-imenu)
          ;; ("M-g I" . consult-imenu-multi)
@@ -435,8 +435,8 @@
     (define-key evil-normal-state-map (kbd "<SPC>") nil)
     (define-key evil-normal-state-map (kbd "z a") 'yafolding-toggle-element)
     (define-key evil-normal-state-map (kbd "C-b") 'bookmark-jump)
-    ;; CTRL - M is ASCII version of RET, DO NOT USE IT IN SHORTCUT
-    (define-key evil-normal-state-map (kbd "'") 'consult-mark)
+    (define-key evil-normal-state-map (kbd "C-m") 'consult-mark)
+    ;; (define-key evil-normal-state-map (kbd "C-m") 'counsel-evil-marks)
     (define-key evil-normal-state-map (kbd "\"")  'consult-yank-from-kill-ring)
     (define-key evil-normal-state-map (kbd "C-d") 'golden-ratio-scroll-screen-up)
     (define-key evil-normal-state-map (kbd "C-u") 'golden-ratio-scroll-screen-down)
@@ -452,7 +452,7 @@
       "b" 'switch-to-buffer
       "t" 'vterm
       "w" 'ace-jump-char-mode
-      ;; "x" 'counsel-M-x
+      "x" 'counsel-M-x
     )
 )
 
@@ -634,6 +634,8 @@
   :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 )
 
+(use-package format-all)
+
 (use-package undo-tree
   :config (global-undo-tree-mode)
 )
@@ -665,11 +667,11 @@
   :bind-keymap ("C-c p" . projectile-command-map)
 )
 
-;; (use-package counsel-projectile
-;;   :defer 2
-;;   :after (counsel projectile)
-;;   :config (counsel-projectile-mode)
-;; )
+(use-package counsel-projectile
+  :defer 2
+  :after (counsel projectile)
+  :config (counsel-projectile-mode)
+)
 
 (use-package org 
     :init (add-hook 'org-mode-hook (lambda () (setq-local display-line-numbers-type nil))) 
@@ -814,11 +816,11 @@
   :custom
     (counsel-describe-function-function #'helpful-callable)
     (counsel-describe-variable-function #'helpful-variable)
-  ;; :bind
-    ;; ([remap describe-function] . counsel-describe-function)
-    ;; ([remap describe-command]  . helpful-command)
-    ;; ([remap describe-variable] . counsel-describe-variable)
-    ;; ([remap describe-key]      . helpful-key) 
+  :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command]  . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key]      . helpful-key) 
 )
 
 (use-package no-littering
@@ -833,7 +835,7 @@
   (align-regexp start end "\\(\\s-*\\)|" 1 1 t)
 )
 
-(defun refresh-init (start end)
+(defun refresh-init ()
 "Refresh init.el file"
   (interactive "r")
   (load-file "~/.config/emacs/init.el")

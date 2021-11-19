@@ -913,6 +913,11 @@ LSP symbol and dependencies on sidebar
 )
 #+end_src
 
+** Format All
+Format based on major mode, need formatting framework to be installed like prettier
+#+begin_src emacs-lisp
+(use-package format-all)
+#+end_src
 * Project management
 ** undo-tree
 Visualize undos
