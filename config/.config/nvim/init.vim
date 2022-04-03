@@ -8,18 +8,18 @@ set relativenumber
 " set termguicolors
 set ignorecase
 set smartcase
-set tabstop=2
-set shiftwidth=2
-set showtabline=2
+" set tabstop=2
+" set shiftwidth=2
+" set showtabline=2
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 set hidden
 set cursorcolumn
 set cursorline
 set splitright
 set splitbelow
 set updatetime=100
-set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
+set viminfo+='1000
 
-" let g:deoplete#enable_at_startup = 1
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "--------------------------------------------------------------------------------
@@ -27,6 +27,8 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 "--------------------------------------------------------------------------------
 source $VIMRUNTIME/mswin.vim
 behave mswin
+" Make Arrow key work in Windows mode
+set keymodel-=stopsel
 
 "--------------------------------------------------------------------------------
 " The mapping you dont think you need, but it change your life
@@ -115,14 +117,6 @@ nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
 "--------------------------------------------------------------------------------
-"LEARN TO BE A BETTER VIMMER
-"--------------------------------------------------------------------------------
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-
-"--------------------------------------------------------------------------------
 " Abbrev in command mode
 "--------------------------------------------------------------------------------
 cnoreabbrev ag Ack!
@@ -179,12 +173,14 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
+Plug 'pprovost/vim-ps1'
 " Plug 'tpope/vim-fugitive'
 Plug 'voldikss/vim-floaterm'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 call plug#end()
-
+let g:python3_host_prog = 'C:\Users\Evan\AppData\Local\Programs\Python\Python38\python.exe'
+let g:deoplete#enable_at_startup = 1
 "--------------------------------------------------------------------------------
 " Let coc install plugins
 "--------------------------------------------------------------------------------
