@@ -19,6 +19,7 @@ set splitright
 set splitbelow
 set updatetime=100
 set viminfo+='1000
+set guifont=DejaVu\ Sans\ Mono:h15
 
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
