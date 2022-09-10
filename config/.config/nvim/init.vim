@@ -5,12 +5,8 @@ filetype plugin indent on
 syntax on
 set nu
 set relativenumber
-" set termguicolors
 set ignorecase
 set smartcase
-" set tabstop=2
-" set shiftwidth=2
-" set showtabline=2
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 set hidden
 set cursorcolumn
@@ -44,8 +40,6 @@ nnoremap <Leader>s :%s/
 "--------------------------------------------------------------------------------
 " Faster delete
 "--------------------------------------------------------------------------------
-nnoremap cA c$
-nnoremap cI c^
 nnoremap dA d$
 nnoremap dI d^
 
@@ -79,6 +73,7 @@ let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 nmap <Leader>t :FloatermToggle<CR>
 
 tnoremap <Esc> <C-\><C-n>
+
 "--------------------------------------------------------------------------------
 " Terminal Mode have weird mapping, dont use <C-m> or <C-[>
 "--------------------------------------------------------------------------------
@@ -140,10 +135,10 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'alvan/vim-closetag'
+" Plug 'ervandew/supertab'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'doums/darcula'
 Plug 'easymotion/vim-easymotion'
-" Plug 'ervandew/supertab'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -156,17 +151,6 @@ Plug 'mkitt/tabline.vim'
 Plug 'mhinz/vim-signify'
 Plug 'moll/vim-bbye'
 Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'neoclide/coc.nvim'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'sebastianmarkow/deoplete-rust'
-Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'posva/vim-vue'
 Plug 'preservim/nerdtree'
 Plug 'pseewald/vim-anyfold'
 Plug 'rbgrouleff/bclose.vim'
@@ -174,30 +158,14 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
-Plug 'pprovost/vim-ps1'
-" Plug 'tpope/vim-fugitive'
 Plug 'voldikss/vim-floaterm'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'neovim/nvim-lspconfig'
 
 call plug#end()
-let g:python3_host_prog = 'C:\Users\Evan\AppData\Local\Programs\Python\Python38\python.exe'
-let g:deoplete#enable_at_startup = 1
-"--------------------------------------------------------------------------------
-" Let coc install plugins
-"--------------------------------------------------------------------------------
-let g:coc_global_extensions = [
-			\ 'coc-json',
-			\ 'coc-tsserver',
-			\ 'coc-html',
-			\ 'coc-css',
-			\ 'coc-yaml',
-			\ 'coc-highlight',
-			\ 'coc-snippets',
-			\ 'coc-vetur',
-			\ 'coc-lists',
-			\ 'coc-angular',
-			\ 'coc-eslint',
-			\ 'coc-prettier']
+" let g:python3_host_prog = 'C:\Users\4542e\AppData\Local\Programs\Python\Python38\python.exe'
 
 "--------------------------------------------------------------------------------
 " SuperTAB loop in order (Default is reverse order)
@@ -248,25 +216,11 @@ set foldlevelstart=99
 let g:indentLine_enabled = 1
 
 "--------------------------------------------------------------------------------
-" COC Snippets Keybind
-"--------------------------------------------------------------------------------
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? coc#_select_confirm() :
-"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-"
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
-"
-" let g:coc_snippet_next = '<tab>'
-"
-" imap <C-j> <Plug>(coc-snippets-expand)
-
-"--------------------------------------------------------------------------------
 " Change file detection
 "--------------------------------------------------------------------------------
 au BufNewFile,BufRead /*.jsx set filetype=javascript.jsx
 au BufNewFile,BufRead /*.rasi setf css
+
+:lua require'lspconfig'.pyright.setup{}
+
+" let g:UltiSnipsExpandTrigger="<RET>"
