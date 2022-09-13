@@ -15,9 +15,6 @@ set splitright
 set splitbelow
 set updatetime=100
 set viminfo+='1000
-set guifont=DejaVu\ Sans\ Mono:h15
-
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "--------------------------------------------------------------------------------
 " Windows integration
@@ -51,27 +48,11 @@ nnoremap <C-h> <C-w>h<cr>
 nnoremap <C-j> <C-w>j<cr>
 nnoremap <C-k> <C-w>k<cr>
 
-"--------------------------------------------------------------------------------
-" Easymotion shortcuts
-"--------------------------------------------------------------------------------
-map / <Plug>(easymotion-sn)
-nmap f <Plug>(easymotion-overwin-f)
-let g:EasyMotion_smartcase = 1
-
-"--------------------------------------------------------------------------------
-"This is for CtrlP
-"--------------------------------------------------------------------------------
-nnoremap ' :CtrlP<CR> 
-let g:ctrlp_map           = "'"
-let g:ctrlp_cmd           = 'CtrlP'
-let g:ctrlp_match_window  = 'results:100'
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 "--------------------------------------------------------------------------------
 " Floaterm
 "--------------------------------------------------------------------------------
 nmap <Leader>t :FloatermToggle<CR>
-
 tnoremap <Esc> <C-\><C-n>
 
 "--------------------------------------------------------------------------------
@@ -80,23 +61,6 @@ tnoremap <Esc> <C-\><C-n>
 tnoremap <silent> <C-n> <C-\><C-n>:FloatermNew<CR>
 tnoremap <silent> <C-l> <C-\><C-n>:FloatermPrev<CR>
 tnoremap <silent> <C-w> <C-\><C-n>:FloatermKill<CR>
-
-"--------------------------------------------------------------------------------
-" NerdTree
-"--------------------------------------------------------------------------------
-nmap <C-n> :NERDTreeToggle<CR>
-
-" after a re-source, fix syntax matching issues (concealing brackets):
-if exists('g:loaded_webdevicons')
-	call webdevicons#refresh()
-endif
-
-let NERDTreeShowLineNumbers = 1
-let NERDTreeShowHidden      = 1
-let g:NERDTreeIgnore = ['node_modules']
-autocmd FileType nerdtree setlocal relativenumber
-
-nmap <Leader>y "*y
 
 "--------------------------------------------------------------------------------
 " Buffer toggle
@@ -116,14 +80,16 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 " Abbrev in command mode
 "--------------------------------------------------------------------------------
 cnoreabbrev ag Ack!
-cnoreabbrev language set syntax=
-cnoreabbrev snipedit UltiSnipsEdit
+cnoreabbrev lang set syntax=
 cnoreabbrev vimrc edit ~/.config/nvim/init.vim 
 cnoreabbrev zshrc edit ~/.zshrc
 cnoreabbrev sourcethis source %
 cnoreabbrev Gdiff Gdiffsplit
+cnoreabbrev debugger Trouble
 "Vsplit current file from 3 commits ago
 cnoreabbrev Ghead Gvsplit HEAD~3:% 
+cnoreabbrev dash Startify
+cnoreabbrev table VimwikiTable 
 
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
@@ -132,40 +98,100 @@ endif
 "--------------------------------------------------------------------------------
 "This is the begining of Vim-Plug
 "--------------------------------------------------------------------------------
-call plug#begin('~/.vim/plugged')
+if has('win32')
+    call plug#begin('~/AppData/Local/nvim/.vim')
+else
+    call plug#begin('~/.config/nvim/.vim')
+endif
 
-Plug 'alvan/vim-closetag'
-" Plug 'ervandew/supertab'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'doums/darcula'
-Plug 'easymotion/vim-easymotion'
-Plug 'francoiscabrol/ranger.vim'
-Plug 'godlygeek/tabular'
-Plug 'honza/vim-snippets'
-Plug 'itchyny/lightline.vim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/vim-peekaboo'
-Plug 'mengelbrecht/lightline-bufferline'
+" Fast searcher
 Plug 'mileszs/ack.vim'
-Plug 'mkitt/tabline.vim'
-Plug 'mhinz/vim-signify'
-Plug 'moll/vim-bbye'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'preservim/nerdtree'
-Plug 'pseewald/vim-anyfold'
-Plug 'rbgrouleff/bclose.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'skywind3000/asyncrun.vim'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+
+" Status line
+Plug 'itchyny/lightline.vim'
+
+" Coding support
+Plug 'jiangmiao/auto-pairs'
+Plug 'alvan/vim-closetag'
 Plug 'tomtom/tcomment_vim'
+Plug 'mkitt/tabline.vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-surround'
+Plug 'wellle/context.vim'
+Plug 'luochen1990/rainbow',
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Make Vim default better
+Plug 'moll/vim-bbye'
+Plug 'easymotion/vim-easymotion'
+Plug 'junegunn/vim-peekaboo'
+Plug 'pseewald/vim-anyfold'
+Plug 'mihaifm/bufstop'
+
+" Git status
+Plug 'mhinz/vim-signify'
+
+" Terminal 
+Plug 'skywind3000/asyncrun.vim'
 Plug 'voldikss/vim-floaterm'
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+
+" LSP Support
 Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+
+" LSP enabled side nav
+Plug 'kyazdani42/nvim-tree.lua'
+
+" Autocompletion
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-nvim-lua'
+
+" Snippets
+Plug 'L3MON4D3/LuaSnip'
+Plug 'rafamadriz/friendly-snippets'
+
+" LSP sane default
+Plug 'VonHeikemen/lsp-zero.nvim'
+
+" LSP Debugger diagnostics
+Plug 'folke/trouble.nvim'
+
+" Icons
+Plug 'kyazdani42/nvim-web-devicons'
+
+" Dashboard
+Plug 'mhinz/vim-startify'
+
+" Note taking
+Plug 'vimwiki/vimwiki'
 
 call plug#end()
-" let g:python3_host_prog = 'C:\Users\4542e\AppData\Local\Programs\Python\Python38\python.exe'
+
+let g:python3_host_prog = 'C:\Users\4542e\AppData\Local\Programs\Python\Python38\python.exe'
+let g:vimwiki_list = [{'path': '~/AppData/Local/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+"--------------------------------------------------------------------------------
+" Easymotion shortcuts
+"--------------------------------------------------------------------------------
+map / <Plug>(easymotion-sn)
+nmap f <Plug>(easymotion-overwin-f)
+let g:EasyMotion_smartcase = 1
+
+"--------------------------------------------------------------------------------
+" CtrlP file search
+"--------------------------------------------------------------------------------
+nnoremap ' :CtrlP<CR> 
+let g:ctrlp_map           = "'"
+let g:ctrlp_cmd           = 'CtrlP'
+let g:ctrlp_match_window  = 'results:100'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 "--------------------------------------------------------------------------------
 " SuperTAB loop in order (Default is reverse order)
@@ -177,7 +203,7 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 "--------------------------------------------------------------------------------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
-"
+
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
@@ -189,8 +215,9 @@ let g:indent_guides_enable_on_vim_startup = 1
 "--------------------------------------------------------------------------------
 " Replace Netrw with ranger
 "--------------------------------------------------------------------------------
-let g:NERDTreeHijackNetrw  = 0 "add this line if you use NERDTree
-let g:ranger_replace_netrw = 1 "open ranger when vim open a directory
+if executable('ranger')
+    let g:ranger_replace_netrw = 1 "open ranger when vim open a directory
+endif
 
 "--------------------------------------------------------------------------------
 "This is for lightline tabline
@@ -221,6 +248,90 @@ let g:indentLine_enabled = 1
 au BufNewFile,BufRead /*.jsx set filetype=javascript.jsx
 au BufNewFile,BufRead /*.rasi setf css
 
-:lua require'lspconfig'.pyright.setup{}
+nmap <Leader>d :TroubleToggle<CR>
+nmap <Leader>n :NvimTreeToggle<CR>
+nmap <Leader>b :BufstopFast<CR>
+nmap <Leader>v :vs<CR>
 
-" let g:UltiSnipsExpandTrigger="<RET>"
+" let g:context_enabled = 1
+
+function Test()
+    if !argc()
+    else
+        TroubleToggle
+        NvimTreeToggle
+        wincmd w
+    endif
+endfunction
+
+autocmd VimEnter * call Test()
+
+let g:indent_guides_exclude_filetypes = ['help', 'nvimtree', 'startify']
+
+let g:asciis = [
+  \ [
+  \ '                                    @       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ',
+  \ '                                 @@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@       ',
+  \ '                               @@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@         ',
+  \ '                            @@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@            ',
+  \ '                          @@@@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@              ',
+  \ '                       @@@@@@@@@@@@@@       @@@@@@@@@@@@@@@@@@@                 ',
+  \ '                     @@@@@@@@@@@@@@@@       @@@@@@@@@@@@@@@@@                   ',
+  \ '                  @@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@@@@                      ',
+  \ '                @@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@@                        ',
+  \ '             @@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@                           ',
+  \ '           @@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@                             ',
+  \ '        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@                                ',
+  \ '      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@                                  ',
+  \ ]
+  \ ]
+
+let g:footer = [
+  \ [
+  \ 'Enjoy Neovim! You know you made the right choice when switching to NeoVim!',
+  \ ]]
+let g:startify_custom_header = 'startify#pad(g:asciis[0])'
+
+let g:startify_session_dir = '~/AppData/Local/nvim/session'
+let g:startify_session_persistence = 1
+let g:startify_session_number = 10
+let g:startify_session_sort = 1
+let g:startify_custom_footer = 'startify#pad(g:footer[0])'
+
+let g:rainbow_active = 1
+
+lua << EOF
+    require'lspconfig'.sumneko_lua.setup {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { 'vim' }
+                }
+            }
+        }
+    }
+EOF
+
+lua << EOF
+    local lsp = require('lsp-zero')
+    lsp.preset('recommended')
+    lsp.setup()
+EOF
+
+lua << EOF
+    vim.g.loaded = 1
+    vim.g.loaded_netrwPlugin = 1
+
+    require("nvim-tree").setup({
+        sort_by = "case_sensitive",
+        view = {
+            adaptive_size = true,
+            mappings = {
+                list = {{ key = "u", action = "dir_up" }},
+            },
+        },
+        renderer = { group_empty = true },
+        filters = { dotfiles = true },
+    })
+EOF
+
