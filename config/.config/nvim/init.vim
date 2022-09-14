@@ -40,6 +40,7 @@ nnoremap <Leader>s :%s/
 nnoremap dA d$
 nnoremap dI d^
 
+
 "--------------------------------------------------------------------------------
 " Switch window pane
 "--------------------------------------------------------------------------------
@@ -47,7 +48,6 @@ nnoremap <C-l> <C-w>l<cr>
 nnoremap <C-h> <C-w>h<cr>
 nnoremap <C-j> <C-w>j<cr>
 nnoremap <C-k> <C-w>k<cr>
-
 
 "--------------------------------------------------------------------------------
 " Floaterm
@@ -90,53 +90,92 @@ cnoreabbrev debugger Trouble
 cnoreabbrev Ghead Gvsplit HEAD~3:% 
 cnoreabbrev dash Startify
 cnoreabbrev table VimwikiTable 
-
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
+cnoreabbrev wiki VimwikiIndex
 
 "--------------------------------------------------------------------------------
-"This is the begining of Vim-Plug
+" This is the begining of Vim-Plug
 "--------------------------------------------------------------------------------
 if has('win32')
-    call plug#begin('~/AppData/Local/nvim/.vim')
+    " rather than ~, stdpath does not resolve path to H: drive for work pc
+    call plug#begin(stdpath('config') . '\.vim\plugged')
 else
     call plug#begin('~/.config/nvim/.vim')
 endif
 
+"--------------------------------------------------------------------------------
 " Fast searcher
-Plug 'mileszs/ack.vim'
-Plug 'francoiscabrol/ranger.vim'
-Plug 'ctrlpvim/ctrlp.vim'
+"--------------------------------------------------------------------------------
+if executable('ag')
+    Plug 'mileszs/ack.vim'
+        " set Ack to use silver searcher(faster)
+        let g:ackprg = 'ag --vimgrep'
+endif
+
+if executable('ranger')
+    " ranger in Windows is not well supported
+    Plug 'francoiscabrol/ranger.vim'
+        " open ranger when vim open a directory
+        let g:ranger_replace_netrw = 1 
+endif
+
+Plug 'ctrlpvim/ctrlp.vim' 
+    nnoremap ' :CtrlP<CR> 
+    let g:ctrlp_map               = "'"
+    if executable('ag')
+        let g:ctrlp_user_command  = 'ag %s -l --nocolor --hidden -g ""'
+    else
+        let g:ctrlp_cmd           = 'CtrlP'
+    endif
+    let g:ctrlp_match_window      = 'results:100'
+    let g:ctrlp_custom_ignore     = 'node_modules\|DS_Store\|git'
 
 " Status line
 Plug 'itchyny/lightline.vim'
 
 " Coding support
 Plug 'jiangmiao/auto-pairs'
-Plug 'alvan/vim-closetag'
-Plug 'tomtom/tcomment_vim'
-Plug 'mkitt/tabline.vim'
+Plug 'alvan/vim-closetag' , { 'for': ['html', 'xml', 'vue', 'jsx'] }
+Plug 'tomtom/tcomment_vim' 
+
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'junegunn/vim-easy-align'
-Plug 'tpope/vim-surround'
+    let g:indent_guides_enable_on_vim_startup = 1
+
+Plug 'junegunn/vim-easy-align' 
+    nmap ga <Plug>(EasyAlign)
+
+Plug 'mbbill/undotree'
+Plug 'tpope/vim-surround' 
+    if has("persistent_undo")
+        let target_path = expand(stdpath('config') . '\undodir')
+        if !isdirectory(target_path)
+            call mkdir(target_path, "p", 0700)
+        endif
+
+        let &undodir=target_path
+        set undofile
+    endif
 Plug 'wellle/context.vim'
-Plug 'luochen1990/rainbow',
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-
-" Make Vim default better
+Plug 'luochen1990/rainbow'
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" "
+" " Make Vim default better
 Plug 'moll/vim-bbye'
+
 Plug 'easymotion/vim-easymotion'
-Plug 'junegunn/vim-peekaboo'
+    map / <Plug>(easymotion-sn)
+    nmap f <Plug>(easymotion-overwin-f)
+    let g:EasyMotion_smartcase = 1
+
+Plug 'junegunn/vim-peekaboo' 
 Plug 'pseewald/vim-anyfold'
-Plug 'mihaifm/bufstop'
-
-" Git status
-Plug 'mhinz/vim-signify'
-
-" Terminal 
-Plug 'skywind3000/asyncrun.vim'
-Plug 'voldikss/vim-floaterm'
+Plug 'mihaifm/bufstop', { 'on': 'BufstopFast' } 
+"
+" " Git status
+" Plug 'mhinz/vim-signify'
+"
+" " Terminal 
+" Plug 'skywind3000/asyncrun.vim'
+Plug 'voldikss/vim-floaterm' , {'on': 'FloatermToggle'}
 
 " LSP Support
 Plug 'neovim/nvim-lspconfig'
@@ -144,7 +183,7 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 
 " LSP enabled side nav
-Plug 'kyazdani42/nvim-tree.lua'
+" Plug 'kyazdani42/nvim-tree.lua'
 
 " Autocompletion
 Plug 'hrsh7th/nvim-cmp'
@@ -171,53 +210,13 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'mhinz/vim-startify'
 
 " Note taking
-Plug 'vimwiki/vimwiki'
+" Somewhat slow during startup, load only on Vim-Wiki Index command
+Plug 'vimwiki/vimwiki' , { 'on': 'VimwikiIndex' } 
+let g:vimwiki_list = [{'path': stdpath('config') . '\vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 call plug#end()
 
-let g:python3_host_prog = 'C:\Users\4542e\AppData\Local\Programs\Python\Python38\python.exe'
-let g:vimwiki_list = [{'path': '~/AppData/Local/nvim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
-"--------------------------------------------------------------------------------
-" Easymotion shortcuts
-"--------------------------------------------------------------------------------
-map / <Plug>(easymotion-sn)
-nmap f <Plug>(easymotion-overwin-f)
-let g:EasyMotion_smartcase = 1
-
-"--------------------------------------------------------------------------------
-" CtrlP file search
-"--------------------------------------------------------------------------------
-nnoremap ' :CtrlP<CR> 
-let g:ctrlp_map           = "'"
-let g:ctrlp_cmd           = 'CtrlP'
-let g:ctrlp_match_window  = 'results:100'
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
-
-"--------------------------------------------------------------------------------
-" SuperTAB loop in order (Default is reverse order)
-"--------------------------------------------------------------------------------
-let g:SuperTabDefaultCompletionType = "<c-n>"
-
-"--------------------------------------------------------------------------------
-" Easy Align mapping
-"--------------------------------------------------------------------------------
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-
-"--------------------------------------------------------------------------------
-" Start indent Guide
-"--------------------------------------------------------------------------------
-let g:indent_guides_enable_on_vim_startup = 1
-
-"--------------------------------------------------------------------------------
-" Replace Netrw with ranger
-"--------------------------------------------------------------------------------
-if executable('ranger')
-    let g:ranger_replace_netrw = 1 "open ranger when vim open a directory
-endif
+let g:python3_host_prog = 'C:\Users\mliu\AppData\Local\Programs\Python\Python310\python.exe'
 
 "--------------------------------------------------------------------------------
 "This is for lightline tabline
@@ -253,18 +252,7 @@ nmap <Leader>n :NvimTreeToggle<CR>
 nmap <Leader>b :BufstopFast<CR>
 nmap <Leader>v :vs<CR>
 
-" let g:context_enabled = 1
-
-function Test()
-    if !argc()
-    else
-        TroubleToggle
-        NvimTreeToggle
-        wincmd w
-    endif
-endfunction
-
-autocmd VimEnter * call Test()
+let g:context_enabled = 1
 
 let g:indent_guides_exclude_filetypes = ['help', 'nvimtree', 'startify']
 
@@ -316,22 +304,5 @@ lua << EOF
     local lsp = require('lsp-zero')
     lsp.preset('recommended')
     lsp.setup()
-EOF
-
-lua << EOF
-    vim.g.loaded = 1
-    vim.g.loaded_netrwPlugin = 1
-
-    require("nvim-tree").setup({
-        sort_by = "case_sensitive",
-        view = {
-            adaptive_size = true,
-            mappings = {
-                list = {{ key = "u", action = "dir_up" }},
-            },
-        },
-        renderer = { group_empty = true },
-        filters = { dotfiles = true },
-    })
 EOF
 
