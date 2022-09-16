@@ -17,7 +17,7 @@ set updatetime=100
 set viminfo+='1000
 
 " let g:python3_host_prog = 'C:\Users\mliu\AppData\Local\Programs\Python\Python310\python.exe'
-
+  
 "--------------------------------------------------------------------------------
 " Windows integration
 "--------------------------------------------------------------------------------
@@ -32,13 +32,13 @@ endif
 " The mapping you dont think you need, but it change your life
 "--------------------------------------------------------------------------------
 nnoremap ; :
-
+  
 "--------------------------------------------------------------------------------
 " Faster delete
 "--------------------------------------------------------------------------------
 nnoremap dA d$
 nnoremap dI d^
-
+  
 "--------------------------------------------------------------------------------
 " Leader key mapping
 "--------------------------------------------------------------------------------
@@ -70,6 +70,8 @@ cnoreabbrev Ghead Gvsplit HEAD~3:%
 cnoreabbrev dash Startify
 cnoreabbrev table VimwikiTable 
 cnoreabbrev wiki VimwikiIndex
+
+cnoreabbrev nbr put =range(,)
 
 "--------------------------------------------------------------------------------
 " Change file detection
@@ -172,6 +174,10 @@ Plug 'pseewald/vim-anyfold'
     let g:indentLine_enabled = 1
 
 Plug 'mihaifm/bufstop', { 'on': 'BufstopFast' } 
+Plug 'yamatsum/nvim-cursorline'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+Plug 'panozzaj/vim-autocorrect'
+    autocmd filetype md,vim,txt call AutoCorrect()
 
 "--------------------------------------------------------------------------------
 " Git status
@@ -196,27 +202,11 @@ Plug 'voldikss/vim-floaterm' , {'on': 'FloatermToggle'}
 " LSP Support
 "--------------------------------------------------------------------------------
 Plug 'neovim/nvim-lspconfig'
-lua << EOF
-    require'lspconfig'.sumneko_lua.setup {
-        settings = {
-            Lua = {
-                diagnostics = {
-                    globals = { 'vim' }
-                }
-            }
-        }
-    }
-EOF
 
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 
 Plug 'VonHeikemen/lsp-zero.nvim'
-lua << EOF
-    local lsp = require('lsp-zero')
-    lsp.preset('recommended')
-    lsp.setup()
-EOF
 
 "--------------------------------------------------------------------------------
 " LSP Debugger diagnostics
@@ -283,3 +273,36 @@ Plug 'vimwiki/vimwiki' , { 'on': 'VimwikiIndex' }
     let g:vimwiki_list = [{'path': stdpath('config') . '\vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 call plug#end()
+
+lua << EOF
+    require'lspconfig'.sumneko_lua.setup {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { 'vim' }
+                }
+            }
+        }
+    }
+EOF
+
+lua << EOF
+    local lsp = require('lsp-zero')
+    lsp.preset('recommended')
+    lsp.setup()
+EOF
+
+lua << EOF
+    require'nvim-cursorline'.setup {
+        cursorline = {
+            enable = true,
+            timeout = 1000,
+            number = false,
+        },
+        cursorword = {
+            enable = true,
+            min_length = 3,
+            hl = { underline = true },
+        }
+    }
+EOF
