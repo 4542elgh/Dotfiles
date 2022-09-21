@@ -17,7 +17,7 @@ set updatetime=100
 set viminfo+='1000
 
 " let g:python3_host_prog = 'C:\Users\mliu\AppData\Local\Programs\Python\Python310\python.exe'
-  
+
 "--------------------------------------------------------------------------------
 " Windows integration
 "--------------------------------------------------------------------------------
@@ -32,46 +32,31 @@ endif
 " The mapping you dont think you need, but it change your life
 "--------------------------------------------------------------------------------
 nnoremap ; :
-  
+
 "--------------------------------------------------------------------------------
 " Faster delete
 "--------------------------------------------------------------------------------
 nnoremap dA d$
 nnoremap dI d^
-  
+
 "--------------------------------------------------------------------------------
 " Leader key mapping
 "--------------------------------------------------------------------------------
 nmap <Leader>s :%s/
-nmap <Leader>d :TroubleToggle<CR>
-nmap <Leader>n :NvimTreeToggle<CR>
-nmap <Leader>b :BufstopFast<CR>
-nmap <Leader>v :vs<CR>
-nmap <Leader>a :Ag<CR>
-nmap <Leader>f :FZF<CR>
-nmap <Leader>l :Lines<CR>
-nmap <Leader>u :UndotreeToggle<CR>
+nmap <Leader>c :let @/=''<CR>
 
 "--------------------------------------------------------------------------------
 " Abbrev in command mode
 "--------------------------------------------------------------------------------
-cnoreabbrev ag Ack!
 cnoreabbrev lang set syntax=
 
 " Abbrev need to expand with these special commands
 cnoreabbrev vimrc edit <C-R>=expand(stdpath('config') . '/init.vim')<CR>
 cnoreabbrev zshrc edit ~/.zshrc
 cnoreabbrev sourcethis source %
-cnoreabbrev Gdiff Gdiffsplit
-cnoreabbrev debugger Trouble
 
 "Vsplit current file from 3 commits ago
 cnoreabbrev Ghead Gvsplit HEAD~3:% 
-cnoreabbrev dash Startify
-cnoreabbrev table VimwikiTable 
-cnoreabbrev wiki VimwikiIndex
-
-cnoreabbrev nbr put =range(,)
 
 "--------------------------------------------------------------------------------
 " Change file detection
@@ -92,6 +77,7 @@ if executable('ag')
     Plug 'mileszs/ack.vim'
         " set Ack to use silver searcher(faster)
         let g:ackprg = 'ag --vimgrep'
+        cnoreabbrev ag Ack!
 endif
 
 if executable('ranger')
@@ -104,6 +90,10 @@ endif
 if executable('fzf')
     Plug 'junegunn/fzf'
     Plug 'junegunn/fzf.vim'
+        nmap <Leader>a :Ag<CR>
+        nmap <Leader>f :FZF<CR>
+        nmap <Leader>l :Lines<CR>
+        tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"
 endif
 
 "--------------------------------------------------------------------------------
@@ -128,6 +118,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'alvan/vim-closetag' , { 'for': ['html', 'xml', 'vue', 'jsx'] }
 Plug 'tomtom/tcomment_vim' 
+Plug 'preservim/tagbar'
 
 Plug 'nathanaelkane/vim-indent-guides'
     let g:indent_guides_enable_on_vim_startup = 1
@@ -137,6 +128,8 @@ Plug 'junegunn/vim-easy-align'
     nmap ga <Plug>(EasyAlign)
 
 Plug 'mbbill/undotree'
+    nmap <Leader>u :UndotreeToggle<CR>
+
 Plug 'tpope/vim-surround' 
     if has("persistent_undo")
         let target_path = expand(stdpath('config') . '\undodir')
@@ -174,10 +167,9 @@ Plug 'pseewald/vim-anyfold'
     let g:indentLine_enabled = 1
 
 Plug 'mihaifm/bufstop', { 'on': 'BufstopFast' } 
-Plug 'yamatsum/nvim-cursorline'
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-Plug 'panozzaj/vim-autocorrect'
-    autocmd filetype md,vim,txt call AutoCorrect()
+    nmap <Leader>b :BufstopFast<CR>
+
+Plug 'petertriho/nvim-scrollbar'
 
 "--------------------------------------------------------------------------------
 " Git status
@@ -202,16 +194,18 @@ Plug 'voldikss/vim-floaterm' , {'on': 'FloatermToggle'}
 " LSP Support
 "--------------------------------------------------------------------------------
 Plug 'neovim/nvim-lspconfig'
+    cnoreabbrev refactor lua vim.lsp.buf.rename()<CR>
 
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
-
 Plug 'VonHeikemen/lsp-zero.nvim'
 
 "--------------------------------------------------------------------------------
 " LSP Debugger diagnostics
 "--------------------------------------------------------------------------------
 Plug 'folke/trouble.nvim'
+    nmap <Leader>d :TroubleToggle<CR>
+    cnoreabbrev debugger Trouble
 
 "--------------------------------------------------------------------------------
 " Autocompletion
@@ -265,14 +259,28 @@ Plug 'mhinz/vim-startify'
     let g:startify_session_sort = 1
     let g:startify_custom_footer = 'startify#pad(g:footer[0])'
 
+    cnoreabbrev dash Startify
+
 "--------------------------------------------------------------------------------
 " Note taking
 "--------------------------------------------------------------------------------
 " Somewhat slow during startup, load only on Vim-Wiki Index command
 Plug 'vimwiki/vimwiki' , { 'on': 'VimwikiIndex' } 
     let g:vimwiki_list = [{'path': stdpath('config') . '\vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+    cnoreabbrev table VimwikiTable 
+    cnoreabbrev wiki VimwikiIndex
 
 call plug#end()
+
+lua << EOF
+    local lsp = require('lsp-zero')
+    lsp.preset('recommended')
+    lsp.setup()
+
+    -- !!! If you use Mason to install typescript-language-server 
+    -- !!! You will also need to use npm to install typescript-language-server
+    -- !!! npm install typescript-language-server
+EOF
 
 lua << EOF
     require'lspconfig'.sumneko_lua.setup {
@@ -287,22 +295,29 @@ lua << EOF
 EOF
 
 lua << EOF
-    local lsp = require('lsp-zero')
-    lsp.preset('recommended')
-    lsp.setup()
+    require("scrollbar").setup({
+        handle = {
+            text = "   ",
+        },
+        marks = {
+            Search = { text = { "--", "==" } },
+            Error = { text = { "--", "==" } },
+            Warn = { text = { "--", "==" } },
+            Info = { text = { "--", "==" } },
+            Hint = { text = { "--", "==" } },
+            Misc = { text = { "--", "==" } },
+        }
+    })
 EOF
 
 lua << EOF
-    require'nvim-cursorline'.setup {
-        cursorline = {
-            enable = true,
-            timeout = 1000,
-            number = false,
-        },
-        cursorword = {
-            enable = true,
-            min_length = 3,
-            hl = { underline = true },
-        }
-    }
+    snipLocation = ""
+    if(vim.loop.os_uname().sysname == "Windows_NT")
+    then
+        snipLocation = os.getenv("LOCALAPPDATA") .. "\\nvim\\snippets"
+    else
+        snipLocation = "~/.config/nvim/snippets"
+    end 
+    require("luasnip.loaders.from_vscode").load({ paths = snipLocation }) 
+    require("luasnip").filetype_extend("vimwiki", {"markdown"})
 EOF
