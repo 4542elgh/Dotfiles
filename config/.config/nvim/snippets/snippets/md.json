@@ -1,0 +1,9 @@
+{
+  "meetIndex": {
+    "prefix": "meetIndex",
+    "body": [
+      "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE} - Meeting - ${1} - $0"
+    ],
+    "description": "Vimscript executing Lua script"
+  }
+}
