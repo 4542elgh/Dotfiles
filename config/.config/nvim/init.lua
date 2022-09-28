@@ -1,4 +1,24 @@
 --==========================================================
+--     ____  ____  ____  _____________________  ___    ____ 
+--    / __ )/ __ \/ __ \/_  __/ ___/_  __/ __ \/   |  / __ \
+--   / __  / / / / / / / / /  \__ \ / / / /_/ / /| | / /_/ /
+--  / /_/ / /_/ / /_/ / / /  ___/ // / / _, _/ ___ |/ ____/ 
+-- /_____/\____/\____/ /_/  /____//_/ /_/ |_/_/  |_/_/      
+--==========================================================
+local ensure_packer = function()
+    local fn = vim.fn
+    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
+end
+
+local packer_bootstrap = ensure_packer()
+
+--==========================================================
 --     ____  _______________   __  ____  ___________
 --    / __ \/ ____/ ____/   | / / / / / /_  __/ ___/
 --   / / / / __/ / /_  / /| |/ / / / /   / /  \__ \ 
@@ -90,6 +110,12 @@ vim.opt.splitbelow = true
 
 vim.opt.updatetime = 100
 
+----------------------------------------------------------------------------------
+-- Disable Netrw
+----------------------------------------------------------------------------------
+vim.g.loaded = 1
+vim.g.loaded_netrwPlugin = 1
+
 --==========================================================
 --     ________  ___   ______________________  _   _______
 --    / ____/ / / / | / / ____/_  __/  _/ __ \/ | / / ___/
@@ -151,7 +177,6 @@ end
 --==========================================================
 autocmd({"BufNewFile", "BufRead"}, {"*.jsx"}, "set filetype=javascriptreact")
 autocmd({"BufNewFile", "BufRead"}, {"*.rasi"}, "setf css")
-autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
 
 --==========================================================
 --     ___    ____  ____  ____  _______    __
@@ -384,6 +409,32 @@ return require('packer').startup(function(use)
         end
     }
 
+    use {
+        'kyazdani42/nvim-tree.lua',
+        config = function ()
+            nmap('<Leader>n', ":NvimTreeToggle<CR>")
+            require("nvim-tree").setup({
+                sort_by = "case_sensitive",
+                view = {
+                    adaptive_size = true,
+                    mappings = {
+                        list = {
+                            { key = "u", action = "dir_up" },
+                            { key = "c", action = "collapse_all" },
+                            { key = "e", action = "expand_all" },
+                        },
+                    },
+                },
+                renderer = {
+                    group_empty = true,
+                },
+                filters = {
+                    dotfiles = true,
+                },
+            })
+        end
+    }
+
     ----------------------------------------------------------------------------------
     -- LSP Support
     ----------------------------------------------------------------------------------
@@ -469,7 +520,7 @@ return require('packer').startup(function(use)
     use 'xiyaowong/nvim-cursorword'
 
     ----------------------------------------------------------------------------------
-    -- LSP Debugger diagnostics
+    -- LSP diagnostics / error console
     ----------------------------------------------------------------------------------
     use {
         'folke/trouble.nvim',
@@ -542,4 +593,11 @@ return require('packer').startup(function(use)
             abbrev('dash', 'Startify')
         end
     }
+
+    if packer_bootstrap then
+        require('packer').sync()
+    else
+        -- This was causing conflict with Packer bootstrap
+        autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
+    end
 end)
