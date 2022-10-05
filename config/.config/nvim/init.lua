@@ -108,7 +108,7 @@ vim.wo.cursorcolumn = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
-vim.opt.updatetime = 100
+vim.opt.updatetime = 50
 
 ----------------------------------------------------------------------------------
 -- Disable Netrw
@@ -190,7 +190,7 @@ if vim.g.os ~= "Windows_NT" then
 end
 abbrev('ag', 'Ack!')
 abbrev('Ghead', 'Gvsplit HEAD~3:%')
-abbrev('vimrc', [[edit <C-R>=expand(stdpath('config') . '/init.vim')<CR>]])
+abbrev('vimrc', [[edit <C-R>=expand(stdpath('config') . '/init.lua')<CR>]])
 
 -- Make current buffer's path to working path, so FZF can work correctly
 abbrev('cdthis', [[cd <C-R>=expand("%:p:h")<CR>]])
@@ -219,6 +219,10 @@ nmap(';', ':')
 ----------------------------------------------------------------------------------
 nmap('dA', 'd$')
 nmap('dI', 'd^')
+
+nmap('<C-d>', '<C-d>zz')
+nmap('<C-u>', '<C-u>zz')
+
 nmap('<', '<<')
 nmap('>', '>>')
 
@@ -305,6 +309,14 @@ return require('packer').startup(function(use)
     use 'tomtom/tcomment_vim'
     use 'preservim/tagbar'
     use 'tpope/vim-surround'
+    use 'xiyaowong/nvim-cursorword'
+
+    use {
+      'lewis6991/gitsigns.nvim',
+      config = function()
+        require('gitsigns').setup()
+      end
+    }
 
     use {
         'pseewald/vim-anyfold',
@@ -318,17 +330,17 @@ return require('packer').startup(function(use)
         'petertriho/nvim-scrollbar',
         config = function()
             require("scrollbar").setup({
-                handle = {
-                    text = "   ",
-                },
-                marks = {
-                    Search = { text = { "--", "==" } },
-                    Error = { text = { "--", "==" } },
-                    Warn = { text = { "--", "==" } },
-                    Info = { text = { "--", "==" } },
-                    Hint = { text = { "--", "==" } },
-                    Misc = { text = { "--", "==" } },
-                }
+                -- handle = {
+                --     text = "   ",
+                -- },
+                -- marks = {
+                --     Search = { text = { "--", "==" } },
+                --     Error = { text = { "--", "==" } },
+                --     Warn = { text = { "--", "==" } },
+                --     Info = { text = { "--", "==" } },
+                --     Hint = { text = { "--", "==" } },
+                --     Misc = { text = { "--", "==" } },
+                -- }
             })
         end
     }
@@ -444,9 +456,9 @@ return require('packer').startup(function(use)
     use 'williamboman/mason-lspconfig.nvim'
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-path'
-    use 'saadparwaiz1/cmp_luasnip'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
+    use 'saadparwaiz1/cmp_luasnip'
     use 'arkav/lualine-lsp-progress'
     use 'kyazdani42/nvim-web-devicons'
 
@@ -492,32 +504,28 @@ return require('packer').startup(function(use)
     use {
         'glepnir/lspsaga.nvim',
         config = function()
-            local keymap = vim.keymap.set
             local saga = require('lspsaga')
+            saga.init_lsp_saga({
+                symbol_in_winbar = {
+                    enable = false,
+                },
+            })
 
-            saga.init_lsp_saga()
-
+            local keymap = vim.keymap.set
             -- The REAL Peak Definition
             keymap("n", "gp", "<cmd>Lspsaga lsp_finder<CR>", { silent = true })
-
             -- Code action
             keymap({"n","v"}, "ga", "<cmd>Lspsaga code_action<CR>", { silent = true })
-
             -- Rename
             keymap("n", "gr", "<cmd>Lspsaga rename<CR>", { silent = true })
-
             -- Peak Definition even though it suppose to go to definition
             keymap("n", "gd", "<cmd>Lspsaga peek_definition<CR>", { silent = true })
-
             -- Hover Doc
             keymap("n", "gh", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
-
             -- Show line diagnostics
             keymap("n", "<leader>o", "<cmd>LSoutlineToggle<CR>", { silent = true })
         end
     }
-
-    use 'xiyaowong/nvim-cursorword'
 
     ----------------------------------------------------------------------------------
     -- LSP diagnostics / error console
