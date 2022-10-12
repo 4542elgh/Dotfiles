@@ -48,7 +48,7 @@ vim.g.os = vim.loop.os_uname().sysname
 -- Color sccheme
 ----------------------------------------------------------------------------------
 vim.cmd("colorscheme darcula")
-
+vim.cmd("set termguicolors")
 ----------------------------------------------------------------------------------
 -- Scroll down when there is 10 spaces left either to the top or bottom
 ----------------------------------------------------------------------------------
@@ -198,9 +198,11 @@ abbrev('lang', 'set syntax=')
 abbrev('gen', ':lua gen()')
 
 -- If you need to copy content with notepad, or just use "+y and copy it to system clipboard
-abbrev('open', '!notepad.exe %')
+abbrev('open', 'silent !notepad.exe %')
+abbrev('exp', 'silent !explorer.exe <C-R>=expand("%:p:h")<CR>')
 
-abbrev('sourcethis', 'source %')
+-- learn to use 'so'
+-- abbrev('sourcethis', 'source %')
 
 --==========================================================
 --     __  ______    ____  ____  _____   _____________
@@ -310,6 +312,28 @@ return require('packer').startup(function(use)
     use 'preservim/tagbar'
     use 'tpope/vim-surround'
     use 'xiyaowong/nvim-cursorword'
+    
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    })
+
+    use {
+        'norcalli/nvim-colorizer.lua',
+        config = function()
+            require('colorizer').setup()
+        end
+    }
+
+    use {
+        's1n7ax/nvim-terminal',
+        config = function()
+            vim.o.hidden = true
+            require('nvim-terminal').setup({
+                toggle_keymap = '<leader>t',
+            })
+        end,
+    }
 
     use {
       'lewis6991/gitsigns.nvim',
