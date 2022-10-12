@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\nvim-qt\nvim-qt]
+"ext_tabline"="false"
+"ext_linegrid"="true"
+
+[HKEY_CURRENT_USER\SOFTWARE\nvim-qt\nvim-qt\Gui]
+"Font"="DejaVuSansMono Nerd Font:h15"
+
