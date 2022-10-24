@@ -32,7 +32,7 @@ vim.cmd("source $VIMRUNTIME/mswin.vim")
 vim.cmd("behave mswin")
 
 -- Make Arrow key work in Windows mode
-vim.cmd("set keymodel-=stopsel")
+vim.opt.keymodel:remove({'stopsel'})
 
 ----------------------------------------------------------------------------------
 -- Mapping leader key
@@ -47,17 +47,22 @@ vim.g.os = vim.loop.os_uname().sysname
 ----------------------------------------------------------------------------------
 -- Color sccheme
 ----------------------------------------------------------------------------------
-vim.cmd("colorscheme darcula")
-vim.cmd("set termguicolors")
+vim.opt.termguicolors = true
+
+----------------------------------------------------------------------------------
+-- Eighty column print
+----------------------------------------------------------------------------------
+vim.opt.colorcolumn = '80'
+
 ----------------------------------------------------------------------------------
 -- Scroll down when there is 10 spaces left either to the top or bottom
 ----------------------------------------------------------------------------------
-vim.cmd('set scrolloff=10')
+vim.opt.scrolloff = 10
 
 ----------------------------------------------------------------------------------
 -- Disable prompt for cmdline, we have cmp-cmdline for autocompletion
 ----------------------------------------------------------------------------------
-vim.cmd('set nowildmenu')
+vim.opt.wildmenu = false
 
 ----------------------------------------------------------------------------------
 -- line number and relative number
@@ -108,13 +113,44 @@ vim.wo.cursorcolumn = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+----------------------------------------------------------------------------------
+-- Update
+----------------------------------------------------------------------------------
 vim.opt.updatetime = 50
 
 ----------------------------------------------------------------------------------
--- Disable Netrw
+-- Disable build in plugins
 ----------------------------------------------------------------------------------
-vim.g.loaded = 1
-vim.g.loaded_netrwPlugin = 1
+local disabled_built_ins = {
+    "netrw",
+    "netrwPlugin",
+    "netrwSettings",
+    "netrwFileHandlers",
+    "gzip",
+    "zip",
+    "zipPlugin",
+    "tar",
+    "tarPlugin",
+    "getscript",
+    "getscriptPlugin",
+    "vimball",
+    "vimballPlugin",
+    "2html_plugin",
+    "logipat",
+    "rrhelper",
+    "spellfile_plugin",
+    "matchit"
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+    vim.g["loaded_" .. plugin] = 1
+end
+
+----------------------------------------------------------------------------------
+-- Set Lazyredraw
+-- When running macros and regexes on a large file, lazy redraw tells neovim/vim not to draw the screen, which greatly speeds it up, upto 6-7x faster 
+----------------------------------------------------------------------------------
+vim.opt.lazyredraw = true
 
 --==========================================================
 --     ________  ___   ______________________  _   _______
@@ -177,6 +213,7 @@ end
 --==========================================================
 autocmd({"BufNewFile", "BufRead"}, {"*.jsx"}, "set filetype=javascriptreact")
 autocmd({"BufNewFile", "BufRead"}, {"*.rasi"}, "setf css")
+autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
 
 --==========================================================
 --     ___    ____  ____  ____  _______    __
@@ -188,9 +225,9 @@ autocmd({"BufNewFile", "BufRead"}, {"*.rasi"}, "setf css")
 if vim.g.os ~= "Windows_NT" then
     abbrev('zshrc', 'edit ~/.zshrc')
 end
-abbrev('ag', 'Ack!')
 abbrev('Ghead', 'Gvsplit HEAD~3:%')
 abbrev('vimrc', [[edit <C-R>=expand(stdpath('config') . '/init.lua')<CR>]])
+abbrev('snippet', [[NvimTreeOpen <C-R>=expand(stdpath('config') . '/snippets')<CR>]])
 
 -- Make current buffer's path to working path, so FZF can work correctly
 abbrev('cdthis', [[cd <C-R>=expand("%:p:h")<CR>]])
@@ -200,9 +237,6 @@ abbrev('gen', ':lua gen()')
 -- If you need to copy content with notepad, or just use "+y and copy it to system clipboard
 abbrev('open', 'silent !notepad.exe %')
 abbrev('exp', 'silent !explorer.exe <C-R>=expand("%:p:h")<CR>')
-
--- learn to use 'so'
--- abbrev('sourcethis', 'source %')
 
 --==========================================================
 --     __  ______    ____  ____  _____   _____________
@@ -222,11 +256,11 @@ nmap(';', ':')
 nmap('dA', 'd$')
 nmap('dI', 'd^')
 
-nmap('<C-d>', '<C-d>zz')
-nmap('<C-u>', '<C-u>zz')
-
 nmap('<', '<<')
 nmap('>', '>>')
+
+nmap('<C-d>', '<C-d>zz')
+nmap('<C-u>', '<C-u>zz')
 
 ----------------------------------------------------------------------------------
 -- Buffer wide substitute
@@ -259,6 +293,29 @@ return require('packer').startup(function(use)
         end
     }
 
+    use{
+        '4542elgh/darcula.nvim',
+        requires = {{'tjdevries/colorbuddy.nvim'}},
+        config = function()
+            require("darcula")
+        end
+    }
+
+    ----------------------------------------------------------------------------------
+    -- NEED FOR SPEED
+    ----------------------------------------------------------------------------------
+    use {
+        'lewis6991/impatient.nvim',
+        config = function ()
+            require('impatient')
+        end
+    }
+
+    ----------------------------------------------------------------------------------
+    -- Profiling
+    ----------------------------------------------------------------------------------
+    -- use 'dstein64/vim-startuptime'
+
     ----------------------------------------------------------------------------------
     -- Status line
     ----------------------------------------------------------------------------------
@@ -281,17 +338,9 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     -- Fast Searcher
     ----------------------------------------------------------------------------------
-    use 'vim-scripts/Buffer-grep'
-
-    if executable('ag') then
-        use 'mileszs/ack.vim'
-        -- set Ack to use silver searcher(faster)
-        vim.g.ackprg = "ag --vimgrep"
-    end
-
     if executable('fzf') then
-        use 'junegunn/fzf'
         use {
+            requires = {{ 'junegunn/fzf' }},
             'junegunn/fzf.vim',
             config = function()
                 nmap('<Leader>a', ':Ag<CR>')
@@ -308,11 +357,15 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use 'farmergreg/vim-lastplace'
     use 'jiangmiao/auto-pairs'
-    use 'tomtom/tcomment_vim'
+    use {
+        'tomtom/tcomment_vim',
+        keys = {'gc', 'gcc'}
+    }
     use 'preservim/tagbar'
     use 'tpope/vim-surround'
-    use 'xiyaowong/nvim-cursorword'
-    
+
+    use {'xiyaowong/nvim-cursorword'}
+
     use({
         "iamcco/markdown-preview.nvim",
         run = function() vim.fn["mkdp#util#install"]() end,
@@ -336,16 +389,16 @@ return require('packer').startup(function(use)
     }
 
     use {
-      'lewis6991/gitsigns.nvim',
-      config = function()
-        require('gitsigns').setup()
-      end
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require('gitsigns').setup()
+        end
     }
 
     use {
         'pseewald/vim-anyfold',
         config = function()
-            vim.cmd('set foldlevelstart=99')
+            vim.opt.foldlevelstart=99
             vim.g.indentLine_enabled = 1
         end
     }
@@ -355,15 +408,15 @@ return require('packer').startup(function(use)
         config = function()
             require("scrollbar").setup({
                 -- handle = {
-                --     text = "   ",
+                --     text = "  ",
                 -- },
                 -- marks = {
-                --     Search = { text = { "--", "==" } },
-                --     Error = { text = { "--", "==" } },
-                --     Warn = { text = { "--", "==" } },
-                --     Info = { text = { "--", "==" } },
-                --     Hint = { text = { "--", "==" } },
-                --     Misc = { text = { "--", "==" } },
+                --     Search = { text = { "-", "=" } },
+                --     Error = { text = { "-", "=" } },
+                --     Warn = { text = { "-", "=" } },
+                --     Info = { text = { "-", "=" } },
+                --     Hint = { text = { "-", "=" } },
+                --     Misc = { text = { "-", "=" } },
                 -- }
             })
         end
@@ -390,7 +443,7 @@ return require('packer').startup(function(use)
         'nathanaelkane/vim-indent-guides',
         config = function()
             vim.g.indent_guides_enable_on_vim_startup = 1
-            vim.cmd("let g:indent_guides_exclude_filetypes = ['help', 'nvimtree', 'startify']")
+            vim.g.indent_guides_exclude_filetypes = {'help', 'nvimtree', 'startify'}
         end
     }
 
@@ -409,39 +462,6 @@ return require('packer').startup(function(use)
                 endif
                 ]]
             )
-        end
-    }
-
-    ----------------------------------------------------------------------------------
-    -- Make Vim default better
-    ----------------------------------------------------------------------------------
-    use 'moll/vim-bbye'
-    use 'junegunn/vim-peekaboo'
-
-    use {
-        'mihaifm/bufstop',
-        config = function()
-            nmap('<Leader>b', ':BufstopFast<CR>')
-        end
-    }
-
-    use {
-        'ggandor/lightspeed.nvim',
-        config = function()
-            vim.g.lightspeed_no_default_keymaps = true
-            vim.cmd("nmap f <Plug>Lightspeed_omni_s")
-        end
-    }
-
-    use {
-        'hrsh7th/cmp-cmdline',
-        config = function()
-            local cmp = require('cmp')
-            cmp.setup.cmdline(':', {
-                sources = {
-                    { name = 'cmdline' }
-                }
-            })
         end
     }
 
@@ -472,6 +492,40 @@ return require('packer').startup(function(use)
     }
 
     ----------------------------------------------------------------------------------
+    -- Make Vim default better
+    ----------------------------------------------------------------------------------
+    use 'moll/vim-bbye'
+    use 'junegunn/vim-peekaboo'
+
+    use {
+        'mihaifm/bufstop',
+        config = function()
+            nmap('<Leader>b', ':BufstopFast<CR>')
+        end
+    }
+
+    use {
+        'ggandor/lightspeed.nvim',
+        keys = "f",
+        config = function()
+            vim.g.lightspeed_no_default_keymaps = true
+            nmap("f", "<Plug>Lightspeed_omni_s")
+        end
+    }
+
+    use {
+        'hrsh7th/cmp-cmdline',
+        config = function()
+            local cmp = require('cmp')
+            cmp.setup.cmdline(':', {
+                sources = {
+                    { name = 'cmdline' }
+                }
+            })
+        end
+    }
+
+    ----------------------------------------------------------------------------------
     -- LSP Support
     ----------------------------------------------------------------------------------
     -- KEEP THE ORDER THIS WAY for LSP to work correctly
@@ -480,9 +534,9 @@ return require('packer').startup(function(use)
     use 'williamboman/mason-lspconfig.nvim'
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-path'
+    use 'saadparwaiz1/cmp_luasnip'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
-    use 'saadparwaiz1/cmp_luasnip'
     use 'arkav/lualine-lsp-progress'
     use 'kyazdani42/nvim-web-devicons'
 
@@ -496,13 +550,12 @@ return require('packer').startup(function(use)
             -- !!! If you use Mason to install typescript-language-server 
             -- !!! You will also need to use npm to install typescript-language-server
             -- !!! npm install typescript-language-server
-
             require'lspconfig'.sumneko_lua.setup {
                 settings = {
                     Lua = {
                         diagnostics = {
                             globals = { 'vim' },
-                        }
+                        },
                     }
                 }
             }
@@ -552,13 +605,12 @@ return require('packer').startup(function(use)
     }
 
     ----------------------------------------------------------------------------------
-    -- LSP diagnostics / error console
+    -- LSP Debugger diagnostics
     ----------------------------------------------------------------------------------
     use {
         'folke/trouble.nvim',
-        config = function()
+        config = function ()
             nmap('<Leader>d', ':TroubleToggle<CR>')
-            abbrev('debugger', 'Trouble')
         end
     }
 
@@ -605,7 +657,6 @@ return require('packer').startup(function(use)
         'vimwiki/vimwiki',
         config = function()
             vim.cmd("let g:vimwiki_list = [{'path': stdpath('config') . '\\vimwiki', 'syntax': 'markdown', 'ext': '.md'}]")
-            abbrev('table', 'VimwikiTable')
             abbrev('wiki', 'VimwikiIndex')
         end
     }
