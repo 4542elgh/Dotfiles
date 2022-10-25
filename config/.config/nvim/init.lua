@@ -313,7 +313,7 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     -- Profiling
     ----------------------------------------------------------------------------------
-    -- use 'dstein64/vim-startuptime'
+    use 'dstein64/vim-startuptime'
 
     ----------------------------------------------------------------------------------
     -- Status line
@@ -339,12 +339,16 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     if executable('fzf') then
         use {
-            requires = {{ 'junegunn/fzf' }},
             'junegunn/fzf.vim',
+            requires = {{ 'junegunn/fzf' }},
+            keys = {
+                '<Leader>a',
+                '<Leader>f',
+                '<Leader>r',
+            },
             config = function()
                 nmap('<Leader>a', ':Ag<CR>')
                 nmap('<Leader>f', ':FZF<CR>')
-                nmap('<Leader>l', ':Lines<CR>')
                 nmap('<Leader>r', ':History<CR>')
                 vim.cmd([[tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"]])
             end
@@ -356,30 +360,35 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use 'farmergreg/vim-lastplace'
     use 'jiangmiao/auto-pairs'
+    use 'tpope/vim-surround'
+
     use {
         'tomtom/tcomment_vim',
         keys = {'gc', 'gcc'}
     }
-    use 'preservim/tagbar'
-    use 'tpope/vim-surround'
-    use 'xiyaowong/nvim-cursorword'
+    use {
+        'xiyaowong/nvim-cursorword',
+        event = "VimEnter",
+    }
 
-    use({
+    use {
         "iamcco/markdown-preview.nvim",
-        run = function() vim.fn["mkdp#util#install"]() end,
-    })
+        run = "cd app && npm install",
+        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+        ft = { "markdown" },
+    }
 
     use {
         'norcalli/nvim-colorizer.lua',
+        event = "VimEnter",
         config = function()
             require('colorizer').setup()
-        end
+        end,
     }
 
     use {
         's1n7ax/nvim-terminal',
         config = function()
-            vim.o.hidden = true
             require('nvim-terminal').setup({
                 window = {
                     height = 7,
@@ -391,6 +400,7 @@ return require('packer').startup(function(use)
 
     use {
         'lewis6991/gitsigns.nvim',
+        event = "VimEnter",
         config = function()
             require('gitsigns').setup()
         end
@@ -406,6 +416,7 @@ return require('packer').startup(function(use)
 
     use {
         'petertriho/nvim-scrollbar',
+        event = "VimEnter",
         config = function()
             require("scrollbar").setup({
                 -- handle = {
@@ -450,6 +461,7 @@ return require('packer').startup(function(use)
 
     use {
         'mbbill/undotree',
+        event = "VimEnter",
         config = function()
             nmap('<Leader>u', ':UndotreeToggle<CR>')
             vim.cmd([[
@@ -468,6 +480,7 @@ return require('packer').startup(function(use)
 
     use {
         'kyazdani42/nvim-tree.lua',
+        event = "VimEnter",
         config = function ()
             nmap('<Leader>n', ":NvimTreeToggle<CR>")
             require("nvim-tree").setup({
@@ -500,6 +513,7 @@ return require('packer').startup(function(use)
 
     use {
         'mihaifm/bufstop',
+        keys = "<Leader>b",
         config = function()
             nmap('<Leader>b', ':BufstopFast<CR>')
         end
@@ -612,6 +626,7 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use {
         'folke/trouble.nvim',
+        keys = '<Leader>d',
         config = function()
             nmap('<Leader>d', ':TroubleToggle<CR>')
         end
@@ -683,7 +698,7 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     -- Discord Presence
     ----------------------------------------------------------------------------------
-    use 'andweeb/presence.nvim'
+    -- use 'andweeb/presence.nvim'
 
     if packer_bootstrap then
         require('packer').sync()
