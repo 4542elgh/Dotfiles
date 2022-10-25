@@ -181,10 +181,6 @@ function autocmd(mode, ext, cmd)
     })
 end
 
-function get_setup(name)
-  return string.format('require("setup/%s")', name)
-end
-
 --===================================================
 --     ____  __________  _____ ____  _   _____    __ 
 --    / __ \/ ____/ __ \/ ___// __ \/ | / /   |  / / 
@@ -255,6 +251,9 @@ nmap(';', ':')
 ----------------------------------------------------------------------------------
 nmap('dA', 'd$')
 nmap('dI', 'd^')
+
+nmap('n', 'nzz')
+nmap('N', 'Nzz')
 
 nmap('<', '<<')
 nmap('>', '>>')
@@ -363,8 +362,7 @@ return require('packer').startup(function(use)
     }
     use 'preservim/tagbar'
     use 'tpope/vim-surround'
-
-    use {'xiyaowong/nvim-cursorword'}
+    use 'xiyaowong/nvim-cursorword'
 
     use({
         "iamcco/markdown-preview.nvim",
@@ -383,6 +381,9 @@ return require('packer').startup(function(use)
         config = function()
             vim.o.hidden = true
             require('nvim-terminal').setup({
+                window = {
+                    height = 7,
+                },
                 toggle_keymap = '<leader>t',
             })
         end,
@@ -398,7 +399,7 @@ return require('packer').startup(function(use)
     use {
         'pseewald/vim-anyfold',
         config = function()
-            vim.opt.foldlevelstart=99
+            vim.cmd('set foldlevelstart=99')
             vim.g.indentLine_enabled = 1
         end
     }
@@ -408,15 +409,15 @@ return require('packer').startup(function(use)
         config = function()
             require("scrollbar").setup({
                 -- handle = {
-                --     text = "  ",
+                --     text = "   ",
                 -- },
                 -- marks = {
-                --     Search = { text = { "-", "=" } },
-                --     Error = { text = { "-", "=" } },
-                --     Warn = { text = { "-", "=" } },
-                --     Info = { text = { "-", "=" } },
-                --     Hint = { text = { "-", "=" } },
-                --     Misc = { text = { "-", "=" } },
+                --     Search = { text = { "--", "==" } },
+                --     Error = { text = { "--", "==" } },
+                --     Warn = { text = { "--", "==" } },
+                --     Info = { text = { "--", "==" } },
+                --     Hint = { text = { "--", "==" } },
+                --     Misc = { text = { "--", "==" } },
                 -- }
             })
         end
@@ -470,14 +471,15 @@ return require('packer').startup(function(use)
         config = function ()
             nmap('<Leader>n', ":NvimTreeToggle<CR>")
             require("nvim-tree").setup({
+                respect_buf_cwd = true,
                 sort_by = "case_sensitive",
                 view = {
                     adaptive_size = true,
                     mappings = {
                         list = {
-                            { key = "u", action = "dir_up" },
-                            { key = "c", action = "collapse_all" },
-                            { key = "e", action = "expand_all" },
+                            { key = "<left>", action = "dir_up" },
+                            { key = "<right>", action = "cd" },
+                            { key = "c", action = "create" },
                         },
                     },
                 },
@@ -490,7 +492,6 @@ return require('packer').startup(function(use)
             })
         end
     }
-
     ----------------------------------------------------------------------------------
     -- Make Vim default better
     ----------------------------------------------------------------------------------
@@ -508,6 +509,9 @@ return require('packer').startup(function(use)
         'ggandor/lightspeed.nvim',
         keys = "f",
         config = function()
+            require('lightspeed').setup {
+                ignore_case = true,
+            }
             vim.g.lightspeed_no_default_keymaps = true
             nmap("f", "<Plug>Lightspeed_omni_s")
         end
@@ -534,9 +538,9 @@ return require('packer').startup(function(use)
     use 'williamboman/mason-lspconfig.nvim'
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-path'
-    use 'saadparwaiz1/cmp_luasnip'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-nvim-lua'
+    use 'saadparwaiz1/cmp_luasnip'
     use 'arkav/lualine-lsp-progress'
     use 'kyazdani42/nvim-web-devicons'
 
@@ -587,7 +591,6 @@ return require('packer').startup(function(use)
                     enable = false,
                 },
             })
-
             local keymap = vim.keymap.set
             -- The REAL Peak Definition
             keymap("n", "gp", "<cmd>Lspsaga lsp_finder<CR>", { silent = true })
@@ -605,11 +608,11 @@ return require('packer').startup(function(use)
     }
 
     ----------------------------------------------------------------------------------
-    -- LSP Debugger diagnostics
+    -- LSP diagnostics / error console
     ----------------------------------------------------------------------------------
     use {
         'folke/trouble.nvim',
-        config = function ()
+        config = function()
             nmap('<Leader>d', ':TroubleToggle<CR>')
         end
     }
@@ -676,6 +679,11 @@ return require('packer').startup(function(use)
             abbrev('dash', 'Startify')
         end
     }
+
+    ----------------------------------------------------------------------------------
+    -- Discord Presence
+    ----------------------------------------------------------------------------------
+    use 'andweeb/presence.nvim'
 
     if packer_bootstrap then
         require('packer').sync()
