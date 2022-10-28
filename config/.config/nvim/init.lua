@@ -48,6 +48,7 @@ vim.g.os = vim.loop.os_uname().sysname
 -- Color sccheme
 ----------------------------------------------------------------------------------
 vim.opt.termguicolors = true
+vim.opt.syntax = "on"
 
 ----------------------------------------------------------------------------------
 -- Eighty column print
@@ -166,6 +167,10 @@ function nmap(left,right)
     vim.keymap.set('n', left, right)
 end
 
+function vmap(left,right)
+    vim.keymap.set('v', left, right)
+end
+
 function abbrev(short, expand)
     vim.cmd('cnoreabbrev ' .. short .. ' ' .. expand)
 end
@@ -233,6 +238,8 @@ abbrev('gen', ':lua gen()')
 -- If you need to copy content with notepad, or just use "+y and copy it to system clipboard
 abbrev('open', 'silent !notepad.exe %')
 abbrev('exp', 'silent !explorer.exe <C-R>=expand("%:p:h")<CR>')
+abbrev('appdata', 'silent !explorer.exe ' .. vim.fn.stdpath('config'))
+abbrev('color', 'e ' .. vim.fn.stdpath('data') .. '/site/pack/packer/start/darcula.nvim/lua/darcula.lua')
 
 --==========================================================
 --     __  ______    ____  ____  _____   _____________
@@ -264,7 +271,19 @@ nmap('<C-u>', '<C-u>zz')
 ----------------------------------------------------------------------------------
 -- Buffer wide substitute
 ----------------------------------------------------------------------------------
-nmap('<Leader>s', ':%s/')
+nmap("<Leader>s", ':%s/<C-R>"//g')
+nmap("<Leader>S", ':%s///g')
+
+----------------------------------------------------------------------------------
+-- Yank into system clipboard
+----------------------------------------------------------------------------------
+vmap('<Leader>y', '"+y')
+
+----------------------------------------------------------------------------------
+-- Delete into the void
+----------------------------------------------------------------------------------
+vmap('<Leader>d', '"_d')
+nmap('<Leader>d', '"_d')
 
 ----------------------------------------------------------------------------------
 -- Clear last search highlight
@@ -292,6 +311,9 @@ return require('packer').startup(function(use)
         end
     }
 
+    ----------------------------------------------------------------------------------
+    -- Darcula for life
+    ----------------------------------------------------------------------------------
     use{
         '4542elgh/darcula.nvim',
         requires = {{'tjdevries/colorbuddy.nvim'}},
@@ -328,7 +350,12 @@ return require('packer').startup(function(use)
                 sections = {
                     lualine_c = {
                         'lsp_progress'
-                    }
+                    },
+                    lualine_x = {
+                        'encoding',
+                        'filetype',
+                        'filename',
+                    },
                 }
             }
         end
@@ -340,16 +367,20 @@ return require('packer').startup(function(use)
     if executable('fzf') then
         use {
             'junegunn/fzf.vim',
-            requires = {{ 'junegunn/fzf' }},
+            requires = {
+                {
+                    'junegunn/fzf',
+                }
+            },
             keys = {
                 '<Leader>a',
                 '<Leader>f',
-                '<Leader>r',
+                '<Leader>h',
             },
             config = function()
                 nmap('<Leader>a', ':Ag<CR>')
                 nmap('<Leader>f', ':FZF<CR>')
-                nmap('<Leader>r', ':History<CR>')
+                nmap('<Leader>h', ':History<CR>')
                 vim.cmd([[tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"]])
             end
         }
@@ -358,14 +389,30 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     -- Coding support
     ----------------------------------------------------------------------------------
-    use 'farmergreg/vim-lastplace'
-    use 'jiangmiao/auto-pairs'
-    use 'tpope/vim-surround'
+    -- use 'junegunn/vim-easy-align'
 
     use {
-        'tomtom/tcomment_vim',
-        keys = {'gc', 'gcc'}
+        "windwp/nvim-autopairs",
+        config = function()
+            require("nvim-autopairs").setup {}
+        end
     }
+
+    use({
+        "kylechui/nvim-surround",
+        config = function()
+            require("nvim-surround").setup{}
+        end
+    })
+
+    use {
+        'terrortylor/nvim-comment',
+        keys = {'gc', 'gcc'},
+        config = function()
+            require('nvim_comment').setup()
+        end
+    }
+
     use {
         'xiyaowong/nvim-cursorword',
         event = "VimEnter",
@@ -374,8 +421,15 @@ return require('packer').startup(function(use)
     use {
         "iamcco/markdown-preview.nvim",
         run = "cd app && npm install",
-        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
-        ft = { "markdown" },
+        setup = function()
+            vim.g.mkdp_filetypes = {
+                "markdown"
+            }
+        end,
+        ft = {
+            "markdown"
+        },
+        cmd = 'MarkdownPreview'
     }
 
     use {
@@ -434,8 +488,6 @@ return require('packer').startup(function(use)
         end
     }
 
-    use 'junegunn/vim-easy-align'
-
     use {
         'luochen1990/rainbow',
         config = function()
@@ -480,7 +532,7 @@ return require('packer').startup(function(use)
 
     use {
         'kyazdani42/nvim-tree.lua',
-        event = "VimEnter",
+        keys = "<Leader>n",
         config = function ()
             nmap('<Leader>n', ":NvimTreeToggle<CR>")
             require("nvim-tree").setup({
@@ -505,11 +557,23 @@ return require('packer').startup(function(use)
             })
         end
     }
+
     ----------------------------------------------------------------------------------
     -- Make Vim default better
     ----------------------------------------------------------------------------------
-    use 'moll/vim-bbye'
-    use 'junegunn/vim-peekaboo'
+    use {
+        'famiu/bufdelete.nvim',
+        config = function()
+            abbrev("bd", "Bdelete")
+        end
+    }
+
+    use {
+        'ethanholz/nvim-lastplace',
+        config = function()
+            require'nvim-lastplace'.setup{}
+        end
+    }
 
     use {
         'mihaifm/bufstop',
@@ -531,18 +595,6 @@ return require('packer').startup(function(use)
         end
     }
 
-    use {
-        'hrsh7th/cmp-cmdline',
-        config = function()
-            local cmp = require('cmp')
-            cmp.setup.cmdline(':', {
-                sources = {
-                    { name = 'cmdline' }
-                }
-            })
-        end
-    }
-
     ----------------------------------------------------------------------------------
     -- LSP Support
     ----------------------------------------------------------------------------------
@@ -559,12 +611,23 @@ return require('packer').startup(function(use)
     use 'kyazdani42/nvim-web-devicons'
 
     use {
+        'hrsh7th/cmp-cmdline',
+        config = function()
+            local cmp = require('cmp')
+            cmp.setup.cmdline(':', {
+                sources = {
+                    { name = 'cmdline' }
+                }
+            })
+        end
+    }
+
+    use {
         'VonHeikemen/lsp-zero.nvim',
         config = function()
             local lsp = require('lsp-zero')
             lsp.preset('recommended')
             lsp.setup()
-
             -- !!! If you use Mason to install typescript-language-server 
             -- !!! You will also need to use npm to install typescript-language-server
             -- !!! npm install typescript-language-server
@@ -626,9 +689,9 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use {
         'folke/trouble.nvim',
-        keys = '<Leader>d',
+        keys = '<Leader>e',
         config = function()
-            nmap('<Leader>d', ':TroubleToggle<CR>')
+            nmap('<Leader>e', ':TroubleToggle document_diagnostics<CR>')
         end
     }
 
@@ -652,6 +715,8 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     -- Snippets
     ----------------------------------------------------------------------------------
+    use 'rafamadriz/friendly-snippets'
+
     use {
         'L3MON4D3/LuaSnip',
         config = function()
@@ -665,8 +730,6 @@ return require('packer').startup(function(use)
             require("luasnip").filetype_extend("vimwiki", {"markdown"})
         end
     }
-
-    use 'rafamadriz/friendly-snippets'
 
     ----------------------------------------------------------------------------------
     -- Note taking
@@ -704,6 +767,6 @@ return require('packer').startup(function(use)
         require('packer').sync()
     else
         -- This was causing conflict with Packer bootstrap
-        autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
+        -- autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
     end
 end)
