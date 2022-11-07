@@ -672,7 +672,7 @@ return require('packer').startup(function(use)
             -- The REAL Peak Definition
             keymap("n", "gp", "<cmd>Lspsaga lsp_finder<CR>", { silent = true })
             -- Code action
-            keymap({"n","v"}, "ga", "<cmd>Lspsaga code_action<CR>", { silent = true })
+            keymap("n", "ga", "<cmd>Lspsaga code_action<CR>", { silent = true })
             -- Rename
             keymap("n", "gr", "<cmd>Lspsaga rename<CR>", { silent = true })
             -- Peak Definition even though it suppose to go to definition
@@ -680,7 +680,7 @@ return require('packer').startup(function(use)
             -- Hover Doc
             keymap("n", "gh", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
             -- Show line diagnostics
-            keymap("n", "<leader>o", "<cmd>LSoutlineToggle<CR>", { silent = true })
+            keymap("n", "go", "<cmd>LSoutlineToggle<CR>", { silent = true })
         end
     }
 
