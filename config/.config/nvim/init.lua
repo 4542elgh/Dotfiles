@@ -1,3 +1,6 @@
+-- Functions take a while to initialize, putting at very top
+require("util")
+
 --==========================================================
 --     ____  ____  ____  _____________________  ___    ____ 
 --    / __ )/ __ \/ __ \/_  __/ ___/_  __/ __ \/   |  / __ \
@@ -5,18 +8,7 @@
 --  / /_/ / /_/ / /_/ / / /  ___/ // / / _, _/ ___ |/ ____/ 
 -- /_____/\____/\____/ /_/  /____//_/ /_/ |_/_/  |_/_/      
 --==========================================================
-local ensure_packer = function()
-    local fn = vim.fn
-    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-    if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-        vim.cmd [[packadd packer.nvim]]
-        return true
-    end
-    return false
-end
-
-local packer_bootstrap = ensure_packer()
+local packer_bootstrap = packer_bootstrap()
 
 --==========================================================
 --     ____  _______________   __  ____  ___________
@@ -42,8 +34,12 @@ vim.g.mapleader = " "
 ----------------------------------------------------------------------------------
 -- Global variable
 ----------------------------------------------------------------------------------
-vim.g.os = vim.loop.os_uname().sysname
+vim.g.separator = "/"
+if vim.g.is_windows then vim.g.separator = "\\" end
 
+vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
+vim.g.hostname = hostname()
+vim.g.is_workpc = substr(vim.g.hostname,1,3) == "M16"
 ----------------------------------------------------------------------------------
 -- Color sccheme
 ----------------------------------------------------------------------------------
@@ -154,58 +150,6 @@ end
 vim.opt.lazyredraw = true
 
 --==========================================================
---     ________  ___   ______________________  _   _______
---    / ____/ / / / | / / ____/_  __/  _/ __ \/ | / / ___/
---   / /_  / / / /  |/ / /     / /  / // / / /  |/ /\__ \ 
---  / __/ / /_/ / /|  / /___  / / _/ // /_/ / /|  /___/ / 
--- /_/    \____/_/ |_/\____/ /_/ /___/\____/_/ |_//____/  
---==========================================================
-----------------------------------------------------------------------------------
--- Just some helper functions making setup less repetitive
-----------------------------------------------------------------------------------
-function nmap(left,right)
-    vim.keymap.set('n', left, right)
-end
-
-function vmap(left,right)
-    vim.keymap.set('v', left, right)
-end
-
-function abbrev(short, expand)
-    vim.cmd('cnoreabbrev ' .. short .. ' ' .. expand)
-end
-
-function executable(name)
-    return vim.fn.executable(name) == 1
-end
-
-function autocmd(mode, ext, cmd)
-    vim.api.nvim_create_autocmd(mode,{
-        pattern = ext,
-        command = cmd
-    })
-end
-
---===================================================
---     ____  __________  _____ ____  _   _____    __ 
---    / __ \/ ____/ __ \/ ___// __ \/ | / /   |  / / 
---   / /_/ / __/ / /_/ /\__ \/ / / /  |/ / /| | / /  
---  / ____/ /___/ _, _/___/ / /_/ / /|  / ___ |/ /___
--- /_/   /_____/_/ |_|/____/\____/_/ |_/_/  |_/_____/
---===================================================
-----------------------------------------------------------------------------------
--- Generate a sequence of numbers based on interactive input
-----------------------------------------------------------------------------------
-function gen()
-    local beginRange = vim.fn.input("Begin Range: ")
-    local endRange = vim.fn.input("End Range: ")
-    local prefix = vim.fn.input("Prefix: ")
-    local suffix = vim.fn.input("Suffix: ")
-
-    vim.cmd("silent for i in range(" .. beginRange .. "," .. endRange .. ") | put ='" .. prefix .. "'.i.'" .. suffix .. "' | endfor | -" .. (endRange - beginRange) )
-end
-
---==========================================================
 --     ___   __  ____________  __    ____  ___    ____ 
 --    /   | / / / /_  __/ __ \/ /   / __ \/   |  / __ \
 --   / /| |/ / / / / / / / / / /   / / / / /| | / / / /
@@ -214,7 +158,8 @@ end
 --==========================================================
 autocmd({"BufNewFile", "BufRead"}, {"*.jsx"}, "set filetype=javascriptreact")
 autocmd({"BufNewFile", "BufRead"}, {"*.rasi"}, "setf css")
-autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
+autocmd({"TextYankPost"}, {"*"}, "lua vim.highlight.on_yank({higroup = 'IncSearch', timeout = 300})")
+-- autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
 
 --==========================================================
 --     ___    ____  ____  ____  _______    __
@@ -223,23 +168,30 @@ autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
 --  / ___ |/ /_/ / /_/ / _, _/ /___  | |/ /  
 -- /_/  |_/_____/_____/_/ |_/_____/  |___/   
 --==========================================================
-if vim.g.os ~= "Windows_NT" then
+if not vim.g.is_windows then
     abbrev('zshrc', 'edit ~/.zshrc')
 end
+
 abbrev('Ghead', 'Gvsplit HEAD~3:%')
-abbrev('vimrc', [[edit <C-R>=expand(stdpath('config') . '/init.lua')<CR>]])
-abbrev('snippet', [[NvimTreeOpen <C-R>=expand(stdpath('config') . '/snippets')<CR>]])
+
+-- Vim shortcut edits
+abbrev('vimrc', "edit " .. vim.fn.stdpath('config') .. vim.g.separator .. "init.lua")
+abbrev('snippet', "NvimTreeOpen " .. vim.fn.stdpath('config') .. vim.g.separator .. "snippets")
+abbrev('color', 'edit ' .. vim.fn.stdpath('data') .. concatPath({"site", "pack", "packer", "start", "darcula.nvim", "lua", "darcula.lua"}, vim.g.separator, true, false))
 
 -- Make current buffer's path to working path, so FZF can work correctly
-abbrev('cdthis', [[cd <C-R>=expand("%:p:h")<CR>]])
+abbrev('cdthis', "cd %:p:h")
 abbrev('lang', 'set syntax=')
-abbrev('gen', ':lua gen()')
 
 -- If you need to copy content with notepad, or just use "+y and copy it to system clipboard
 abbrev('open', 'silent !notepad.exe %')
-abbrev('exp', 'silent !explorer.exe <C-R>=expand("%:p:h")<CR>')
+abbrev('exp', 'silent !explorer.exe %:p:h')
 abbrev('appdata', 'silent !explorer.exe ' .. vim.fn.stdpath('config'))
-abbrev('color', 'e ' .. vim.fn.stdpath('data') .. '/site/pack/packer/start/darcula.nvim/lua/darcula.lua')
+
+-- Invoke personal functions
+abbrev('gen', 'lua gen()')
+abbrev('reverse', 'lua reverse()')
+abbrev('ssh', 'lua ssh()')
 
 --==========================================================
 --     __  ______    ____  ____  _____   _____________
@@ -275,20 +227,14 @@ nmap("<Leader>s", ':%s/<C-R>"//g')
 nmap("<Leader>S", ':%s///g')
 
 ----------------------------------------------------------------------------------
--- Yank into system clipboard
+-- Put register text into Ex mode
 ----------------------------------------------------------------------------------
-vmap('<Leader>y', '"+y')
-
-----------------------------------------------------------------------------------
--- Delete into the void
-----------------------------------------------------------------------------------
-vmap('<Leader>d', '"_d')
-nmap('<Leader>d', '"_d')
+nmap("<Leader>y", ':<C-R>"')
 
 ----------------------------------------------------------------------------------
 -- Clear last search highlight
 ----------------------------------------------------------------------------------
-nmap('<Leader>c', ':let @/=\'\'<CR>')
+nmap('<Leader>c', ":let @/=''<CR>")
 
 --==========================================================
 --     ____  ___   ________ __ __________ 
@@ -362,29 +308,28 @@ return require('packer').startup(function(use)
     }
 
     ----------------------------------------------------------------------------------
-    -- Fast Searcher
+    -- Fast Searcher, for 
     ----------------------------------------------------------------------------------
-    if executable('fzf') then
-        use {
-            'junegunn/fzf.vim',
-            requires = {
-                {
-                    'junegunn/fzf',
-                }
-            },
-            keys = {
-                '<Leader>a',
-                '<Leader>f',
-                '<Leader>h',
-            },
-            config = function()
-                nmap('<Leader>a', ':Ag<CR>')
-                nmap('<Leader>f', ':FZF<CR>')
-                nmap('<Leader>h', ':History<CR>')
-                vim.cmd([[tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"]])
-            end
-        }
-    end
+    use {
+        'junegunn/fzf.vim',
+        requires = {
+            {
+                'junegunn/fzf',
+            }
+        },
+        keys = {
+            '<Leader>a',
+            '<Leader>f',
+            '<Leader>h',
+        },
+        config = function()
+            nmap('<Leader>a', ':Ag<CR>')
+            nmap('<Leader>f', ':FZF<CR>')
+            nmap('<Leader>h', ':History<CR>')
+            vim.cmd([[tnoremap <expr> <Esc> (&filetype == "fzf") ? "<Esc>" : "<c-\><c-n>"]])
+        end,
+        cond = executable("fzf") and vim.g.is_workpc
+    }
 
     ----------------------------------------------------------------------------------
     -- Coding support
@@ -394,7 +339,7 @@ return require('packer').startup(function(use)
     use {
         "windwp/nvim-autopairs",
         config = function()
-            require("nvim-autopairs").setup {}
+            require("nvim-autopairs").setup{}
         end
     }
 
@@ -409,7 +354,7 @@ return require('packer').startup(function(use)
         'terrortylor/nvim-comment',
         keys = {'gc', 'gcc'},
         config = function()
-            require('nvim_comment').setup()
+            require('nvim_comment').setup{}
         end
     }
 
@@ -436,7 +381,7 @@ return require('packer').startup(function(use)
         'norcalli/nvim-colorizer.lua',
         event = "VimEnter",
         config = function()
-            require('colorizer').setup()
+            require('colorizer').setup{}
         end,
     }
 
@@ -456,7 +401,7 @@ return require('packer').startup(function(use)
         'lewis6991/gitsigns.nvim',
         event = "VimEnter",
         config = function()
-            require('gitsigns').setup()
+            require('gitsigns').setup{}
         end
     }
 
@@ -492,7 +437,8 @@ return require('packer').startup(function(use)
         'luochen1990/rainbow',
         config = function()
             vim.g.rainbow_active = 1
-        end
+        end,
+        cond = vim.g.is_workpc
     }
 
     use {
@@ -500,7 +446,8 @@ return require('packer').startup(function(use)
         config = function()
             vim.g.closetag_filenames = '*.html,*.xhtml,*.vue,*.jsx'
             vim.g.closetag_emptyTags_caseSensitive = 1
-        end
+        end,
+        cond = vim.g.is_workpc
     }
 
     use {
@@ -517,16 +464,15 @@ return require('packer').startup(function(use)
         config = function()
             nmap('<Leader>u', ':UndotreeToggle<CR>')
             vim.cmd([[
-                if has("persistent_undo")
-                    let target_path = expand(stdpath('config') . '\undodir')
-                    if !isdirectory(target_path)
-                        call mkdir(target_path, "p", 0700)
-                    endif
-                    let &undodir=target_path
-                    set undofile
+            if has("persistent_undo")
+                let target_path = expand(stdpath('config') . '\undodir')
+                if !isdirectory(target_path)
+                    call mkdir(target_path, "p", 0700)
                 endif
-                ]]
-            )
+                let &undodir=target_path
+                set undofile
+            endif
+            ]])
         end
     }
 
@@ -542,9 +488,18 @@ return require('packer').startup(function(use)
                     adaptive_size = true,
                     mappings = {
                         list = {
-                            { key = "<left>", action = "dir_up" },
-                            { key = "<right>", action = "cd" },
-                            { key = "c", action = "create" },
+                            {
+                                key = "<left>",
+                                action = "dir_up",
+                            },
+                            {
+                                key = "<right>",
+                                action = "cd",
+                            },
+                            {
+                                key = "c",
+                                action = "create",
+                            },
                         },
                     },
                 },
@@ -580,7 +535,8 @@ return require('packer').startup(function(use)
         keys = "<Leader>b",
         config = function()
             nmap('<Leader>b', ':BufstopFast<CR>')
-        end
+        end,
+        cond = vim.g.is_workpc
     }
 
     use {
@@ -594,6 +550,8 @@ return require('packer').startup(function(use)
             nmap("f", "<Plug>Lightspeed_omni_s")
         end
     }
+
+    use 'junegunn/vim-peekaboo'
 
     ----------------------------------------------------------------------------------
     -- LSP Support
@@ -616,7 +574,9 @@ return require('packer').startup(function(use)
             local cmp = require('cmp')
             cmp.setup.cmdline(':', {
                 sources = {
-                    { name = 'cmdline' }
+                    {
+                        name = 'cmdline'
+                    }
                 }
             })
         end
@@ -635,7 +595,9 @@ return require('packer').startup(function(use)
                 settings = {
                     Lua = {
                         diagnostics = {
-                            globals = { 'vim' },
+                            globals = {
+                                'vim',
+                            },
                         },
                     }
                 }
@@ -689,9 +651,9 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use {
         'folke/trouble.nvim',
-        keys = '<Leader>e',
+        keys = '<Leader>d',
         config = function()
-            nmap('<Leader>e', ':TroubleToggle document_diagnostics<CR>')
+            nmap('<Leader>d', ':TroubleToggle document_diagnostics<CR>')
         end
     }
 
@@ -721,8 +683,8 @@ return require('packer').startup(function(use)
         'L3MON4D3/LuaSnip',
         config = function()
             local snipLocation = ""
-            if(vim.loop.os_uname().sysname == "Windows_NT") then
-                snipLocation = os.getenv("LOCALAPPDATA") .. "\\nvim\\snippets"
+            if vim.g.is_windows then
+                snipLocation = os.getenv("LOCALAPPDATA") .. vim.g.separator .. "nvim" .. vim.g.separator .. "snippets"
             else
                 snipLocation = "~/.config/nvim/snippets"
             end
@@ -755,7 +717,8 @@ return require('packer').startup(function(use)
             vim.g.startify_session_sort = 1
             vim.cmd("let g:startify_custom_footer = 'startify#pad(g:footer[0])'")
             abbrev('dash', 'Startify')
-        end
+        end,
+        cond = vim.g.is_workpc
     }
 
     ----------------------------------------------------------------------------------
