@@ -160,11 +160,6 @@ return require('packer').startup(function(use)
 
     use {
         'pseewald/vim-anyfold',
-        config = function()
-            vim.cmd('set foldlevelstart=99')
-            vim.g.indentLine_enabled = 1
-            autocmd({"Filetype"}, {"*"}, "AnyFoldActivate")
-        end,
         cond = vim.g.is_workpc
     }
 
@@ -268,9 +263,18 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     -- Require ZIG
     ----------------------------------------------------------------------------------
-    use "nvim-treesitter/nvim-treesitter-context"
-    use "windwp/nvim-ts-autotag"
-    use "p00f/nvim-ts-rainbow"
+    use {
+        "nvim-treesitter/nvim-treesitter-context",
+        cond = not vim.g.is_workpc
+    }
+    use {
+        "windwp/nvim-ts-autotag",
+        cond = not vim.g.is_workpc
+    }
+    use {
+        "p00f/nvim-ts-rainbow",
+        cond = not vim.g.is_workpc
+    }
 
     use {
         "nvim-treesitter/nvim-treesitter",
@@ -313,7 +317,8 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use {
         "nvim-telescope/telescope-fzf-native.nvim",
-        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
+        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        cond = not vim.g.is_workpc
     }
 
     -- use {
@@ -340,7 +345,8 @@ return require('packer').startup(function(use)
                     },
                 },
             })
-        end
+        end,
+        cond = not vim.g.is_workpc
     }
 
     use {
@@ -638,7 +644,7 @@ return require('packer').startup(function(use)
                 },
             }
         end,
-        cond = not vim.g.workpc
+        cond = not vim.g.is_workpc
     }
 
     ----------------------------------------------------------------------------------
