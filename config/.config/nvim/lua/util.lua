@@ -78,6 +78,8 @@ function hostname()
         for host in hostnameAddr:gmatch("[^\r\n]+") do
             return host
         end
+    else
+        return vim.fn.system("hostname")
     end
 end
 
