@@ -19,7 +19,10 @@ abbrev('color', 'edit ' .. vim.fn.stdpath('data') .. concatPath({"site", "pack",
 
 -- Make current buffer's path to working path, so FZF can work correctly
 abbrev('cdthis', [[cd <C-R>=expand("%:p:h")<CR>]])
-abbrev('lang', 'set syntax=')
+
+if vim.g.is_workpc then
+    abbrev('lang', 'set syntax=')
+end
 
 -- If you need to copy content with notepad, or just use "+y and copy it to system clipboard
 abbrev('open', 'silent !notepad.exe %')
@@ -31,3 +34,8 @@ abbrev('gen', ':lua gen()')
 abbrev('reverse', 'lua reverse()')
 abbrev('ssh', 'lua ssh()')
 
+if not vim.g.is_workpc then
+    abbrev('smb', ':Telescope smb_unc')
+else
+    abbrev('smb', ':lua networkPath()')
+end

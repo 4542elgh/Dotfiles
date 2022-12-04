@@ -28,6 +28,10 @@ end
 ----------------------------------------------------------------------------------
 -- Just some helper functions making setup less repetitive
 ----------------------------------------------------------------------------------
+function imap(left,right)
+    vim.keymap.set('i', left, right)
+end
+
 function nmap(left,right)
     vim.keymap.set('n', left, right)
 end
@@ -78,8 +82,6 @@ function hostname()
         for host in hostnameAddr:gmatch("[^\r\n]+") do
             return host
         end
-    else
-        return vim.fn.system("hostname")
     end
 end
 
@@ -109,7 +111,7 @@ function concatPath(arr, concatChar, prefixChar, suffixChar)
     local result = ""
     if prefixChar then result = result .. concatChar end
     for count, item in ipairs(arr) do
-        if(count ~= table.getn(arr)) then
+        if(count ~= #arr) then
             result = result .. item .. concatChar
         else
             result = result .. item

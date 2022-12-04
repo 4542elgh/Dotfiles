@@ -54,9 +54,13 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use "dstein64/vim-startuptime"
 
-    ----------------------------------------------------------------------------------
-    -- Status line
-    ----------------------------------------------------------------------------------
+    --================================================================================
+    --    ______________  ________  _______    __    _____   ________
+    --   / ___/_  __/   |/_  __/ / / / ___/   / /   /  _/ | / / ____/
+    --   \__ \ / / / /| | / / / / / /\__ \   / /    / //  |/ / __/   
+    --  ___/ // / / ___ |/ / / /_/ /___/ /  / /____/ // /|  / /___   
+    -- /____//_/ /_/  |_/_/  \____//____/  /_____/___/_/ |_/_____/   
+    --================================================================================
     use {
         "nvim-lualine/lualine.nvim",
         config = function()
@@ -212,6 +216,7 @@ return require('packer').startup(function(use)
         event = "VimEnter",
         config = function()
             nmap("<Leader>u", ":UndotreeToggle<CR>")
+            vim.api.undolevel = 500
             vim.cmd([[
                 if has("persistent_undo")
                     let target_path = expand(stdpath("config") . "\undodir")
@@ -261,16 +266,18 @@ return require('packer').startup(function(use)
     -- /_/ /_/ |_/_____/_____//____/___/ /_/   /_/ /_____/_/ |_|  
     --================================================================================
     ----------------------------------------------------------------------------------
-    -- Require ZIG
+    -- require zig
     ----------------------------------------------------------------------------------
     use {
         "nvim-treesitter/nvim-treesitter-context",
         cond = not vim.g.is_workpc
     }
+
     use {
         "windwp/nvim-ts-autotag",
         cond = not vim.g.is_workpc
     }
+
     use {
         "p00f/nvim-ts-rainbow",
         cond = not vim.g.is_workpc
@@ -282,7 +289,6 @@ return require('packer').startup(function(use)
         config = function()
             vim.o.foldmethod = "expr"
             vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "lua", "rust" },
                 -- Async install
@@ -310,7 +316,6 @@ return require('packer').startup(function(use)
     --   / / / __/ / /   / __/  \__ \/ /   / / / / /_/ / __/   
     --  / / / /___/ /___/ /___ ___/ / /___/ /_/ / ____/ /___   
     -- /_/ /_____/_____/_____//____/\____/\____/_/   /_____/   
-    --                                                        
     --================================================================================
     ----------------------------------------------------------------------------------
     -- Require cmake
@@ -325,6 +330,8 @@ return require('packer').startup(function(use)
     --     "nvim-telescope/telescope-frecency.nvim",
     --     requires = {"kkharji/sqlite.lua"}
     -- }
+
+    use "4542elgh/telescope-smb-unc.nvim"
 
     use {
         "nvim-telescope/telescope-file-browser.nvim",
@@ -361,7 +368,6 @@ return require('packer').startup(function(use)
                     }
                 })
             end
-
             nmap("<Leader>a", ":Telescope live_grep<CR>")
             nmap("<Leader>ff", ":Telescope find_files<CR>")
             nmap("<Leader>fr", ":Telescope oldfiles<CR>")
@@ -369,7 +375,7 @@ return require('packer').startup(function(use)
             nmap("<Leader>fn", ":Telescope file_browser<CR>")
             nmap("<Leader>b", ":Telescope buffers<CR>")
             abbrev("reg", ":Telescope registers<CR>")
-
+            abbrev('lang', 'Telescope filetypes')
             local actions = require("telescope.actions")
             require("telescope").setup({
                 defaults = {
@@ -387,6 +393,7 @@ return require('packer').startup(function(use)
             })
             require("telescope").load_extension("fzf")
             require("telescope").load_extension("file_browser")
+            require('telescope').load_extension('smb_unc')
             -- require("telescope").load_extension("frecency")
         end,
         cond = not vim.g.is_workpc
@@ -437,9 +444,13 @@ return require('packer').startup(function(use)
         end
     }
 
-    ----------------------------------------------------------------------------------
-    -- LSP Support
-    ----------------------------------------------------------------------------------
+    --================================================================================
+    --     __   _____ ____ 
+    --    / /  / ___// __ \
+    --   / /   \__ \/ /_/ /
+    --  / /______/ / ____/ 
+    -- /_____/____/_/      
+    --================================================================================
     -- KEEP THE ORDER THIS WAY for LSP to work correctly
     use "neovim/nvim-lspconfig"
     use "williamboman/mason.nvim"
@@ -498,6 +509,22 @@ return require('packer').startup(function(use)
     }
 
     use {
+        "hrsh7th/nvim-cmp",
+        config = function()
+            -- Annoying, but its here when you need it, this will show definition when cursor is on ANY word
+            -- vim.cmd([[au CursorHold * lua vim.lsp.buf.hover()]])
+            local cmp = require "cmp"
+            cmp.setup({
+                mapping = {
+                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+                    ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+                    ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+                },
+            })
+        end
+    }
+
+    use {
         'glepnir/lspsaga.nvim',
         config = function()
             require("lspsaga").init_lsp_saga({
@@ -517,7 +544,7 @@ return require('packer').startup(function(use)
             -- Rename
             nmap("gr","<cmd>Lspsaga rename<CR>")
             -- Peak Definition even though it suppose to go to definition
-            nmap("gd","<cmd>Lspsaga peek_definition<CR>")
+            -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
             -- Hover Doc
             nmap("gh","<cmd>Lspsaga hover_doc<CR>")
             -- Show line diagnostics
@@ -526,7 +553,7 @@ return require('packer').startup(function(use)
     }
 
     ----------------------------------------------------------------------------------
-    -- LSP diagnostics and Better comments (inspired by VS Code extension)
+    -- folke plugins
     ----------------------------------------------------------------------------------
     use {
         "folke/trouble.nvim",
@@ -537,38 +564,20 @@ return require('packer').startup(function(use)
 
     -- Be sure to have TODO[:], without colon, plugin cannot recognize as valid comment
     use {
-        "folke/todo-comments.nvim",
-        requires = "nvim-lua/plenary.nvim",
-        config = function()
-            require("todo-comments").setup()
-        end
+       "folke/todo-comments.nvim",
+       requires = "nvim-lua/plenary.nvim",
+       config = function()
+           require("todo-comments").setup()
+       end
     }
 
-    use {
-        "folke/which-key.nvim",
-        config = function()
-            require("which-key").setup()
-        end
-    }
-
-    ----------------------------------------------------------------------------------
-    -- Autocompletion
-    ----------------------------------------------------------------------------------
-    use {
-        "hrsh7th/nvim-cmp",
-        config = function()
-            -- Annoying, but its here when you need it, this will show definition when cursor is on ANY word
-            -- vim.cmd([[au CursorHold * lua vim.lsp.buf.hover()]])
-            local cmp = require "cmp"
-            cmp.setup({
-                mapping = {
-                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-                    ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-                    ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-                },
-            })
-        end
-    }
+    -- This delays single key action like ">"
+    -- use {
+    --     "folke/which-key.nvim",
+    --     config = function()
+    --         require("which-key").setup()
+    --     end
+    -- }
 
     ----------------------------------------------------------------------------------
     -- Snippets
@@ -625,24 +634,45 @@ return require('packer').startup(function(use)
                 {
                     icon = "  ",
                     desc = "Recently opened files                   ",
+                    action = "Telescope oldfiles",
                     shortcut = "SPC f r"
                 },
                 {
                     icon = "  ",
                     desc = "Find File                               ",
+                    action = "Telescope find_files",
                     shortcut = "SPC f f"
                 },
                 {
                     icon = "  ",
                     desc = "File Browser                            ",
+                    action = "Telescope file_browser",
                     shortcut = "SPC f n"
                 },
                 {
                     icon = "  ",
                     desc = "Vim Wiki                                ",
+                    action = "VimwikiIndex",
                     shortcut = "SPC f w"
                 },
             }
+            abbrev("dash", "Dashboard")
+            db.custom_header = {
+                '                                    @       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ',
+                '                                 @@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@       ',
+                '                               @@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@         ',
+                '                            @@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@            ',
+                '                          @@@@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@              ',
+                '                       @@@@@@@@@@@@@@       @@@@@@@@@@@@@@@@@@@                 ',
+                '                     @@@@@@@@@@@@@@@@       @@@@@@@@@@@@@@@@@                   ',
+                '                  @@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@@@@                      ',
+                '                @@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@@                        ',
+                '             @@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@                           ',
+                '           @@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@                             ',
+                '        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@                                ',
+                '      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@                                  ',
+            }
+            db.custom_footer = { '', '💿 Listen kid, dont trust anyone who don\'t like Avicii' }
         end,
         cond = not vim.g.is_workpc
     }
