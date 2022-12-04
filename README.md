@@ -32,7 +32,7 @@ Defaults editor=/usr/bin/vim # Replace Vim with your favorite editor
 ```
 
 # [i3-gaps](https://github.com/Airblader/i3)
-![i3-gaps screenshot](./img/i3-gaps.png)
+![i3-gaps](https://user-images.githubusercontent.com/17227723/205518184-2bee5d73-d587-4a83-ad7b-be9c1832f106.png)
 i3 will make full use of your screen real estates. It is as simple as that.
 Add some config and you will never leave i3 even though it is not the conventional floating window manager.
 I use gaps so it has a bit more asthetic feel.
@@ -138,7 +138,7 @@ exec --no-startup-id picom -b
 ```
 
 # [GlassCord - Dual Kawase Blur Discord](https://github.com/AryToNeX/Glasscord)
-![i3-gaps screenshot](./img/glasscord.png)<br/>
+![glasscord](https://user-images.githubusercontent.com/17227723/205518223-35721313-2cee-42bd-becb-d8d8c4c9d4b6.png)<br/>
 Install Discord first.
 ```bash
 yay discord
@@ -159,7 +159,7 @@ It is always a good idea to update to latest stable build by `sudo betterdiscord
 Then install Bandaged BetterDiscord by typing `betterdiscordctl install`
 If everything goes well, you can start discord and a new prompt popup showing new features of BandagedBD.
 You can confirm you have BandagedBD by going to settings and a new set of options should appear at the very bottom.<br/>
-![i3-gaps screenshot](./img/glasscord_2.png)<br/>
+![glasscord_2](https://user-images.githubusercontent.com/17227723/205518264-702325df-ce37-4800-8a9e-86b2f6fbe8bd.png)<br/>
 Go to GlassCord repo's release tab and download the latest glasscord.asar
 
 Then place it under `~/.config/discord/VERSION_NUMBER/modules/discord_desktop_core/`
@@ -226,7 +226,7 @@ antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
 Then it is as easy as `source ~/.zsh_plugins.sh` to get all the plugins running.
 
 # [Clipster](https://github.com/mrichar1/clipster) & [Rofi](https://github.com/davatorium/rofi) & [Rofi-Clips](https://github.com/gilbertw1/roficlip)
-![i3-gaps screenshot](./img/rofi.png)<br/>
+![rofi](https://user-images.githubusercontent.com/17227723/205518302-8ea7f788-6a5e-41a7-9428-4e41def3a1e4.png)<br/>
 I was initially searching for a clipboard manager, and I came across clipster, and it is recommended to use with Rofi-Clips add-on for better experience. Then I realize Rofi framework itself is more intuitive to use than dmenu (i3wm default menu selection)
 ```bash
 sudo pacman -S rofi
@@ -317,7 +317,7 @@ fc-list | grep "your font name"
 and the name after your font's name is the name you want to put in config file, for DejaVuSansMono.ttf, I should input `DejaVu Sans Mono` as my font name.
 
 # [Neofetch](https://github.com/dylanaraps/neofetch)
-![i3-gaps screenshot](./img/neofetch.png)<br/>
+![neofetch](https://user-images.githubusercontent.com/17227723/205518332-7e2aa666-534c-42f3-87d2-5dde62791153.png)<br/>
 Get that wholesome Arch Logo and Sys Info in your terminal. Dont know what am talking about? Take a look at [/r/UnixPorn](https://www.reddit.com/r/unixporn/)
 
 Installing is simple
@@ -327,7 +327,7 @@ sudo pacman -S neofetch
 If you want to display image, make sure you have `w3m` installed and `stow` neofetch files into `~/.config` directory
 
 # [Neovim](https://github.com/neovim/neovim)
-![i3-gaps screenshot](./img/neovim.png)<br/>
+![neovim](https://user-images.githubusercontent.com/17227723/205518355-8d87d578-9d10-41ae-af55-acd50f24421d.png)<br/>
 Everyone will have their own sets of .vimrc/.init.vim, I do have a list of plugins that I think is convenient to have. Maybe you will find something you need but didnt know exist. 🤔 
 ```bash
 sudo pacman -S nvim
@@ -340,7 +340,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 ```
 
 # [Ranger](https://github.com/ranger/ranger)
-![i3-gaps screenshot](./img/ranger.png)<br/>
+![ranger](https://user-images.githubusercontent.com/17227723/205518382-dc662d0f-4587-4189-8f2d-316d461f734f.png)<br/>
 It suppose to be a file explorer. However, I mainly use it for image/pdf preview. With some help from `w3m` it is a fast and simple explorer to use.
 ```bash
 sudo pacman -S ranger
@@ -362,17 +362,9 @@ Then edit `scope.sh`
 find `handle_image()` and uncomment `application/pdf` entry
 You should able to preview PDF at this point.😃
 
-# [Grip](https://github.com/joeyespo/grip)
-![i3-gaps screenshot](./img/grip.png)<br/>
-I write this markdown with Vim and previewed in Grip, a Github preview server written in Python3.
-It is as simple as `grip README.md` and a localhost will serve your markdown file rendered same way as Github does.
-Install is easy
-```bash
-pip3 install grip
-```
-
 # [Fcitx](https://github.com/fcitx/fcitx5)
-![i3-gaps screenshot](./img/fcitx.png) Input prompt is not transparent, screenshot made its shot half way during fcitx disappearing<br/>
+![fcitx](https://user-images.githubusercontent.com/17227723/205518414-26201d03-1833-447a-966d-148e81aa1b65.png)<br/>
+Input prompt is not transparent, screenshot made its shot half way during fcitx disappearing<br/>
 If you are using Chinese input method, then [fcitx](https://fcitx-im.org/wiki/Fcitx) framework will be a good option
 Additionally, you will need to install **one** of the chinese input methods, the one I use is **fcitx-sunpinyin**
 You can find a full list of input methods from the [Official Arch Wiki](https://wiki.archlinux.org/index.php/fcitx)
@@ -460,7 +452,7 @@ AutoEnable=true
 Enjoy! 🤣
 
 # [mps-Youtube](https://github.com/mps-youtube/mps-youtube)
-![i3-gaps screenshot](./img/mpsyt.png)<br/>
+![mpsyt](https://user-images.githubusercontent.com/17227723/205518436-298603ec-78da-4795-a814-d5c686575ac7.png)<br/>
 I ususally code with some music on. So here it is, a CLI util just for listening to Youtube music.
 You do need to have python3 installed.
 ```bash
@@ -483,7 +475,7 @@ set player mplayer
 # File search
 There are times I want to do a quick lookup of a file. Either by filename or file content
 I use [fzf](https://github.com/junegunn/fzf), [mlocate](https://pagure.io/mlocate) (lookup through filename), and [ag (the silver searcher)](https://github.com/ggreer/the_silver_searcher) (lookup through file content)
-![i3-gaps screenshot](./img/fzf.png)<br/>
+![fzf](https://user-images.githubusercontent.com/17227723/205518459-0f062dc1-e5bb-4262-b216-270d0e46e2c3.png)<br/>
 FZF is async, fuzzy, interactive search engine that also provide file preview.
 ```bash
 sudo pacman -S fzf
