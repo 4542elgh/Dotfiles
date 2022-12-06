@@ -82,6 +82,8 @@ function hostname()
         for host in hostnameAddr:gmatch("[^\r\n]+") do
             return host
         end
+    else
+        return "Unix"
     end
 end
 
