@@ -270,17 +270,9 @@ return require('packer').startup(function(use)
     ----------------------------------------------------------------------------------
     use {
         "nvim-treesitter/nvim-treesitter-context",
-        cond = not vim.g.is_workpc
-    }
-
-    use {
         "windwp/nvim-ts-autotag",
-        cond = not vim.g.is_workpc
-    }
-
-    use {
         "p00f/nvim-ts-rainbow",
-        cond = not vim.g.is_workpc
+        requires = { "nvim-treesitter/nvim-treesitter" }
     }
 
     use {
