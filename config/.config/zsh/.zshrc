@@ -3,7 +3,7 @@
 
 # Preserve MANPATH if you already defined it somewhere in your config.
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
-export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+# export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
@@ -66,5 +66,3 @@ vterm_printf(){
         printf "\e]%s\e\\" "$1"
     fi
 }
-
-macchina

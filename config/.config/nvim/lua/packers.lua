@@ -269,12 +269,12 @@ return require('packer').startup(function(use)
     -- require zig
     ----------------------------------------------------------------------------------
     use {
-        "nvim-treesitter/nvim-treesitter-context",
         "windwp/nvim-ts-autotag",
         "p00f/nvim-ts-rainbow",
-        requires = { "nvim-treesitter/nvim-treesitter" }
+        "nvim-treesitter/nvim-treesitter-context",
+        requires = { 'nvim-treesitter/nvim-treesitter' }
     }
-
+    
     use {
         "nvim-treesitter/nvim-treesitter",
         run = ":TSUpdate",

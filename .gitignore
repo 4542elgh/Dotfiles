@@ -1,6 +1,7 @@
 # Ignore exact file name on all dir and subdir
 .DS_Store
 config/.config/nvim/.netrwhist
+config/.config/nvim/plugin/
 config/.config/karabiner/automatic_backups/
 config/.config/zsh/.zsh_plugins.sh
 __pycache__

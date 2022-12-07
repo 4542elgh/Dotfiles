@@ -19,7 +19,14 @@ vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
 vim.g.separator = "/"
 if vim.g.is_windows then vim.g.separator = "\\" end
 
-vim.g.hostname = hostname()
+vim.g.hostname = ""
+
+if vim.g.is_windows then
+    vim.g.hostname = hostname()
+else
+    vim.g.hostname = "linux"
+end
+
 vim.g.is_workpc = substr(vim.g.hostname,1,3) == "M16"
 ----------------------------------------------------------------------------------
 -- Mapping leader key
