@@ -408,8 +408,8 @@ return require('packer').startup(function(use)
         config = function ()
             require("colorful-winsep").setup({
                 highlight = {
-                    guibg = "#323232",
-                    guifg = "#c57825",
+                    bg = "#323232",
+                    fg = "#c57825",
                 }
             })
         end
