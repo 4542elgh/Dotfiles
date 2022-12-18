@@ -82,8 +82,6 @@ function hostname()
         for host in hostnameAddr:gmatch("[^\r\n]+") do
             return host
         end
-    else
-        return "Unix"
     end
 end
 
@@ -121,4 +119,20 @@ function concatPath(arr, concatChar, prefixChar, suffixChar)
     end
     if suffixChar then result = result .. concatChar end
     return result
+end
+
+function networkPath()
+    local drive = string.upper(vim.fn.input("Drive Letter: ", "")) .. ":"
+    local output = vim.fn.system("cmd /C net use")
+    local found = false
+
+    for line in output:gmatch("%S+") do
+        if found == true then
+            vim.fn.setreg("\"", line)
+            break
+        end
+        if line == drive then
+            found = true
+        end
+    end
 end

@@ -272,9 +272,8 @@ return require('packer').startup(function(use)
         "windwp/nvim-ts-autotag",
         "p00f/nvim-ts-rainbow",
         "nvim-treesitter/nvim-treesitter-context",
-        requires = { 'nvim-treesitter/nvim-treesitter' }
     }
-    
+
     use {
         "nvim-treesitter/nvim-treesitter",
         run = ":TSUpdate",
@@ -541,6 +540,19 @@ return require('packer').startup(function(use)
             nmap("gh","<cmd>Lspsaga hover_doc<CR>")
             -- Show line diagnostics
             nmap("go","<cmd>LSoutlineToggle<CR>")
+        end
+    }
+
+    use {
+        "jose-elias-alvarez/null-ls.nvim",
+        run = "npm install -g @fsouza/prettierd",
+        config = function()
+            local null_ls = require("null-ls")
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.prettierd
+                },
+            })
         end
     }
 
