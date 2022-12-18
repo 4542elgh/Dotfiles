@@ -9,9 +9,6 @@ if not vim.g.is_windows then
     abbrev('zshrc', 'edit ~/.zshrc')
 end
 
--- Git
-abbrev('Ghead', 'Gvsplit HEAD~3:%')
-
 -- Vim shortcut edits
 abbrev('vimrc', "edit " .. vim.fn.stdpath('config') .. vim.g.separator .. "init.lua<CR>")
 abbrev('snippet', "NvimTreeOpen " .. vim.fn.stdpath('config') .. vim.g.separator .. "snippets<CR>")

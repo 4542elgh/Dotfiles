@@ -40,6 +40,10 @@ function vmap(left,right)
     vim.keymap.set('v', left, right)
 end
 
+function tnoremap(left,right)
+    vim.keymap.set('t', left, right, { noremap = true })
+end
+
 function abbrev(short, expand)
     vim.cmd('cnoreabbrev ' .. short .. ' ' .. expand)
 end
