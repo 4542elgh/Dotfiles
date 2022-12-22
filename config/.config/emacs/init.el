@@ -1,16 +1,22 @@
 (defvar bootstrap-version)
-(let (
-  (bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-  (bootstrap-version 5)
-  )
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-      (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el" 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)
+(let
+    (
+        (bootstrap-file
+            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory)
+        )
+        (bootstrap-version 5)
     )
-  )
-  (load bootstrap-file nil 'nomessage)
+    (unless
+        (file-exists-p bootstrap-file)
+        (with-current-buffer
+            (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el" 'silent 'inhibit-cookies)
+            (goto-char
+                (point-max)
+            )
+            (eval-print-last-sexp)
+        )
+    )
+    (load bootstrap-file nil 'nomessage)
 )
 
 ;; For emacs 27 and above
@@ -20,21 +26,59 @@
 (setq straight-use-package-by-default t)
 
 (use-package esup
-  :config (setq esup-depth 0)
+    :config (setq esup-depth 0)
+)
+
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete)
+)
+
+(use-package no-littering
+  :config
+    (setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+)
+
+(use-package recentf
+    :init
+    (setq
+        recentf-max-saved-items 10000
+        recentf-max-menu-items 5000
+    )
+    (recentf-mode 1)
+    (run-at-time nil (* 5 60) 'recentf-save-list)
+)
+
+(add-to-list 'recentf-exclude no-littering-var-directory)
+(add-to-list 'recentf-exclude no-littering-etc-directory)
+
+(use-package savehist
+    :init (savehist-mode)
 )
 
 ;; Use a hook so the message doesn't get clobbered by other messages.
 (add-hook 'emacs-startup-hook
-  (lambda ()
-    (message "Emacs ready in %s with %d garbage collections."
-      (format "%.2f seconds"
-        (float-time
-          (time-subtract after-init-time before-init-time)
+    (lambda ()
+        (message "Emacs ready in %s with %d garbage collections."
+            (format "%.2f seconds"
+                (float-time
+                    (time-subtract after-init-time before-init-time)
+                )
+            )
+        gcs-done
         )
-      )
-      gcs-done
     )
-  )
 )
 
 (tool-bar-mode -1)
@@ -45,7 +89,7 @@
 
 (blink-cursor-mode 0)
 
-(setq ring-bell-function'ignore)
+(setq ring-bell-function 'ignore)
 
 (setq byte-compile-warnings '(cl-functions))
 
@@ -59,7 +103,7 @@
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
-(setq-default tab-width 2)
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
 (setq inhibit-splash-screen t)
@@ -84,11 +128,11 @@
  '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold)))))
 
 (use-package exec-path-from-shell
-  :config (setq exec-path-from-shell-arguments nil)
+    :config (setq exec-path-from-shell-arguments nil)
 )
 
 (when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize)
+    (exec-path-from-shell-initialize)
 )
 
 (global-display-line-numbers-mode)
@@ -107,51 +151,49 @@
 
 ;; (setq dired-listing-switches "-aBhl  --group-directories-first")
 
-(set-frame-font "DejaVu Sans Mono 16" nil t)
+(set-frame-font "DejaVuSansMono Nerd Font 16" nil t)
 
 (use-package emojify
-  :defer 2
-  :config (global-emojify-mode 1)
+    :defer 2
+    :config (global-emojify-mode 1)
 )
 
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  '(col-highlight ((t (:background "#313335"))))
-  '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold))))
+    ;; custom-set-faces was added by Custom.
+    ;; If you edit it by hand, you could mess it up, so be careful.
+    ;; Your init file should contain only one such instance.
+    ;; If there is more than one, they won't work right.
+    '(col-highlight ((t (:background "#313335"))))
+    '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold))))
 )
 
-(use-package vterm
-  :defer 2
-  :config
-  (add-hook 'vterm-mode-hook '(lambda()(column-highlight-mode 0)))
-  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-  (setq vterm-shell "/bin/bash")
-)
+;; (use-package vterm
+;;   :defer 2
+;;   :config
+;;   (add-hook 'vterm-mode-hook '(lambda()(column-highlight-mode 0)))
+;;   (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+;;   (setq vterm-shell "/bin/bash")
+;; )
 
 (use-package all-the-icons)
 
 (use-package jetbrains-darcula-theme
-  :config (load-theme 'jetbrains-darcula t)
+    :config (load-theme 'jetbrains-darcula t)
 )
 
 (use-package spaceline
-  :config (spaceline-emacs-theme)
+    :config (spaceline-emacs-theme)
 )
 
 (use-package highlight-indent-guides
-  :hook (prog-mode . highlight-indent-guides-mode)
+    :hook (prog-mode . highlight-indent-guides-mode)
 )
 
 (use-package smart-tabs-mode)
 
 (use-package rainbow-delimiters
-  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 )
-
-(use-package workgroups)
 
 ;; (use-package col-highlight
 ;;   :config (column-highlight-mode)
@@ -162,102 +204,66 @@
 (use-package golden-ratio-scroll-screen)
 
 (use-package gse-number-rect
-  :straight (gse-number-rect :type git :host github :repo "4542elgh/gse-number-rect")
+    :straight (gse-number-rect :type git :host github :repo "4542elgh/gse-number-rect")
 )
 
 (use-package ace-jump-mode)
 
-;; (use-package ivy
-;;   :defer 0.1
-;;   :diminish
-;;   :config
-;;     (ivy-mode)
-;;     (define-key ivy-mode-map          (kbd "C-c b") #'nil)
-;;     (define-key ivy-minibuffer-map    (kbd "C-j")   #'ivy-next-line)
-;;     (define-key ivy-minibuffer-map    (kbd "C-k")   #'ivy-previous-line)
-;;     ; Swiper mapped C-K to kill buffer, need to remap that to previous line
-;;     (define-key ivy-switch-buffer-map (kbd "C-k")   #'ivy-previous-line)
-;;     (define-key ivy-switch-buffer-map (kbd "C-x")   #'ivy-switch-buffer-kill)
-;; )
+(use-package vertico
+    :ensure t
+    :init
+        (vertico-mode)
 
-;; (use-package ivy-rich
-;;   :init (ivy-rich-mode 1)
-;; )
+        ;; Different scroll margin
+        (setq vertico-scroll-margin 0)
 
-;; (use-package ivy-prescient
-;;   :config (ivy-prescient-mode)
-;; )
+        ;; Show more candidates
+        (setq vertico-count 20)
 
-;; (use-package ivy-posframe
-;;   :config
-;;     (ivy-posframe-mode 1)
+        ;; Grow and shrink the Vertico minibuffer
+        (setq vertico-resize t)
 
-;;     (setq ivy-posframe-parameters '(
-;;       (left-fringe  . 8)
-;;       (right-fringe . 8)
-;;       )
-;;     )
+        ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+        (setq vertico-cycle t)
+    :bind (:map vertico-map
+        ("C-j" . vertico-next)
+        ("C-k" . vertico-previous)
+        ("C-d" . vertico-scroll-down)
+        ("C-u" . vertico-scroll-up)
+    )
+)
 
-;;     (setq ivy-posframe-height-alist '(
-;;       (swiper                 . 15)
-;;       (find-file              . 20)
-;;       (counsel-ag             . 15)
-;;       (counsel-projectile-ag  . 30)
-;;       (counsel-evil-registers . 30)
-;;       (t                      . 25)
-;;       )
-;;     )
-
-;;     (setq ivy-posframe-display-functions-alist '(
-;;       (complete-symbol . ivy-posframe-display-at-point)
-;;       (counsel-M-x     . ivy-posframe-display-at-frame-center)
-;;       (t               . ivy-posframe-display-at-frame-center))
-;;     )
-
-;;     (defun ivy-posframe-get-size () 
-;;       "The default functon used by `ivy-posframe-size-function'."
-;;       (list
-;;         :height 30
-;;         :width 100
-;;         :min-height (or ivy-posframe-min-height (round (* (frame-height) 0.6)))
-;;         :min-width  (or ivy-posframe-min-width  (round (* (frame-width) 0.62)))
-;;       )
-;;     )
-;; )
-
-;; (use-package counsel
-;;   :after ivy
-;;   :config
-;;     (setq ivy-initial-inputs-alist nil)
-;; )
-
-;; (use-package swiper
-;;   :after ivy
-;;   :bind (("C-p" . swiper))
-;; )
-
-(use-package selectrum-prescient)
-
-(use-package selectrum
-:init (selectrum-mode +1)
-      (selectrum-prescient-mode +1)
-      (prescient-persist-mode +1)
-:config
-  (define-key selectrum-minibuffer-map    (kbd "C-j")   #'selectrum-next-candidate)
-  (define-key selectrum-minibuffer-map    (kbd "C-k")   #'selectrum-previous-candidate)
+(use-package orderless
+    :ensure t
+    :custom
+        (completion-styles '(orderless basic))
+        (completion-category-overrides '((file (styles basic partial-completion))))
 )
 
 ;; Enable richer annotations using the Marginalia package
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
-  :bind (
-    ("M-A" . marginalia-cycle)
-    :map minibuffer-local-map
-      ("M-A" . marginalia-cycle)
-  )
+    :bind (
+        ("M-A" . marginalia-cycle)
+        :map minibuffer-local-map
+            ("M-A" . marginalia-cycle)
+    )
 
-  ;; The :init configuration is always executed (Not lazy!)
-  :init (marginalia-mode)
+    ;; The :init configuration is always executed (Not lazy!)
+    :init (marginalia-mode)
+)
+
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
 )
 
 ;; Example configuration for Consult
@@ -287,7 +293,7 @@
          ;; ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ;; ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
          ;; ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("C-m" . consult-mark)
+         ;; ("C-m" . consult-mark)
          ;; ("M-g k" . consult-global-mark)
          ;; ("M-g i" . consult-imenu)
          ;; ("M-g I" . consult-imenu-multi)
@@ -352,7 +358,6 @@
    :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-file consult--source-project-file consult--source-bookmark
    :preview-key (kbd "M-."))
 
   ;; Optionally configure the narrowing key.
@@ -449,10 +454,10 @@
     (global-evil-leader-mode)
     (evil-leader/set-leader "<SPC>")
     (evil-leader/set-key
-      "b" 'switch-to-buffer
+      "b" 'consult-buffer
       "t" 'vterm
-      "w" 'ace-jump-char-mode
-      "x" 'counsel-M-x
+      "ff" 'find-file
+      "fr" 'consult-recent-file
     )
 )
 
@@ -550,8 +555,33 @@
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp))
 )
 
-(use-package company
-:config (setq comapny-minimum-prefix-length 1 company-idle-delay 0.0)
+;; (use-package company
+;; :config (setq comapny-minimum-prefix-length 1 company-idle-delay 0.0)
+;; )
+
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-excluded-modes'.
+  :init
+  (global-corfu-mode)
 )
 
 (use-package yasnippet
@@ -667,11 +697,11 @@
   :bind-keymap ("C-c p" . projectile-command-map)
 )
 
-(use-package counsel-projectile
-  :defer 2
-  :after (counsel projectile)
-  :config (counsel-projectile-mode)
-)
+;; (use-package counsel-projectile
+;;   :defer 2
+;;   :after (counsel projectile)
+;;   :config (counsel-projectile-mode)
+;; )
 
 (use-package org 
     :init (add-hook 'org-mode-hook (lambda () (setq-local display-line-numbers-type nil))) 
@@ -685,9 +715,10 @@
         (setq indent-line-function 'insert-tab)
       )) 
     :config 
-        (setq org-ellipsis "▼") 
+        (setq org-ellipsis " \u25BE") 
         (setq org-src-tab-acts-natively nil) 
         (add-to-list 'org-emphasis-alist           '("*" (:foreground "black" :background "yellow"))) 
+        ;; THE FOLLOWING ARE TRIGGERED BY < follow by shorthand
         (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")) 
         (add-to-list 'org-structure-template-alist '("javascript" . "src javascript")) 
         (add-to-list 'org-structure-template-alist '("bash" . "src bash")) 
@@ -821,12 +852,6 @@
     ([remap describe-command]  . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-key]      . helpful-key) 
-)
-
-(use-package no-littering
-  :config
-    (setq auto-save-file-name-transforms
-      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 )
 
 (defun align-pipe (start end)

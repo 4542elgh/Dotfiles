@@ -7,18 +7,24 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 ** Bootstrap
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
-(let (
-  (bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-  (bootstrap-version 5)
-  )
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-      (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el" 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)
+(let
+    (
+        (bootstrap-file
+            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory)
+        )
+        (bootstrap-version 5)
     )
-  )
-  (load bootstrap-file nil 'nomessage)
+    (unless
+        (file-exists-p bootstrap-file)
+        (with-current-buffer
+            (url-retrieve-synchronously "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el" 'silent 'inhibit-cookies)
+            (goto-char
+                (point-max)
+            )
+            (eval-print-last-sexp)
+        )
+    )
+    (load bootstrap-file nil 'nomessage)
 )
 
 ;; For emacs 27 and above
@@ -35,24 +41,76 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 ** esup
 #+begin_src emacs-lisp
 (use-package esup
-  :config (setq esup-depth 0)
+    :config (setq esup-depth 0)
 )
 #+end_src
+
 * Build-in packages
+
+** Emacs self configuration
+#+begin_src emacs-lisp
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete)
+)
+#+end_src
+** No Littering
+Define a sane location for package generated files, this need to define early
+#+begin_src emacs-lisp
+(use-package no-littering
+  :config
+    (setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+)
+#+end_src
+
+** recentf
+#+begin_src emacs-lisp
+(use-package recentf
+    :init
+    (setq
+        recentf-max-saved-items 10000
+        recentf-max-menu-items 5000
+    )
+    (recentf-mode 1)
+    (run-at-time nil (* 5 60) 'recentf-save-list)
+)
+
+(add-to-list 'recentf-exclude no-littering-var-directory)
+(add-to-list 'recentf-exclude no-littering-etc-directory)
+#+end_src
+
+** Save history
+#+begin_src emacs-lisp
+(use-package savehist
+    :init (savehist-mode)
+)
+#+end_src
+
 ** Show Bootup time
 #+begin_src emacs-lisp
 ;; Use a hook so the message doesn't get clobbered by other messages.
 (add-hook 'emacs-startup-hook
-  (lambda ()
-    (message "Emacs ready in %s with %d garbage collections."
-      (format "%.2f seconds"
-        (float-time
-          (time-subtract after-init-time before-init-time)
+    (lambda ()
+        (message "Emacs ready in %s with %d garbage collections."
+            (format "%.2f seconds"
+                (float-time
+                    (time-subtract after-init-time before-init-time)
+                )
+            )
+        gcs-done
         )
-      )
-      gcs-done
     )
-  )
 )
 #+end_src
 
@@ -78,8 +136,9 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 
 ** Disable beep sound
 #+begin_src emacs-lisp
-(setq ring-bell-function'ignore)
+(setq ring-bell-function 'ignore)
 #+end_src
+
 ** Disable warning for deprecated cl package
 #+begin_src emacs-lisp
 (setq byte-compile-warnings '(cl-functions))
@@ -89,11 +148,15 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 #+begin_src emacs-lisp
 (setq ad-redefinition-action 'accept)
 #+end_src
+
 ** Use egp to use minibuffer input for password
 #+begin_src emacs-lisp
 (setq epa-pinentry-mode 'loopback)
 #+end_src
+
 ** Save windows and buffers across session
+Winner mode will save current layout
+Desktop mode save all your open buffers
 #+begin_src emacs-lisp
 (winner-mode 1)
 (desktop-save-mode 1)
@@ -107,7 +170,7 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 
 ** Set default tab size
 #+begin_src emacs-lisp
-(setq-default tab-width 2)
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 #+end_src
 
@@ -118,7 +181,7 @@ We will be using straight.el for downloading Melpa/ELPA/Github packages, rather 
 #+end_src
 
 ** Set X11 Primary
-X11 primary selection is done by highlighting text with mouse. The highlighted text will automatically added to the clipboard
+X11 primary clipboard is done by highlighting text with mouse. The highlighted text will automatically added to the clipboard
 #+begin_src emacs-lisp
 (setq x-select-enable-primary t)
 #+end_src
@@ -143,6 +206,7 @@ Auto refresh buffer when file change outside of Emacs
   ;;   `((".*" ,temporary-file-directory t))
   ;; )
 #+end_src
+
 ** Auto ending bracket and highlight
 #+begin_src emacs-lisp
 (electric-pair-mode)
@@ -154,11 +218,11 @@ Auto refresh buffer when file change outside of Emacs
 ** Grab path and envar from shell
 #+begin_src emacs-lisp
 (use-package exec-path-from-shell
-  :config (setq exec-path-from-shell-arguments nil)
+    :config (setq exec-path-from-shell-arguments nil)
 )
 
 (when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize)
+    (exec-path-from-shell-initialize)
 )
 #+end_src
 
@@ -190,47 +254,50 @@ Auto refresh buffer when file change outside of Emacs
 
 ** Dired
 #+begin_src emacs-lisp
-  ;; (setq dired-listing-switches "-aBhl  --group-directories-first")
+;; (setq dired-listing-switches "-aBhl  --group-directories-first")
 #+end_src
 
 * Secrets
 ** AuthInfo
 #+begin_src emacs-lisp
-(setq auth-sources '((:source "~/.authinfo.gpg")))
+;; (setq auth-sources '((:source "~/.authinfo.gpg")))
 #+end_src>
 
 * Theme / Color / Program Aid
 ** Font
 #+begin_src emacs-lisp
-(set-frame-font "DejaVu Sans Mono 16" nil t)
+(set-frame-font "DejaVuSansMono Nerd Font 16" nil t)
 #+end_src
+
 ** Emoji
 #+begin_src emacs-lisp
 (use-package emojify
-  :defer 2
-  :config (global-emojify-mode 1)
+    :defer 2
+    :config (global-emojify-mode 1)
 )
 #+end_src
+
 ** Customize variable (system generated)
 #+begin_src emacs-lisp
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  '(col-highlight ((t (:background "#313335"))))
-  '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold))))
+    ;; custom-set-faces was added by Custom.
+    ;; If you edit it by hand, you could mess it up, so be careful.
+    ;; Your init file should contain only one such instance.
+    ;; If there is more than one, they won't work right.
+    '(col-highlight ((t (:background "#313335"))))
+    '(show-paren-match ((t (:background "DeepSkyBlue2" :foreground "yellow" :weight bold))))
 )
 #+end_src
+
 ** Vterm
 #+begin_src emacs-lisp
-(use-package vterm
-  :defer 2
-  :config
-  (add-hook 'vterm-mode-hook '(lambda()(column-highlight-mode 0)))
-  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-  (setq vterm-shell "/bin/bash")
-)
+;; (use-package vterm
+;;   :defer 2
+;;   :config
+;;   (add-hook 'vterm-mode-hook '(lambda()(column-highlight-mode 0)))
+;;   (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+;;   (setq vterm-shell "/bin/bash")
+;; )
 #+end_src
 
 ** Icon Pack
@@ -241,21 +308,21 @@ Auto refresh buffer when file change outside of Emacs
 ** Color Scheme
 #+begin_src emacs-lisp
 (use-package jetbrains-darcula-theme
-  :config (load-theme 'jetbrains-darcula t)
+    :config (load-theme 'jetbrains-darcula t)
 )
 #+end_src
 
 ** Spaceline
 #+begin_src emacs-lisp
 (use-package spaceline
-  :config (spaceline-emacs-theme)
+    :config (spaceline-emacs-theme)
 )
 #+end_src
 
 ** Indent guide
 #+begin_src emacs-lisp
 (use-package highlight-indent-guides
-  :hook (prog-mode . highlight-indent-guides-mode)
+    :hook (prog-mode . highlight-indent-guides-mode)
 )
 #+end_src
 
@@ -267,13 +334,8 @@ Auto refresh buffer when file change outside of Emacs
 ** Rainbow Parens
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 )
-#+end_src
-
-** Workgroups
-#+begin_src emacs-lisp
-(use-package workgroups)
 #+end_src
 
 ** Vertical / Horizontal highlight
@@ -284,14 +346,16 @@ Auto refresh buffer when file change outside of Emacs
 
   ;; (global-hl-line-mode 1)
 #+end_src
+
 ** Scroll with highlight
 #+begin_src emacs-lisp
 (use-package golden-ratio-scroll-screen)
 #+end_src
+
 ** Insert numbers
 #+begin_src emacs-lisp
 (use-package gse-number-rect
-  :straight (gse-number-rect :type git :host github :repo "4542elgh/gse-number-rect")
+    :straight (gse-number-rect :type git :host github :repo "4542elgh/gse-number-rect")
 )
 #+end_src
 
@@ -299,117 +363,42 @@ Auto refresh buffer when file change outside of Emacs
 #+begin_src emacs-lisp
 (use-package ace-jump-mode)
 #+end_src
-* Ivy/Counsel/Swiper
-** Ivy
-Minibuffer with preview result
+
+* Selectrum/Orderless/Marginalia/Embark/Consult
+** Vertico
 #+begin_src emacs-lisp
-  ;; (use-package ivy
-  ;;   :defer 0.1
-  ;;   :diminish
-  ;;   :config
-  ;;     (ivy-mode)
-  ;;     (define-key ivy-mode-map          (kbd "C-c b") #'nil)
-  ;;     (define-key ivy-minibuffer-map    (kbd "C-j")   #'ivy-next-line)
-  ;;     (define-key ivy-minibuffer-map    (kbd "C-k")   #'ivy-previous-line)
-  ;;     ; Swiper mapped C-K to kill buffer, need to remap that to previous line
-  ;;     (define-key ivy-switch-buffer-map (kbd "C-k")   #'ivy-previous-line)
-  ;;     (define-key ivy-switch-buffer-map (kbd "C-x")   #'ivy-switch-buffer-kill)
-  ;; )
+(use-package vertico
+    :ensure t
+    :init
+        (vertico-mode)
+
+        ;; Different scroll margin
+        (setq vertico-scroll-margin 0)
+
+        ;; Show more candidates
+        (setq vertico-count 20)
+
+        ;; Grow and shrink the Vertico minibuffer
+        (setq vertico-resize t)
+
+        ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+        (setq vertico-cycle t)
+    :bind (:map vertico-map
+        ("C-j" . vertico-next)
+        ("C-k" . vertico-previous)
+        ("C-d" . vertico-scroll-down)
+        ("C-u" . vertico-scroll-up)
+    )
+)
 #+end_src
 
-*** Ivy rich 
-More info on Ivy panel
+** Orderless
 #+begin_src emacs-lisp
-;; (use-package ivy-rich
-;;   :init (ivy-rich-mode 1)
-;; )
-#+end_src
-
-*** Ivy prescient
-Persist your search result in M-x
-#+begin_src emacs-lisp
-  ;; (use-package ivy-prescient
-  ;;   :config (ivy-prescient-mode)
-  ;; )
-#+end_src
-
-*** Ivy posframe
-Put ivy buffer in middle of the screen (THIS IS INTERFERRING WITH LSP MODE)
-#+begin_src emacs-lisp
-  ;; (use-package ivy-posframe
-  ;;   :config
-  ;;     (ivy-posframe-mode 1)
-
-  ;;     (setq ivy-posframe-parameters '(
-  ;;       (left-fringe  . 8)
-  ;;       (right-fringe . 8)
-  ;;       )
-  ;;     )
-
-  ;;     (setq ivy-posframe-height-alist '(
-  ;;       (swiper                 . 15)
-  ;;       (find-file              . 20)
-  ;;       (counsel-ag             . 15)
-  ;;       (counsel-projectile-ag  . 30)
-  ;;       (counsel-evil-registers . 30)
-  ;;       (t                      . 25)
-  ;;       )
-  ;;     )
-
-  ;;     (setq ivy-posframe-display-functions-alist '(
-  ;;       (complete-symbol . ivy-posframe-display-at-point)
-  ;;       (counsel-M-x     . ivy-posframe-display-at-frame-center)
-  ;;       (t               . ivy-posframe-display-at-frame-center))
-  ;;     )
-
-  ;;     (defun ivy-posframe-get-size () 
-  ;;       "The default functon used by `ivy-posframe-size-function'."
-  ;;       (list
-  ;;         :height 30
-  ;;         :width 100
-  ;;         :min-height (or ivy-posframe-min-height (round (* (frame-height) 0.6)))
-  ;;         :min-width  (or ivy-posframe-min-width  (round (* (frame-width) 0.62)))
-  ;;       )
-  ;;     )
-  ;; )
-#+end_src
-
-** Counsel
-M-x with ivy panel
-#+begin_src emacs-lisp
-  ;; (use-package counsel
-  ;;   :after ivy
-  ;;   :config
-  ;;     (setq ivy-initial-inputs-alist nil)
-  ;; )
-#+end_src
-
-** Swiper
-In buffer search with ivy panel
-#+begin_src emacs-lisp
-  ;; (use-package swiper
-  ;;   :after ivy
-  ;;   :bind (("C-p" . swiper))
-  ;; )
-#+end_src
-
-* Selectrum/Marginalia/Embark/Consult
-** Selectrum-Prescient
-Add fuzzy search to Selectrum
-#+begin_src emacs-lisp
-(use-package selectrum-prescient)
-#+end_src
-
-** Selectrum
-Alternative to Ivy, work with native completion and minibuffer
-#+begin_src emacs-lisp
-(use-package selectrum
-:init (selectrum-mode +1)
-      (selectrum-prescient-mode +1)
-      (prescient-persist-mode +1)
-:config
-  (define-key selectrum-minibuffer-map    (kbd "C-j")   #'selectrum-next-candidate)
-  (define-key selectrum-minibuffer-map    (kbd "C-k")   #'selectrum-previous-candidate)
+(use-package orderless
+    :ensure t
+    :custom
+        (completion-styles '(orderless basic))
+        (completion-category-overrides '((file (styles basic partial-completion))))
 )
 #+end_src
 
@@ -419,17 +408,32 @@ Add detail to minibuffer entries, like ivy-rich
 ;; Enable richer annotations using the Marginalia package
 (use-package marginalia
   ;; Either bind `marginalia-cycle` globally or only in the minibuffer
-  :bind (
-    ("M-A" . marginalia-cycle)
-    :map minibuffer-local-map
-      ("M-A" . marginalia-cycle)
-  )
+    :bind (
+        ("M-A" . marginalia-cycle)
+        :map minibuffer-local-map
+            ("M-A" . marginalia-cycle)
+    )
 
-  ;; The :init configuration is always executed (Not lazy!)
-  :init (marginalia-mode)
+    ;; The :init configuration is always executed (Not lazy!)
+    :init (marginalia-mode)
 )
 #+end_src
 
+** Embark
+#+begin_src emacs-lisp
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+)
+#+end_src
 ** Consult
 Search buffer or buffers for string, swiper alternative
 #+begin_src emacs-lisp
@@ -460,7 +464,7 @@ Search buffer or buffers for string, swiper alternative
            ;; ("M-g g" . consult-goto-line)             ;; orig. goto-line
            ;; ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
            ;; ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-           ("C-m" . consult-mark)
+           ;; ("C-m" . consult-mark)
            ;; ("M-g k" . consult-global-mark)
            ;; ("M-g i" . consult-imenu)
            ;; ("M-g I" . consult-imenu-multi)
@@ -525,7 +529,6 @@ Search buffer or buffers for string, swiper alternative
      :preview-key '(:debounce 0.2 any)
      consult-ripgrep consult-git-grep consult-grep
      consult-bookmark consult-recent-file consult-xref
-     consult--source-file consult--source-project-file consult--source-bookmark
      :preview-key (kbd "M-."))
 
     ;; Optionally configure the narrowing key.
@@ -642,10 +645,10 @@ Vim keybind for Emacs
     (global-evil-leader-mode)
     (evil-leader/set-leader "<SPC>")
     (evil-leader/set-key
-      "b" 'switch-to-buffer
+      "b" 'consult-buffer
       "t" 'vterm
-      "w" 'ace-jump-char-mode
-      "x" 'counsel-M-x
+      "ff" 'find-file
+      "fr" 'consult-recent-file
     )
 )
 #+end_src
@@ -776,12 +779,38 @@ Add error indicators to source code
 )
 #+end_src
 
-
-
 ** Company Mode
 #+begin_src emacs-lisp
-(use-package company
-:config (setq comapny-minimum-prefix-length 1 company-idle-delay 0.0)
+  ;; (use-package company
+  ;; :config (setq comapny-minimum-prefix-length 1 company-idle-delay 0.0)
+  ;; )
+#+End_src
+
+** Corfu Mode
+#+begin_src emacs-lisp
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-excluded-modes'.
+  :init
+  (global-corfu-mode)
 )
 #+end_src
 
@@ -859,6 +888,7 @@ LSP symbol and dependencies on sidebar
   :config (setq js-indent-level 2)
 )
 #+end_src
+
 ** JSON Mode
 #+begin_src emacs-lisp
 (use-package json-mode
@@ -918,6 +948,7 @@ Format based on major mode, need formatting framework to be installed like prett
 #+begin_src emacs-lisp
 (use-package format-all)
 #+end_src
+
 * Project management
 ** undo-tree
 Visualize undos
@@ -967,11 +998,11 @@ Visualize undos
 
 ** Counsel Projectile
 #+begin_src emacs-lisp
-(use-package counsel-projectile
-  :defer 2
-  :after (counsel projectile)
-  :config (counsel-projectile-mode)
-)
+;; (use-package counsel-projectile
+;;   :defer 2
+;;   :after (counsel projectile)
+;;   :config (counsel-projectile-mode)
+;; )
 #+end_src
 
 * Org mode
@@ -990,9 +1021,10 @@ Org mode with some source expansion
         (setq indent-line-function 'insert-tab)
       )) 
     :config 
-        (setq org-ellipsis "▼") 
+        (setq org-ellipsis " \u25BE") 
         (setq org-src-tab-acts-natively nil) 
         (add-to-list 'org-emphasis-alist           '("*" (:foreground "black" :background "yellow"))) 
+        ;; THE FOLLOWING ARE TRIGGERED BY < follow by shorthand
         (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")) 
         (add-to-list 'org-structure-template-alist '("javascript" . "src javascript")) 
         (add-to-list 'org-structure-template-alist '("bash" . "src bash")) 
@@ -1160,16 +1192,6 @@ Display and organize help command
     ([remap describe-command]  . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-key]      . helpful-key) 
-)
-#+end_src
-
-** No littering
-Define a sane location for package generated files
-#+begin_src emacs-lisp
-(use-package no-littering
-  :config
-    (setq auto-save-file-name-transforms
-      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 )
 #+end_src
 
