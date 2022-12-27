@@ -41,7 +41,7 @@ function vmap(left,right)
 end
 
 function tnoremap(left,right)
-    vim.keymap.set('t', left, right, { noremap = true })
+    vim.keymap.set('t', left, right)
 end
 
 function abbrev(short, expand)

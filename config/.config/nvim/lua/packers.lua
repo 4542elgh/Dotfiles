@@ -163,6 +163,10 @@ return require('packer').startup(function(use)
     }
 
     use {
+        "kdheepak/lazygit.nvim"
+    }
+
+    use {
         'pseewald/vim-anyfold',
         cond = vim.g.is_workpc
     }
@@ -323,6 +327,7 @@ return require('packer').startup(function(use)
     -- }
 
     use "4542elgh/telescope-smb-unc.nvim"
+    use "4542elgh/telescope-scratch-run.nvim"
 
     use {
         "nvim-telescope/telescope-file-browser.nvim",
@@ -385,6 +390,7 @@ return require('packer').startup(function(use)
             require("telescope").load_extension("fzf")
             require("telescope").load_extension("file_browser")
             require('telescope').load_extension('smb_unc')
+            require('telescope').load_extension('scratch_run')
             -- require("telescope").load_extension("frecency")
         end,
         cond = not vim.g.is_workpc
