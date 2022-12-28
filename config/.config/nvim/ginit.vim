@@ -1,1 +1,1 @@
-GuiFont! DejaVuSansMono\ Nerd\ Font:h15
+GuiFont! JetBrainsMono\ NFM:h15
