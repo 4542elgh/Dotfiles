@@ -3,11 +3,9 @@
 ----------------------------------------------------------------------------------
 return {
     "moll/vim-bbye",
+    "kyazdani42/nvim-web-devicons",
     "junegunn/vim-peekaboo",
-    {
-        "ethanholz/nvim-lastplace",
-        config = true
-    },
+    { "ethanholz/nvim-lastplace", config = true },
     {
         "nvim-zh/colorful-winsep.nvim",
         config = function ()
@@ -19,16 +17,8 @@ return {
             })
         end
     },
-    -- {
-    --     "mihaifm/bufstop",
-    --     config = function()
-    --         nmap("<Leader>b", ":BufstopFast<CR>")
-    --     end,
-    --     -- cond = vim.g.is_workpc
-    -- },
     {
         "ggandor/lightspeed.nvim",
-        -- keys = "f",
         config = function()
             require("lightspeed").setup({
                 ignore_case = true,

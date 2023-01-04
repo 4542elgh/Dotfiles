@@ -9,14 +9,18 @@
 -- Require cmake
 ----------------------------------------------------------------------------------
 return {
-    -- use {
-    --     "nvim-telescope/telescope-frecency.nvim",
-    --     requires = {"kkharji/sqlite.lua"}
-    -- }
-
     "4542elgh/telescope-smb-unc.nvim",
     "4542elgh/telescope-scratch-run.nvim",
     "nvim-telescope/telescope-file-browser.nvim",
+    {
+        'prochri/telescope-all-recent.nvim',
+        dependencies = "kkharji/sqlite.lua",
+        config = function()
+            require('telescope-all-recent').setup({
+                vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
+            })
+        end
+    },
     {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
@@ -26,6 +30,14 @@ return {
         "nvim-telescope/telescope.nvim",
         version = "0.1.0",
         dependencies = {"nvim-lua/plenary.nvim"},
+        keys = {
+            {"<Leader>a" , ":Telescope live_grep<CR>"},
+            {"<Leader>ff", ":Telescope find_files<CR>"},
+            {"<Leader>fr", ":Telescope oldfiles<CR>"},
+            {"<Leader>fw", ":lua vimwiki()<CR>"},
+            {"<Leader>fn", ":Telescope file_browser<CR>"},
+            {"<Leader>b" , ":Telescope buffers<CR>"}
+        },
         config = function()
             function vimwiki()
                 require("telescope.builtin").find_files({
@@ -34,14 +46,8 @@ return {
                     }
                 })
             end
-            nmap("<Leader>a", ":Telescope live_grep<CR>")
-            nmap("<Leader>ff", ":Telescope find_files<CR>")
-            nmap("<Leader>fr", ":Telescope oldfiles<CR>")
-            nmap("<Leader>fw", ":lua vimwiki()<CR>")
-            nmap("<Leader>fn", ":Telescope file_browser<CR>")
-            nmap("<Leader>b", ":Telescope buffers<CR>")
-            abbrev("reg", ":Telescope registers<CR>")
-            abbrev('lang', 'Telescope filetypes')
+            abbrev("reg" , "Telescope registers<CR>")
+            abbrev('lang', "Telescope filetypes<CR>")
             local actions = require("telescope.actions")
             require("telescope").setup({
                 defaults = {
@@ -52,8 +58,6 @@ return {
                             ["<C-d>"] = actions.delete_buffer,
                             ["<esc>"] = actions.close,
                         },
-                        -- n = {
-                        -- }
                     }
                 },
                 extensions = {
@@ -85,9 +89,7 @@ return {
             require("telescope").load_extension("file_browser")
             require('telescope').load_extension('smb_unc')
             require('telescope').load_extension('scratch_run')
-            -- require("telescope").load_extension("frecency")
 
         end,
-        -- cond = not vim.g.is_workpc
     }
 }

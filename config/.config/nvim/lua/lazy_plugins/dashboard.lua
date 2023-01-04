@@ -5,6 +5,7 @@ return {
     {
         "glepnir/dashboard-nvim",
         config = function()
+            abbrev("dash", "Dashboard")
             local db = require("dashboard")
             db.custom_center = {
                 {
@@ -32,7 +33,6 @@ return {
                     shortcut = "SPC f w"
                 },
             }
-            abbrev("dash", "Dashboard")
             db.custom_header = {
                 '                                    @       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ',
                 '                                 @@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@       ',

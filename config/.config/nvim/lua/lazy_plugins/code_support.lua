@@ -2,14 +2,13 @@ return {
     "xiyaowong/nvim-cursorword",
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
-    { "terrortylor/nvim-comment", 
+    { "lewis6991/gitsigns.nvim", config = true },
+    { "terrortylor/nvim-comment",
         -- The plugin name and git repo name are different, cant use short hand
         config = function()
             require("nvim_comment").setup()
         end
     },
-
-    -- NEED OPTIMIZATION
     {
         "iamcco/markdown-preview.nvim",
         build = "cd app && npm install",
@@ -18,6 +17,11 @@ return {
         end,
         cmd = "MarkdownPreview",
         cond = executable("npm")
+    },
+    {
+        'barrett-ruth/import-cost.nvim',
+        build = 'sh install.sh yarn',
+        cond = executable("yarn")
     },
     {
         "norcalli/nvim-colorizer.lua",
@@ -36,13 +40,6 @@ return {
             })
         end
     },
-    { "lewis6991/gitsigns.nvim", config = true
-        -- config = function()
-        --     require('gitsigns').setup()
-        --     require("scrollbar.handlers.gitsigns").setup()
-        -- end
-    },
-    { 'pseewald/vim-anyfold' },
     {
         "petertriho/nvim-scrollbar",
         config = function()
@@ -61,11 +58,6 @@ return {
             })
         end
     },
-    { "luochen1990/rainbow",
-        config = function()
-            vim.g.rainbow_active = 1
-        end,
-    },
     {
         "alvan/vim-closetag",
         config = function()
@@ -73,14 +65,6 @@ return {
             vim.g.closetag_emptyTags_caseSensitive = 1
         end,
     },
-    -- {
-    --     "nathanaelkane/vim-indent-guides",
-    --     config = function()
-    --         -- vim.g.indent_guides_enable_on_vim_startup = 1
-    --         vim.cmd("let g:indent_guides_enable_on_vim_startup = 1")
-    --         vim.g.indent_guides_exclude_filetypes = {"help", "nvimtree", "dashboard"}
-    --     end
-    -- },
     {
         "lukas-reineke/indent-blankline.nvim",
         -- underline value

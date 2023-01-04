@@ -45,7 +45,9 @@ vmap("<Leader>s", ':s/<C-R>"//g')
 ----------------------------------------------------------------------------------
 -- Clear last search highlight
 ----------------------------------------------------------------------------------
-nmap('<Leader>c', ':let @/=\'\'<CR>')
+-- Should use default key binding <C-l>
+-- nmap('<Leader>c', ':let @/=\'\'<CR>')
+nmap('<Leader>c', ':lua vim.notify("Try using the default keybinding < C-l >", vim.log.levels.ERROR)<CR>')
 
 ----------------------------------------------------------------------------------
 -- Put register text into Ex mode
@@ -55,10 +57,10 @@ nmap("<Leader>y", ':<C-R>"')
 ----------------------------------------------------------------------------------
 -- Why not put ESC in a more comfortable place
 ----------------------------------------------------------------------------------
-imap("tt", "<Esc>")
+imap("jj", "<Esc>")
 
 ----------------------------------------------------------------------------------
 -- Escape terminal mode with same mapping
 ----------------------------------------------------------------------------------
-tnoremap("tt", "<C-\\><C-n>")
+tnoremap("jj", "<C-\\><C-n>")
 tnoremap("<Esc>", "noob")

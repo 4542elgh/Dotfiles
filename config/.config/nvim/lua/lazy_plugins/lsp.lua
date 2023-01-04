@@ -7,26 +7,14 @@
 --================================================================================
 -- KEEP THE ORDER THIS WAY for LSP to work correctly, hopefully with lazy.nvim we dont need to keep order this way
 return {
-    -- "neovim/nvim-lspconfig",
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    -- "hrsh7th/cmp-buffer",
-    -- "hrsh7th/cmp-path",
-    -- "hrsh7th/cmp-nvim-lsp",
-    -- "hrsh7th/cmp-nvim-lua",
-    -- "saadparwaiz1/cmp_luasnip",
-    "arkav/lualine-lsp-progress",
-    "kyazdani42/nvim-web-devicons",
-    {
-        "hrsh7th/cmp-cmdline",
-        config = function()
-            require("cmp").setup.cmdline(":", {
-                sources = {{ name = "cmdline" }}
-            })
-        end
-    },
     {
         "VonHeikemen/lsp-zero.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "neovim/nvim-lspconfig",
+            "arkav/lualine-lsp-progress",
+        },
         config = function()
             local lspZero = require("lsp-zero")
             lspZero.preset("recommended")
@@ -67,7 +55,6 @@ return {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lua",
             "saadparwaiz1/cmp_luasnip",
-            "neovim/nvim-lspconfig",
         },
         config = function()
             -- Annoying, but its here when you need it, this will show definition when cursor is on ANY word
@@ -83,7 +70,29 @@ return {
         end
     },
     {
+        "hrsh7th/cmp-cmdline",
+        config = function()
+            require("cmp").setup.cmdline(":", {
+                sources = {{ name = "cmdline" }}
+            })
+        end
+    },
+    {
         'glepnir/lspsaga.nvim',
+        keys = {
+            -- The REAL Peak Definition
+            {"n", "gp","<cmd>Lspsaga lsp_finder<CR>"},
+            -- Code action
+            {"n", "ga","<cmd>Lspsaga code_action<CR>"},
+            -- Rename
+            {"n", "gr","<cmd>Lspsaga rename<CR>"},
+            -- Peak Definition even though it suppose to go to definition
+            -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
+            -- Hover Doc
+            {"n", "gh","<cmd>Lspsaga hover_doc<CR>"},
+            -- Show line diagnostics
+            {"n", "go","<cmd>LSoutlineToggle<CR>"}
+        },
         config = function()
             require("lspsaga").init_lsp_saga({
                 symbol_in_winbar = {
@@ -93,23 +102,9 @@ return {
                     enable = false,
                 }
             })
-
             vim.diagnostic.config({
                 virtual_text = false
             })
-
-            -- The REAL Peak Definition
-            nmap("gp","<cmd>Lspsaga lsp_finder<CR>")
-            -- Code action
-            nmap("ga","<cmd>Lspsaga code_action<CR>")
-            -- Rename
-            nmap("gr","<cmd>Lspsaga rename<CR>")
-            -- Peak Definition even though it suppose to go to definition
-            -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
-            -- Hover Doc
-            nmap("gh","<cmd>Lspsaga hover_doc<CR>")
-            -- Show line diagnostics
-            nmap("go","<cmd>LSoutlineToggle<CR>")
         end
     },
     {
