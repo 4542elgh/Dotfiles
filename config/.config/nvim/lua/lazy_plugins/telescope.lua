@@ -11,6 +11,7 @@
 return {
     "4542elgh/telescope-smb-unc.nvim",
     "4542elgh/telescope-scratch-run.nvim",
+    "4542elgh/telescope-youtube-mpv.nvim",
     "nvim-telescope/telescope-file-browser.nvim",
     {
         'prochri/telescope-all-recent.nvim',

@@ -81,17 +81,17 @@ return {
         'glepnir/lspsaga.nvim',
         keys = {
             -- The REAL Peak Definition
-            {"n", "gp","<cmd>Lspsaga lsp_finder<CR>"},
+            {"gp","<cmd>Lspsaga lsp_finder<CR>"},
             -- Code action
-            {"n", "ga","<cmd>Lspsaga code_action<CR>"},
+            {"ga","<cmd>Lspsaga code_action<CR>"},
             -- Rename
-            {"n", "gr","<cmd>Lspsaga rename<CR>"},
+            {"gr","<cmd>Lspsaga rename<CR>"},
             -- Peak Definition even though it suppose to go to definition
             -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
             -- Hover Doc
-            {"n", "gh","<cmd>Lspsaga hover_doc<CR>"},
+            {"gh","<cmd>Lspsaga hover_doc<CR>"},
             -- Show line diagnostics
-            {"n", "go","<cmd>LSoutlineToggle<CR>"}
+            {"go","<cmd>LSoutlineToggle<CR>"}
         },
         config = function()
             require("lspsaga").init_lsp_saga({
