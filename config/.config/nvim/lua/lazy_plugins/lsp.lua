@@ -22,7 +22,8 @@ return {
             -- !!! If you use Mason to install typescript-language-server 
             -- !!! You will also need to use npm to install typescript-language-server
             -- !!! npm install typescript-language-server
-            require("lspconfig").sumneko_lua.setup({
+            -- sumneko_lua
+            require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {
                         diagnostics = {

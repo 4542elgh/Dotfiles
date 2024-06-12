@@ -8,28 +8,14 @@
 ----------------------------------------------------------------------------------
 -- Require cmake
 ----------------------------------------------------------------------------------
-return {
+local telescope_config = {
     "4542elgh/telescope-smb-unc.nvim",
     "4542elgh/telescope-scratch-run.nvim",
     "4542elgh/telescope-youtube-mpv.nvim",
     "nvim-telescope/telescope-file-browser.nvim",
     {
-        'prochri/telescope-all-recent.nvim',
-        dependencies = "kkharji/sqlite.lua",
-        config = function()
-            require('telescope-all-recent').setup({
-                vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
-            })
-        end
-    },
-    {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-        cond = not vim.g.is_workpc,
-    },
-    {
         "nvim-telescope/telescope.nvim",
-        version = "0.1.0",
+        version = "0.1.8",
         dependencies = {"nvim-lua/plenary.nvim"},
         keys = {
             {"<Leader>a" , ":Telescope live_grep<CR>"},
@@ -84,7 +70,8 @@ return {
                     }
                 },
             })
-            if not vim.g.is_workpc then
+            -- Windows cannot build fzf-native without cmake which isnt installed by default
+            if vim.g.has_fzf then
                 require("telescope").load_extension("fzf")
             end
             require("telescope").load_extension("file_browser")
@@ -92,5 +79,39 @@ return {
             require('telescope').load_extension('scratch_run')
 
         end,
-    }
+    },
 }
+
+-- FZF not working on windows when first cloning the repo, need cmake from Visual Studio C++ (look at individual component, one should say C++ CMake)
+-- Add cmake to path with C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+-- Build will trigger on Install/Update
+if vim.g.has_cmake then
+    vim.g.has_fzf = true
+    table.insert(telescope_config,
+        {
+            "nvim-telescope/telescope-fzf-native.nvim",
+            build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        }
+    )
+end
+
+if vim.g.is_windows and vim.fn.filereadable(vim.fn.stdpath('config') .. vim.g.separator .. 'bin' .. vim.g.separator .. 'sqlite3.dll') == 0 then
+else
+    table.insert(telescope_config, 
+        {
+            'prochri/telescope-all-recent.nvim',
+            dependencies = "kkharji/sqlite.lua",
+            config = function()
+                if vim.g.is_windows then
+                    require('telescope-all-recent').setup({
+                        vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
+                    })
+                else 
+                    require('telescope-all-recent').setup()
+                end
+            end
+        }
+    )
+end
+
+return telescope_config

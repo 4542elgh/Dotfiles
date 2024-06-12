@@ -44,17 +44,18 @@ return {
         "petertriho/nvim-scrollbar",
         config = function()
             require("scrollbar").setup({
-                -- handle = {
-                --     text = "   ",
-                -- },
-                -- marks = {
-                --     Search = { text = { "--", "==" } },
-                --     Error = { text = { "--", "==" } },
-                --     Warn = { text = { "--", "==" } },
-                --     Info = { text = { "--", "==" } },
-                --     Hint = { text = { "--", "==" } },
-                --     Misc = { text = { "--", "==" } },
-                -- }
+                handle = {
+                    text = " ",
+                    color = "#a9b7c6"
+                },
+                marks = {
+                    Search = { text = { "--", "==" } },
+                    Error = { text = { "--", "==" } },
+                    Warn = { text = { "--", "==" } },
+                    Info = { text = { "--", "==" } },
+                    Hint = { text = { "--", "==" } },
+                    Misc = { text = { "--", "==" } },
+                }
             })
         end
     },
@@ -67,35 +68,19 @@ return {
     },
     {
         "lukas-reineke/indent-blankline.nvim",
-        -- underline value
-        -- hl-IndentBlanklineContextStart
-        -- Vertical value
-        -- hl-IndentBlanklineContextChar
+        main = "ibl",
         config = function()
-            -- Blank 4 space tab coloring
-            vim.cmd [[highlight IndentBlanklineIndent1 guifg=#F7BFB9 gui=nocombine]]
-            vim.cmd [[highlight IndentBlanklineIndent2 guifg=#C6B1DF gui=nocombine]]
-            vim.cmd [[highlight IndentBlanklineIndent3 guifg=#F2ACBA gui=nocombine]]
-            vim.cmd [[highlight IndentBlanklineIndent4 guifg=#9FB5CB gui=nocombine]]
-            vim.cmd [[highlight IndentBlanklineIndent5 guifg=#A6C6F0 gui=nocombine]]
-            vim.cmd [[highlight IndentBlanklineIndent6 guifg=#DEE6EC gui=nocombine]]
-            vim.cmd [[highlight IndentBlanklineIndent7 guifg=#B1AAAA gui=nocombine]]
-
-            -- vim.opt.list = true
-            require("indent_blankline").setup {
-                space_char_blankline = " ",
-                show_current_context = true,
-                show_current_context_start = true,
-                filetype_exclude = {'help', 'lazy', 'dashboard', 'nvimtree'},
-                char_highlight_list = {
-                    "IndentBlanklineIndent1",
-                    "IndentBlanklineIndent2",
-                    "IndentBlanklineIndent3",
-                    "IndentBlanklineIndent4",
-                    "IndentBlanklineIndent5",
-                    "IndentBlanklineIndent6",
-                    "IndentBlanklineIndent7",
+            local highlight = {
+                "CursorColumn",
+                "Whitespace",
+            }
+            require("ibl").setup {
+                indent = { highlight = highlight, char = "" },
+                whitespace = {
+                    highlight = highlight,
+                    remove_blankline_trail = false,
                 },
+                scope = { enabled = false },
             }
         end
     },
@@ -122,6 +107,23 @@ return {
         -- keys = "<Leader>n",
         config = function ()
             nmap('<Leader>n', ":NvimTreeToggle<CR>")
+
+            local function tree_mapping(bufnr)
+                local api = require "nvim-tree.api"
+
+                local function opts(desc)
+                  return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+                end
+              
+                -- default mappings
+                api.config.mappings.default_on_attach(bufnr)
+              
+                -- custom mappings
+                vim.keymap.set('n', '<left>', api.tree.change_root_to_parent, opts('Up'))
+                vim.keymap.set('n', 'right',     api.tree.change_root_to_node, opts('CD'))
+                vim.keymap.set('n', 'c',     api.fs.create, opts('Create File Or Directory'))
+            end
+
             require("nvim-tree").setup({
                 respect_buf_cwd = true,
                 sort_by = "case_sensitive",
@@ -130,13 +132,6 @@ return {
                 },
                 view = { 
                     adaptive_size = true,
-                    mappings = {
-                        list = {
-                            { key = "<left>", action = "dir_up" },
-                            { key = "<right>", action = "cd" },
-                            { key = "c", action = "create" },
-                        },
-                    },
                 },
                 renderer = {
                     group_empty = true,
@@ -144,6 +139,7 @@ return {
                 filters = {
                     dotfiles = true,
                 },
+                on_attach = tree_mapping
             })
         end
     }

@@ -8,9 +8,6 @@
 ----------------------------------------------------------------------------------
 -- Microsoft features
 ----------------------------------------------------------------------------------
-vim.cmd("source $VIMRUNTIME/mswin.vim")
-vim.cmd("behave mswin")
-
 -- Make Arrow key work in Windows mode
 vim.opt.keymodel:remove({'stopsel'})
 
@@ -27,7 +24,9 @@ else
     vim.g.hostname = "linux"
 end
 
-vim.g.is_workpc = substr(vim.g.hostname,1,3) == "M16"
+vim.g.has_cmake = vim.fn.executable("cmake") == 1
+
+vim.g.is_workpc = substr(vim.g.hostname,1,3) == "M16" or substr(vim.g.hostname,1,3) == "ECC"
 ----------------------------------------------------------------------------------
 -- Mapping leader key
 ----------------------------------------------------------------------------------
@@ -37,7 +36,6 @@ vim.g.mapleader = " "
 -- Color sccheme
 ----------------------------------------------------------------------------------
 vim.opt.termguicolors = true
--- vim.opt.syntax = "on"
 
 ----------------------------------------------------------------------------------
 -- Global status line

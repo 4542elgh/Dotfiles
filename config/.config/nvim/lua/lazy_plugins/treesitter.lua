@@ -8,28 +8,32 @@
 ----------------------------------------------------------------------------------
 -- require zig
 ----------------------------------------------------------------------------------
-return {
-    "windwp/nvim-ts-autotag",
-    "mrjones2014/nvim-ts-rainbow",
-    "nvim-treesitter/nvim-treesitter-context",
-    {
-        "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
-        config = function()
-            vim.o.foldmethod = "expr"
-            vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = { "lua", "rust" },
-                -- Async install
-                -- sync_install = true,
-                highlight = { enable = true, },
-                autotag = { enable = true, },
-                rainbow = {
-                    enable = true,
-                    extended_mode = true,
-                    max_file_lines = nil,
-                },
-            })
-        end
+if false then
+    return {
+        "windwp/nvim-ts-autotag",
+        "mrjones2014/nvim-ts-rainbow",
+        "nvim-treesitter/nvim-treesitter-context",
+        {
+            "nvim-treesitter/nvim-treesitter",
+            build = ":TSUpdate",
+            config = function()
+                vim.o.foldmethod = "expr"
+                vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+                require("nvim-treesitter.configs").setup({
+                    ensure_installed = { "lua", "rust" },
+                    -- Async install
+                    -- sync_install = true,
+                    highlight = { enable = true, },
+                    autotag = { enable = true, },
+                    rainbow = {
+                        enable = true,
+                        extended_mode = true,
+                        max_file_lines = nil,
+                    },
+                })
+            end
+        }
     }
-}
+else
+    return {}
+end
