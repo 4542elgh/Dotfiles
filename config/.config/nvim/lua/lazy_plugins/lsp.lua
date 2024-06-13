@@ -19,10 +19,20 @@ return {
             local lspZero = require("lsp-zero")
             lspZero.preset("recommended")
             lspZero.setup()
+
+            require('mason').setup({})
+            require('mason-lspconfig').setup({
+                ensure_installed = {'lua_ls'},
+                handlers = {
+                    function(server_name)
+                        require('lspconfig')[server_name].setup({})
+                    end,
+                },
+            })
+
             -- !!! If you use Mason to install typescript-language-server 
             -- !!! You will also need to use npm to install typescript-language-server
             -- !!! npm install typescript-language-server
-            -- sumneko_lua
             require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {
@@ -78,36 +88,36 @@ return {
             })
         end
     },
-    {
-        'glepnir/lspsaga.nvim',
-        keys = {
-            -- The REAL Peak Definition
-            {"gp","<cmd>Lspsaga lsp_finder<CR>"},
-            -- Code action
-            {"ga","<cmd>Lspsaga code_action<CR>"},
-            -- Rename
-            {"gr","<cmd>Lspsaga rename<CR>"},
-            -- Peak Definition even though it suppose to go to definition
-            -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
-            -- Hover Doc
-            {"gh","<cmd>Lspsaga hover_doc<CR>"},
-            -- Show line diagnostics
-            {"go","<cmd>LSoutlineToggle<CR>"}
-        },
-        config = function()
-            require("lspsaga").init_lsp_saga({
-                symbol_in_winbar = {
-                    enable = false,
-                },
-                code_action_lightbulb = {
-                    enable = false,
-                }
-            })
-            vim.diagnostic.config({
-                virtual_text = false
-            })
-        end
-    },
+    -- {
+    --     'glepnir/lspsaga.nvim',
+    --     keys = {
+    --         -- The REAL Peak Definition
+    --         {"gp","<cmd>Lspsaga lsp_finder<CR>"},
+    --         -- Code action
+    --         {"ga","<cmd>Lspsaga code_action<CR>"},
+    --         -- Rename
+    --         {"gr","<cmd>Lspsaga rename<CR>"},
+    --         -- Peak Definition even though it suppose to go to definition
+    --         -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
+    --         -- Hover Doc
+    --         {"gh","<cmd>Lspsaga hover_doc<CR>"},
+    --         -- Show line diagnostics
+    --         {"go","<cmd>LSoutlineToggle<CR>"}
+    --     },
+    --     config = function()
+    --         require("lspsaga").init_lsp_saga({
+    --             symbol_in_winbar = {
+    --                 enable = false,
+    --             },
+    --             code_action_lightbulb = {
+    --                 enable = false,
+    --             }
+    --         })
+    --         vim.diagnostic.config({
+    --             virtual_text = false
+    --         })
+    --     end
+    -- },
     {
         "jose-elias-alvarez/null-ls.nvim",
         run = "npm install -g @fsouza/prettierd",
@@ -120,7 +130,7 @@ return {
             })
         end
     },
-    
+
     ----------------------------------------------------------------------------------
     -- Snippets
     ----------------------------------------------------------------------------------

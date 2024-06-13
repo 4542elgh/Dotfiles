@@ -19,5 +19,9 @@ require("lazy").setup("lazy_plugins", {
         rtp = {
             reset = false
         }
+    },
+    change_detection = {
+        enabled = true,
+        notify = false,
     }
 })

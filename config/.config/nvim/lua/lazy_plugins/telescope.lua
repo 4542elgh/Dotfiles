@@ -21,18 +21,18 @@ local telescope_config = {
             {"<Leader>a" , ":Telescope live_grep<CR>"},
             {"<Leader>ff", ":Telescope find_files<CR>"},
             {"<Leader>fr", ":Telescope oldfiles<CR>"},
-            {"<Leader>fw", ":lua vimwiki()<CR>"},
+            -- {"<Leader>fw", ":lua vimwiki()<CR>"},
             {"<Leader>fn", ":Telescope file_browser<CR>"},
             {"<Leader>b" , ":Telescope buffers<CR>"}
         },
         config = function()
-            function vimwiki()
-                require("telescope.builtin").find_files({
-                    search_dirs = {
-                        vim.fn.stdpath("config") .. "\\vimwiki"
-                    }
-                })
-            end
+            -- local function vimwiki()
+            --     require("telescope.builtin").find_files({
+            --         search_dirs = {
+            --             vim.fn.stdpath("config") .. "\\vimwiki"
+            --         }
+            --     })
+            -- end
             abbrev("reg" , "Telescope registers<CR>")
             abbrev('lang', "Telescope filetypes<CR>")
             local actions = require("telescope.actions")
@@ -97,8 +97,7 @@ end
 
 if vim.g.is_windows and vim.fn.filereadable(vim.fn.stdpath('config') .. vim.g.separator .. 'bin' .. vim.g.separator .. 'sqlite3.dll') == 0 then
 else
-    table.insert(telescope_config, 
-        {
+    table.insert({
             'prochri/telescope-all-recent.nvim',
             dependencies = "kkharji/sqlite.lua",
             config = function()
@@ -106,11 +105,12 @@ else
                     require('telescope-all-recent').setup({
                         vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
                     })
-                else 
+                else
                     require('telescope-all-recent').setup()
                 end
             end
-        }
+        },
+        telescope_config
     )
 end
 

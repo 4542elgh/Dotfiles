@@ -6,34 +6,30 @@
 -- /_/ /_/ |_/_____/_____//____/___/ /_/   /_/ /_____/_/ |_|  
 --================================================================================
 ----------------------------------------------------------------------------------
--- require zig
+-- Require zig, dont use clang, will error out at some point
 ----------------------------------------------------------------------------------
-if false then
-    return {
-        "windwp/nvim-ts-autotag",
-        "mrjones2014/nvim-ts-rainbow",
-        "nvim-treesitter/nvim-treesitter-context",
-        {
-            "nvim-treesitter/nvim-treesitter",
-            build = ":TSUpdate",
-            config = function()
-                vim.o.foldmethod = "expr"
-                vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-                require("nvim-treesitter.configs").setup({
-                    ensure_installed = { "lua", "rust" },
-                    -- Async install
-                    -- sync_install = true,
-                    highlight = { enable = true, },
-                    autotag = { enable = true, },
-                    rainbow = {
-                        enable = true,
-                        extended_mode = true,
-                        max_file_lines = nil,
-                    },
-                })
-            end
-        }
+return {
+    "windwp/nvim-ts-autotag",
+    "nvim-treesitter/nvim-treesitter-context",
+    "HiPhish/rainbow-delimiters.nvim",
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            vim.o.foldmethod = "expr"
+            vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = { "lua" },
+                -- Async install
+                -- sync_install = true,
+                highlight = { enable = true, },
+                autotag = { enable = true, },
+                rainbow = {
+                    enable = true,
+                    extended_mode = true,
+                    max_file_lines = nil,
+                },
+            })
+        end
     }
-else
-    return {}
-end
+}

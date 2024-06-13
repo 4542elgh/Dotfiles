@@ -9,7 +9,7 @@ autocmd({"BufNewFile", "BufRead"}, {"*.jsx"}, "set filetype=javascriptreact")
 autocmd({"BufNewFile", "BufRead"}, {"*.rasi"}, "setf css")
 
 -- Show line diagnostics automatically in hover window
-autocmd({"CursorHold", "CursorHoldI"}, {"*"}, "lua vim.diagnostic.open_float(nil, {border='rounded', focus=false})")
+-- autocmd({"CursorHold", "CursorHoldI"}, {"*"}, "lua vim.diagnostic.open_float(nil, {border='rounded', focus=false})")
 
 vim.cmd('set foldlevelstart=99')
 vim.g.indentLine_enabled = 1

@@ -3,7 +3,6 @@ require("global")
 require("abbrev")
 require("autoload")
 require("mapping")
--- require("packers") 
 require("lazycore")
 
 local function cmd(alias, command)

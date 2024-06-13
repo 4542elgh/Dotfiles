@@ -5,8 +5,8 @@ return {
     "moll/vim-bbye",
     "kyazdani42/nvim-web-devicons",
     "junegunn/vim-peekaboo",
-    {"asiryk/auto-hlsearch.nvim", config = true },
-    { "ethanholz/nvim-lastplace", config = true },
+    {"asiryk/auto-hlsearch.nvim", config = true},
+    {"ethanholz/nvim-lastplace", config = true},
     {
         "nvim-zh/colorful-winsep.nvim",
         config = function ()
