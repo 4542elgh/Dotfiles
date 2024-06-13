@@ -1,5 +1,5 @@
 return {
-    "xiyaowong/nvim-cursorword",
+    -- "xiyaowong/nvim-cursorword",
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
     { "lewis6991/gitsigns.nvim", config = true },

@@ -13,6 +13,12 @@ return {
     "nvim-treesitter/nvim-treesitter-context",
     "HiPhish/rainbow-delimiters.nvim",
     {
+        'tzachar/local-highlight.nvim',
+        config = function()
+            require('local-highlight').setup()
+        end
+    },
+    {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()

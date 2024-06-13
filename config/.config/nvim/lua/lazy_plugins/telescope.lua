@@ -103,7 +103,7 @@ else
             config = function()
                 if vim.g.is_windows then
                     require('telescope-all-recent').setup({
-                        vim.cmd("let g:sqlite_clib_path = '" .. vim.fn.stdpath('config') .. vim.g.separator .. 'bin' .. vim.g.separator .. 'sqlite3.dll\'')
+                        vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
                     })
                 else
                     require('telescope-all-recent').setup()
