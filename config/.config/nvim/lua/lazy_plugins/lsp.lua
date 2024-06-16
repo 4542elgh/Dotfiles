@@ -7,6 +7,20 @@
 --================================================================================
 -- KEEP THE ORDER THIS WAY for LSP to work correctly, hopefully with lazy.nvim we dont need to keep order this way
 return {
+    {"SmiteshP/nvim-navic",
+        config = function ()
+            vim.o.winbar = "      %{%v:lua.require'nvim-navic'.get_location()%}"
+            local navic = require("nvim-navic")
+            navic.setup{
+                highlight = true
+            }
+        end
+    },
+    -- { 'fgheng/winbar.nvim',
+    --     config = function ()
+    --         require("winbar").setup({})
+    --     end
+    -- },
     {
         "VonHeikemen/lsp-zero.nvim",
         dependencies = {
@@ -17,6 +31,7 @@ return {
         },
         config = function()
             local lspZero = require("lsp-zero")
+            local navic = require("nvim-navic")
             lspZero.preset("recommended")
             lspZero.setup()
 
@@ -34,6 +49,9 @@ return {
             -- !!! You will also need to use npm to install typescript-language-server
             -- !!! npm install typescript-language-server
             require("lspconfig").lua_ls.setup({
+                on_attach = function(client, bufnr)
+                    navic.attach(client, bufnr)
+                end,
                 settings = {
                     Lua = {
                         diagnostics = {
@@ -120,7 +138,7 @@ return {
     -- },
     {
         "jose-elias-alvarez/null-ls.nvim",
-        run = "npm install -g @fsouza/prettierd",
+        build = "npm install -g @fsouza/prettierd",
         config = function()
             local null_ls = require("null-ls")
             null_ls.setup({
@@ -137,6 +155,7 @@ return {
     "rafamadriz/friendly-snippets",
     {
         "L3MON4D3/LuaSnip",
+        build = "make install_jsregexp",
         config = function()
             local snipLocation = ""
             if(vim.loop.os_uname().sysname == "Windows_NT") then

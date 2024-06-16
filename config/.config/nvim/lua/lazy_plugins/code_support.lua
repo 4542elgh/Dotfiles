@@ -1,5 +1,4 @@
 return {
-    -- "xiyaowong/nvim-cursorword",
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
     { "lewis6991/gitsigns.nvim", config = true },
@@ -9,15 +8,15 @@ return {
             require("nvim_comment").setup()
         end
     },
-    {
-        "iamcco/markdown-preview.nvim",
-        build = "cd app && npm install",
-        setup = function()
-            vim.g.mkdp_filetypes = {"markdown"}
-        end,
-        cmd = "MarkdownPreview",
-        cond = executable("npm")
-    },
+    -- {
+    --     "iamcco/markdown-preview.nvim",
+    --     build = "cd app && npm install",
+    --     setup = function()
+    --         vim.g.mkdp_filetypes = {"markdown"}
+    --     end,
+    --     cmd = "MarkdownPreview",
+    --     cond = executable("npm")
+    -- },
     {
         'barrett-ruth/import-cost.nvim',
         build = 'sh install.sh yarn',
@@ -71,7 +70,7 @@ return {
         main = "ibl",
         config = function()
             local highlight = {
-                "whitePrimary"
+                "VertSplit"
             }
 
             local highlight_rainbow = {
@@ -86,6 +85,7 @@ return {
 
             local hooks = require "ibl.hooks"
             hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+                -- Cannot put in colorbuddy, this load before colorbuddy
                 vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
                 vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
                 vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
@@ -93,7 +93,6 @@ return {
                 vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
                 vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
                 vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-                vim.api.nvim_set_hl(0, "whitePrimary", { fg = "#555555" })
             end)
 
             require("ibl").setup {
@@ -137,12 +136,12 @@ return {
                 local api = require "nvim-tree.api"
 
                 local function opts(desc)
-                  return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+                    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
                 end
-              
+
                 -- default mappings
                 api.config.mappings.default_on_attach(bufnr)
-              
+
                 -- custom mappings
                 vim.keymap.set('n', '<left>', api.tree.change_root_to_parent, opts('Up'))
                 vim.keymap.set('n', 'right',     api.tree.change_root_to_node, opts('CD'))
@@ -155,7 +154,7 @@ return {
                 update_focused_file = {
                     enable = true
                 },
-                view = { 
+                view = {
                     adaptive_size = true,
                 },
                 renderer = {
@@ -167,5 +166,23 @@ return {
                 on_attach = tree_mapping
             })
         end
+    },
+    {
+        "mikavilpas/yazi.nvim",
+        event = "VeryLazy",
+        keys = {
+            -- 👇 in this section, choose your own keymappings!
+            {
+                "<leader>m",
+                function()
+                    require("yazi").yazi()
+                end,
+                desc = "Open the file manager"
+            }
+        },
+        ---@type YaziConfig
+        opts = {
+            open_for_directories = false,
+        }
     }
 }

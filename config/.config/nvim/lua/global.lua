@@ -8,8 +8,13 @@
 ----------------------------------------------------------------------------------
 -- Microsoft features
 ----------------------------------------------------------------------------------
+vim.cmd("source $VIMRUNTIME/mswin.vim")
+
 -- Make Arrow key work in Windows mode
 vim.opt.keymodel:remove({'stopsel'})
+
+vim.opt.guifont = { "DejaVuSansM Nerd Font Mono", ":h16" }
+
 
 vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
 

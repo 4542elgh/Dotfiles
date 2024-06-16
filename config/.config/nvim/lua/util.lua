@@ -140,3 +140,7 @@ function networkPath()
         end
     end
 end
+
+function cmd(alias, command)
+    return vim.api.nvim_create_user_command(alias, command, {nargs = 0})
+end

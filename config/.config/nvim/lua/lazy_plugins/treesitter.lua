@@ -6,16 +6,19 @@
 -- /_/ /_/ |_/_____/_____//____/___/ /_/   /_/ /_____/_/ |_|  
 --================================================================================
 ----------------------------------------------------------------------------------
--- Require zig, dont use clang, will error out at some point
+-- Require zig, dont use clang from Visual Studio, will error out at some point
 ----------------------------------------------------------------------------------
 return {
     "windwp/nvim-ts-autotag",
     "nvim-treesitter/nvim-treesitter-context",
     "HiPhish/rainbow-delimiters.nvim",
+    -- "xiyaowong/nvim-cursorword",
     {
         'tzachar/local-highlight.nvim',
         config = function()
-            require('local-highlight').setup()
+            require('local-highlight').setup({
+                hlgroup = 'LocalHighlight'
+            })
         end
     },
     {

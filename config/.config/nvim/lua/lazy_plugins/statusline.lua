@@ -14,7 +14,7 @@ return {
             },
             sections = {
                 lualine_c = { "lsp_progress" },
-                lualine_x = { "encoding", "filetype", "filename", },
+                lualine_x = { "encoding", "filetype", {"filename", path = 1} },
             }
         })
     end

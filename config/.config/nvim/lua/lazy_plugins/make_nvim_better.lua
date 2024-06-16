@@ -11,7 +11,7 @@ return {
         "nvim-zh/colorful-winsep.nvim",
         config = function ()
             require("colorful-winsep").setup({
-                highlight = {
+                hi = {
                     bg = "#323232",
                     fg = "#c57825",
                 }
