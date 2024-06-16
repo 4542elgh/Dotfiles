@@ -1,9 +1,9 @@
 # Start ZSH in debug mode to test speed
-# zmodload zsh/zprof
 
 # Preserve MANPATH if you already defined it somewhere in your config.
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+export PATH=/usr/local/git/bin:$PATH
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
@@ -68,3 +68,4 @@ vterm_printf(){
 }
 
 macchina
+

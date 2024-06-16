@@ -4,7 +4,8 @@ source /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.c
 fpath+=( /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/common-aliases )
 source /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/npm/npm.plugin.zsh
 fpath+=( /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/npm )
-
+source /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/rust/rust.plugin.zsh
+fpath+=( /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/rust )
 source /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/golang/golang.plugin.zsh
 fpath+=( /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/golang )
 source /Users/evanliu/Library/Caches/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/autojump/autojump.plugin.zsh
