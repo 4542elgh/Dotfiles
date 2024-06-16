@@ -13,10 +13,13 @@ vim.cmd("source $VIMRUNTIME/mswin.vim")
 -- Make Arrow key work in Windows mode
 vim.opt.keymodel:remove({'stopsel'})
 
-vim.opt.guifont = { "DejaVuSansM Nerd Font Mono", ":h16" }
-
-
 vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
+
+if vim.g.is_windows then
+    vim.opt.guifont = { "DejaVuSansM Nerd Font Mono", ":h16" }
+else
+    vim.opt.guifont = { "DejaVuSansMono Nerd Font", ":h16" }
+end
 
 vim.g.separator = "/"
 if vim.g.is_windows then vim.g.separator = "\\" end
