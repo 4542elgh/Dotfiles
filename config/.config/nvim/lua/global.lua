@@ -17,8 +17,10 @@ vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
 
 if vim.g.is_windows then
     vim.opt.guifont = { "DejaVuSansM Nerd Font Mono", ":h16" }
+    vim.g.explorer = "explorer.exe"
 else
     vim.opt.guifont = { "DejaVuSansMono Nerd Font", ":h16" }
+    vim.g.explorer = "open"
 end
 
 vim.g.separator = "/"
