@@ -128,7 +128,6 @@ return {
     },
     {
         "kyazdani42/nvim-tree.lua",
-        -- keys = "<Leader>n",
         config = function ()
             nmap('<Leader>n', ":NvimTreeToggle<CR>")
 
@@ -143,8 +142,8 @@ return {
                 api.config.mappings.default_on_attach(bufnr)
 
                 -- custom mappings
-                vim.keymap.set('n', '<left>', api.tree.change_root_to_parent, opts('Up'))
-                vim.keymap.set('n', 'right',     api.tree.change_root_to_node, opts('CD'))
+                vim.keymap.set('n', 'h', api.tree.change_root_to_parent, opts('Up'))
+                vim.keymap.set('n', 'l',     api.tree.change_root_to_node, opts('CD'))
                 vim.keymap.set('n', 'c',     api.fs.create, opts('Create File Or Directory'))
             end
 

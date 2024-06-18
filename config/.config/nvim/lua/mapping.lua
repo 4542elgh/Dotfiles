@@ -86,3 +86,9 @@ nmap("<Leader>y", ':<C-R>"')
 nmap("ga", vim.lsp.buf.code_action)
 nmap("gd", vim.lsp.buf.definition)
 nmap("gr", vim.lsp.buf.references)
+
+
+----------------------------------------------------------------------------------
+-- LSP
+----------------------------------------------------------------------------------
+nmap("<Leader>eq", vim.fn.getreg("q"))
