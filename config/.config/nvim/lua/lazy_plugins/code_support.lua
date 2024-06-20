@@ -1,7 +1,6 @@
 return {
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
-    { "lewis6991/gitsigns.nvim", config = true },
     { "terrortylor/nvim-comment",
         -- The plugin name and git repo name are different, cant use short hand
         config = function()
