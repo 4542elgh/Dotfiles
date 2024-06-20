@@ -18,6 +18,8 @@ nmap('dI', 'd^')
 nmap('yA', 'y$')
 nmap('yI', 'y^')
 
+nmap('E', 'gE')
+
 nmap('n', 'nzz')
 nmap('N', 'Nzz')
 
