@@ -18,12 +18,16 @@ while ($option -ne 1 -and $option -ne 2){
 if ($option -eq 1){
     $srcFolder = (Split-Path -Parent $scriptFolder)
     $destFolder = "$env:LOCALAPPDATA\nvim"
+    Write-Host "Removing files from $destFolder" -ForegroundColor Red
     Get-ChildItem -Path $destFolder -Recurse | Remove-Item -Recurse -Force
+    Write-Host "Copy from $srcFolder to $destFolder" -ForegroundColor Green
     Copy-Item -Path $srcFolder\* -Destination $destFolder -Recurse -Force
 } elseif ($option -eq 2){
     $srcFolder = "$env:LOCALAPPDATA\nvim"
     $destFolder = (Split-Path -Parent $scriptFolder)
+    Write-Host "Removing files from $destFolder" -ForegroundColor Red
     Get-ChildItem -Path $destFolder | Where-Object { $_.FullName -ne $scriptFolder } | Remove-Item -Recurse -Force
+    Write-Host "Copy from $srcFolder to $destFolder" -ForegroundColor Green 
     Copy-Item -Path "$srcFolder\*" -Destination $destFolder -Recurse -Force -Exclude "scripts"
 }
 
