@@ -100,15 +100,16 @@ return {
                     highlight = highlight,
                     remove_blankline_trail = false,
                 },
-                scope = { highlight = highlight_rainbow },
+                scope = { highlight = highlight_rainbow }
             }
+
             vim.g.rainbow_delimiters = { highlight = highlight_rainbow }
             hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
         end
     },
     {
         "mbbill/undotree",
-        event = "VimEnter",
+        -- event = "VimEnter",
         config = function()
             nmap("<Leader>u", ":UndotreeToggle<CR>")
             vim.api.undolevel = 500
