@@ -77,7 +77,7 @@ return {
                             -- You can pass a query group to use query from `queries/<lang>/<query_group>.scm file in your runtime path.
                             -- Below example nvim-treesitter's `locals.scm` and `folds.scm`. They also provide highlights.scm and indent.scm.
                             ["]s"] = { query = "@scope", query_group = "locals", desc = "Next scope" },
-                            ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
+                            -- ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
                         },
                         goto_next_end = {
                             ["]F"] = "@function.outer",
@@ -111,6 +111,25 @@ return {
         config = function()
             vim.o.foldmethod = "expr"
             vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+            -- vim.o.foldtext = "nvim_treesitter#foldtext()"
+
+            function MyFoldtext()
+                local text = vim.treesitter.foldtext()
+
+                local n_lines = vim.v.foldend - vim.v.foldstart
+                local text_lines = " lines"
+
+                if n_lines == 1 then
+                    text_lines = " line"
+                end
+
+                table.insert(text, { " - " .. n_lines .. text_lines, { "Folded" }})
+
+                return text
+            end
+
+            vim.o.foldtext = "MyFoldtext()"
+
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "lua" },
                 -- Async install

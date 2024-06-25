@@ -35,6 +35,7 @@ end
 vim.g.has_cmake = vim.fn.executable("cmake") == 1
 
 vim.g.is_workpc = substr(vim.g.hostname,1,3) == "M16" or substr(vim.g.hostname,1,3) == "ECC"
+
 ----------------------------------------------------------------------------------
 -- Mapping leader key
 ----------------------------------------------------------------------------------
@@ -167,4 +168,10 @@ end
 -- When running macros and regexes on a large file, lazy redraw tells neovim/vim not to draw the screen, which greatly speeds it up, upto 6-7x faster 
 ----------------------------------------------------------------------------------
 vim.opt.lazyredraw = true
+
+----------------------------------------------------------------------------------
+-- Set Minimap before plugin
+----------------------------------------------------------------------------------
+vim.g.minimap_auto_start = true
+vim.g.minimap_auto_start_win_enter = true
 

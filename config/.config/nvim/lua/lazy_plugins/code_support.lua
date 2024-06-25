@@ -1,10 +1,11 @@
 return {
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
-    { "terrortylor/nvim-comment",
-        -- The plugin name and git repo name are different, cant use short hand
-        config = function()
-            require("nvim_comment").setup()
+    {
+        'wfxr/minimap.vim',
+        build = "cargo install --locked code-minimap",
+        config = function ()
+            vim.g.minimap_width = 10
         end
     },
     -- {
@@ -35,25 +36,6 @@ return {
                     height = 7,
                 },
                 toggle_keymap = "<leader>t",
-            })
-        end
-    },
-    {
-        "petertriho/nvim-scrollbar",
-        config = function()
-            require("scrollbar").setup({
-                handle = {
-                    text = " ",
-                    color = "#a9b7c6"
-                },
-                marks = {
-                    Search = { text = { "--", "==" } },
-                    Error = { text = { "--", "==" } },
-                    Warn = { text = { "--", "==" } },
-                    Info = { text = { "--", "==" } },
-                    Hint = { text = { "--", "==" } },
-                    Misc = { text = { "--", "==" } },
-                }
             })
         end
     },

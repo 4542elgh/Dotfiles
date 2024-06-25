@@ -20,7 +20,7 @@ abbrev('snippet', "NvimTreeOpen " .. vim.fn.stdpath('config') .. vim.g.separator
 abbrev('cdthis' , [[cd <C-R>=expand("%:p:h")<CR>]])
 
 -- If you need to copy content with notepad, or just use "+y and copy it to system clipboard
-abbrev('open'   , 'silent !notepad.exe %')
+abbrev('openfile'   , 'silent !notepad.exe %')
 abbrev('explorer'    , 'silent !explorer.exe <C-R>=expand("%:p:h")<CR>')
 
 -- Personal functions
