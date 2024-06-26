@@ -3,7 +3,7 @@ return {
     { "kylechui/nvim-surround", config = true },
     {
         'wfxr/minimap.vim',
-        build = "cargo install --locked code-minimap",
+        -- build = "cargo install --locked code-minimap",
         config = function ()
             vim.g.minimap_width = 10
         end
