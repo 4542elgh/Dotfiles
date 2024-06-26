@@ -15,6 +15,9 @@ vim.opt.keymodel:remove({'stopsel'})
 
 vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
 
+-- Yank will yank to system clipboard
+vim.api.nvim_set_option("clipboard","unnamed")
+
 if vim.g.is_windows then
     vim.opt.guifont = { "DejaVuSansM Nerd Font Mono", ":h16" }
 else
@@ -168,10 +171,4 @@ end
 -- When running macros and regexes on a large file, lazy redraw tells neovim/vim not to draw the screen, which greatly speeds it up, upto 6-7x faster 
 ----------------------------------------------------------------------------------
 vim.opt.lazyredraw = true
-
-----------------------------------------------------------------------------------
--- Set Minimap before plugin
-----------------------------------------------------------------------------------
-vim.g.minimap_auto_start = true
-vim.g.minimap_auto_start_win_enter = true
 

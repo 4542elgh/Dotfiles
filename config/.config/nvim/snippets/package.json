@@ -1,18 +1,22 @@
 {
-  "name": "evan-snippets",
-  "engines": {
-    "vscode": "^1.11.0"
-  },
-  "contributes": {
-    "snippets": [
-      {
-        "language": "vim",
-        "path": "./snippets/vim.json"
-      },
-      {
-        "language": "markdown",
-        "path": "./snippets/md.json"
-      }
-    ]
-  }
+    "name": "evan-snippets",
+    "engines": {
+        "vscode": "^1.11.0"
+    },
+    "contributes": {
+        "snippets": [
+            {
+                "language": "vim",
+                "path": "./snippets/vim.json"
+            },
+            {
+                "language": "markdown",
+                "path": "./snippets/md.json"
+            },
+            {
+                "language": "lua",
+                "path": "./snippets/lua.json"
+            }
+        ]
+    }
 }

@@ -1,0 +1,29 @@
+{
+  "tableForEach": {
+    "prefix": ["tableForEach", "tblForEach"],
+    "body": [
+      "for idx, item in ipairs(${0:arr})",
+      "",
+      "end"
+    ],
+    "description": "Iterate through a table"
+  },
+  "dictForEach": {
+    "prefix": ["dictForEach"],
+    "body": [
+      "for key, val in pairs(${0:dict})",
+      "",
+      "end"
+    ],
+    "description": "Iterate through a dictionary"
+  },
+  "docstring": {
+    "prefix": ["docstring"],
+    "body": [
+        "--[[${1:BRIEF_DESCRIPTION}",
+        "@param ${2:PARAMETERS}",
+        "@return ${3:RETURN}--]]"
+    ],
+    "description": "Iterate through a dictionary"
+  }
+}

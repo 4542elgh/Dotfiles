@@ -21,8 +21,8 @@ local telescope_config = {
             {"<Leader>a" , ":Telescope live_grep<CR>"},
             {"<Leader>ff", ":Telescope find_files<CR>"},
             {"<Leader>fr", ":Telescope oldfiles<CR>"},
-            -- {"<Leader>fw", ":lua vimwiki()<CR>"},
             {"<Leader>fn", ":Telescope file_browser<CR>"},
+            {"<Leader>fm", ":Telescope marks<CR>"},
             {"<Leader>b" , ":Telescope buffers<CR>"}
         },
         config = function()

@@ -16,11 +16,6 @@ return {
             }
         end
     },
-    -- { 'fgheng/winbar.nvim',
-    --     config = function ()
-    --         require("winbar").setup({})
-    --     end
-    -- },
     {
         "VonHeikemen/lsp-zero.nvim",
         dependencies = {
@@ -83,19 +78,58 @@ return {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lua",
+            -- Snippets
             "saadparwaiz1/cmp_luasnip",
+            "L3MON4D3/LuaSnip",
+            -- This is required to get LuaSnip to work
+            "rafamadriz/friendly-snippets"
         },
         config = function()
-            -- Annoying, but its here when you need it, this will show definition when cursor is on ANY word
-            -- vim.cmd([[au CursorHold * lua vim.lsp.buf.hover()]])
-            local cmp = require "cmp"
+            local cmp = require("cmp")
+            local luasnip = require("luasnip")
             cmp.setup({
                 mapping = {
                     ["<CR>"] = cmp.mapping.confirm({ select = true }),
                     ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-                    ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+                    -- Make tab behave differently based on cmp or snippet
+                    ['<Tab>'] = cmp.mapping(function(fallback)
+                        -- Cycle cmp
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        -- Cycle luasnip placeholders 
+                        elseif luasnip.expand_or_locally_jumpable() then
+                            luasnip.expand_or_jump()
+                        else
+                            fallback()
+                        end
+                    end, { 'i', 's' }),
                 },
+                snippet = {
+                    expand = function(args)
+                        require'luasnip'.lsp_expand(args.body)
+                    end
+                },
+                sources = cmp.config.sources({
+                    { name = 'nvim_lsp' },
+                    { name = "nvim_lsp_signature_help" },
+                    { name = "luasnip" },
+                    { name = "path" },
+                }, {
+                    { name = "buffer"}
+                }),
+                window = {
+                    documentation = {
+                        border = {"╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+                    },
+                    completion = {
+                        border = {"╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+                        -- winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpPmenuBorder,CursorLine:PmenuSel,Search:None',
+                    }
+                }
             })
+            require("luasnip.loaders.from_vscode").load({ paths = vim.fn.stdpath('config') .. "\\snippets" })
+            require("luasnip.loaders.from_vscode").lazy_load()
+            require("luasnip").filetype_extend("vimwiki", {"markdown"})
         end
     },
     {
@@ -106,36 +140,6 @@ return {
             })
         end
     },
-    -- {
-    --     'glepnir/lspsaga.nvim',
-    --     keys = {
-    --         -- The REAL Peak Definition
-    --         {"gp","<cmd>Lspsaga lsp_finder<CR>"},
-    --         -- Code action
-    --         {"ga","<cmd>Lspsaga code_action<CR>"},
-    --         -- Rename
-    --         {"gr","<cmd>Lspsaga rename<CR>"},
-    --         -- Peak Definition even though it suppose to go to definition
-    --         -- nmap("gd","<cmd>Lspsaga peek_definition<CR>")
-    --         -- Hover Doc
-    --         {"gh","<cmd>Lspsaga hover_doc<CR>"},
-    --         -- Show line diagnostics
-    --         {"go","<cmd>LSoutlineToggle<CR>"}
-    --     },
-    --     config = function()
-    --         require("lspsaga").init_lsp_saga({
-    --             symbol_in_winbar = {
-    --                 enable = false,
-    --             },
-    --             code_action_lightbulb = {
-    --                 enable = false,
-    --             }
-    --         })
-    --         vim.diagnostic.config({
-    --             virtual_text = false
-    --         })
-    --     end
-    -- },
     {
         "jose-elias-alvarez/null-ls.nvim",
         build = "npm install -g @fsouza/prettierd",
@@ -148,23 +152,4 @@ return {
             })
         end
     },
-
-    ----------------------------------------------------------------------------------
-    -- Snippets
-    ----------------------------------------------------------------------------------
-    "rafamadriz/friendly-snippets",
-    {
-        "L3MON4D3/LuaSnip",
-        build = "make install_jsregexp",
-        config = function()
-            local snipLocation = ""
-            if(vim.loop.os_uname().sysname == "Windows_NT") then
-                snipLocation = os.getenv("LOCALAPPDATA") .. "\\nvim\\snippets"
-            else
-                snipLocation = "~/.config/nvim/snippets"
-            end
-            require("luasnip.loaders.from_vscode").load({ paths = snipLocation })
-            require("luasnip").filetype_extend("vimwiki", {"markdown"})
-        end
-    }
 }

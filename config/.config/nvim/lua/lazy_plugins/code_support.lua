@@ -1,13 +1,13 @@
 return {
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
-    {
-        'wfxr/minimap.vim',
-        -- build = "cargo install --locked code-minimap",
-        config = function ()
-            vim.g.minimap_width = 10
-        end
-    },
+    -- {
+    --     'wfxr/minimap.vim',
+    --     -- build = "cargo install --locked code-minimap",
+    --     config = function ()
+    --         vim.g.minimap_width = 10
+    --     end
+    -- },
     -- {
     --     "iamcco/markdown-preview.nvim",
     --     build = "cd app && npm install",
@@ -17,11 +17,11 @@ return {
     --     cmd = "MarkdownPreview",
     --     cond = executable("npm")
     -- },
-    {
-        'barrett-ruth/import-cost.nvim',
-        build = 'sh install.sh yarn',
-        cond = executable("yarn")
-    },
+    -- {
+    --     'barrett-ruth/import-cost.nvim',
+    --     build = 'sh install.sh yarn',
+    --     cond = executable("yarn")
+    -- },
     {
         "norcalli/nvim-colorizer.lua",
         config = function()
@@ -48,6 +48,7 @@ return {
     },
     {
         "lukas-reineke/indent-blankline.nvim",
+        event = "VeryLazy",
         main = "ibl",
         config = function()
             local highlight = {
@@ -164,5 +165,5 @@ return {
         opts = {
             open_for_directories = false,
         }
-    }
+    },
 }

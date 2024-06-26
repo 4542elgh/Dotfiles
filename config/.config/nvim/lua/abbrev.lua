@@ -14,7 +14,7 @@ abbrev('vimrc'  , "edit " .. vim.fn.stdpath('config') .. vim.g.separator .. "ini
 abbrev('vimrcdir', 'silent !explorer.exe ' .. vim.fn.stdpath('config'))
 
 abbrev('color'  , 'edit ' .. vim.fn.stdpath('data') .. concatPath({"site", "pack", "packer", "start", "darcula.nvim", "lua", "darcula.lua"}, vim.g.separator, true, false))
-abbrev('snippet', "NvimTreeOpen " .. vim.fn.stdpath('config') .. vim.g.separator .. "snippets<CR>")
+abbrev('snippet', "edit " .. vim.fn.stdpath('config') .. vim.g.separator .. "snippets" .. vim.g.separator .. "package.json<CR>")
 
 -- Make current buffer's path to working path, so FZF can work correctly
 abbrev('cdthis' , [[cd <C-R>=expand("%:p:h")<CR>]])
