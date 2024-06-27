@@ -110,28 +110,12 @@ return {
         build = ":TSUpdate",
         config = function()
             vim.o.foldmethod = "expr"
-            vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-            -- vim.o.foldtext = "nvim_treesitter#foldtext()"
-
-            function MyFoldtext()
-                local text = vim.treesitter.foldtext()
-
-                local n_lines = vim.v.foldend - vim.v.foldstart
-                local text_lines = " lines"
-
-                if n_lines == 1 then
-                    text_lines = " line"
-                end
-
-                table.insert(text, { " - " .. n_lines .. text_lines, { "Folded" }})
-
-                return text
-            end
-
-            vim.o.foldtext = "MyFoldtext()"
+            vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+	    --        vim.o.foldtext = ""
+	    -- vim.o.fillchars = "fold: "
 
             require("nvim-treesitter.configs").setup({
-                ensure_installed = { "lua" },
+                ensure_installed = { "lua", "vim", "vimdoc", "yaml", "python" },
                 -- Async install
                 -- sync_install = true,
                 highlight = { enable = true, },

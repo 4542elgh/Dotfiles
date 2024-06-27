@@ -1,29 +1,45 @@
 {
-  "tableForEach": {
-    "prefix": ["tableForEach", "tblForEach"],
-    "body": [
-      "for idx, item in ipairs(${0:arr})",
-      "",
-      "end"
-    ],
-    "description": "Iterate through a table"
-  },
-  "dictForEach": {
-    "prefix": ["dictForEach"],
-    "body": [
-      "for key, val in pairs(${0:dict})",
-      "",
-      "end"
-    ],
-    "description": "Iterate through a dictionary"
-  },
-  "docstring": {
-    "prefix": ["docstring"],
-    "body": [
-        "--[[${1:BRIEF_DESCRIPTION}",
-        "@param ${2:PARAMETERS}",
-        "@return ${3:RETURN}--]]"
-    ],
-    "description": "Iterate through a dictionary"
-  }
+    "tableForEach": {
+        "prefix": ["tableForEach", "tblForEach"],
+        "body": [
+            "for idx, item in ipairs(${0:arr})",
+            "$1",
+            "end"
+        ],
+        "description": "Iterate through a table"
+    },
+    "dictForEach": {
+        "prefix": ["dictForEach"],
+        "body": [
+            "for key, val in pairs(${0:dict})",
+            "$1",
+            "end"
+        ],
+        "description": "Iterate through a dictionary"
+    },
+    "docstring": {
+        "prefix": ["docstring"],
+        "body": [
+            "--[[${1:BRIEF_DESCRIPTION}",
+            "\t@param ${2:PARAMETERS}",
+            "\t@return ${3:RETURN}--]]"
+        ],
+        "description": "Iterate through a dictionary"
+    },
+    "scandir": {
+        "prefix": ["scandir"],
+        "body": [
+            "local handle = vim.loop.fs_scandir(${1:path})",
+            "while true do",
+            "\tlocal name, type = vim.loop.fs_scandir_next(handle)",
+            "\tif not name then",
+            "\tbreak",
+            "\tend",
+            "\tif type == 'file' then",
+            "\t\ttable.insert(${2:table}, name)",
+            "\tend",
+            "end"
+        ],
+        "description": "Scan a directory"
+    }
 }

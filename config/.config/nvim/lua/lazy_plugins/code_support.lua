@@ -1,6 +1,12 @@
 return {
     { "windwp/nvim-autopairs", config = true },
     { "kylechui/nvim-surround", config = true },
+    {
+        'bbjornstad/pretty-fold.nvim',
+        config = function()
+            require('pretty-fold').setup()
+        end
+    },
     -- {
     --     'wfxr/minimap.vim',
     --     -- build = "cargo install --locked code-minimap",

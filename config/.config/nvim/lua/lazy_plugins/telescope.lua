@@ -10,6 +10,7 @@
 ----------------------------------------------------------------------------------
 local telescope_config = {
     "4542elgh/telescope-smb-unc.nvim",
+    "4542elgh/telescope-arsenal.nvim",
     "4542elgh/telescope-scratch-run.nvim",
     "4542elgh/telescope-youtube-mpv.nvim",
     "nvim-telescope/telescope-file-browser.nvim",
@@ -20,19 +21,13 @@ local telescope_config = {
         keys = {
             {"<Leader>a" , ":Telescope live_grep<CR>"},
             {"<Leader>ff", ":Telescope find_files<CR>"},
+            {"<Leader>ft", ":Telescope builtin include_extensions=true<CR>"},
             {"<Leader>fr", ":Telescope oldfiles<CR>"},
             {"<Leader>fn", ":Telescope file_browser<CR>"},
             {"<Leader>fm", ":Telescope marks<CR>"},
             {"<Leader>b" , ":Telescope buffers<CR>"}
         },
         config = function()
-            -- local function vimwiki()
-            --     require("telescope.builtin").find_files({
-            --         search_dirs = {
-            --             vim.fn.stdpath("config") .. "\\vimwiki"
-            --         }
-            --     })
-            -- end
             abbrev("reg" , "Telescope registers<CR>")
             abbrev('lang', "Telescope filetypes<CR>")
             local actions = require("telescope.actions")
@@ -74,44 +69,38 @@ local telescope_config = {
             if vim.g.has_fzf then
                 require("telescope").load_extension("fzf")
             end
+            print(vim.g.has_fzf)
             require("telescope").load_extension("file_browser")
             require('telescope').load_extension('smb_unc')
             require('telescope').load_extension('scratch_run')
+            require('telescope').load_extension('arsenal')
 
         end,
     },
-}
-
--- FZF not working on windows when first cloning the repo, need cmake from Visual Studio C++ (look at individual component, one should say C++ CMake)
--- Add cmake to path with C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
--- Build will trigger on Install/Update
-if vim.g.has_cmake then
-    vim.g.has_fzf = true
-    table.insert(telescope_config,
-        {
-            "nvim-telescope/telescope-fzf-native.nvim",
-            build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-        }
-    )
-end
-
-if vim.g.is_windows and vim.fn.filereadable(vim.fn.stdpath('config') .. vim.g.separator .. 'bin' .. vim.g.separator .. 'sqlite3.dll') == 0 then
-else
-    table.insert({
-            'prochri/telescope-all-recent.nvim',
-            dependencies = "kkharji/sqlite.lua",
-            config = function()
-                if vim.g.is_windows then
-                    require('telescope-all-recent').setup({
-                        vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
-                    })
-                else
-                    require('telescope-all-recent').setup()
-                end
+    {
+        'prochri/telescope-all-recent.nvim',
+        dependencies = "kkharji/sqlite.lua",
+        config = function()
+            if vim.g.is_windows then
+                require('telescope-all-recent').setup({
+                    vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
+                })
+            else
+                require('telescope-all-recent').setup()
             end
-        },
-        telescope_config
-    )
-end
+        end,
+    },
+    -- FZF need compiling, need cmake from Visual Studio C++ (look at individual component, one should say C++ CMake)
+    -- Add cmake to path with C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe
+    -- fzf-native build will trigger on Lazy Install/Update
+    {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        config = function ()
+            vim.g.has_fzf = true
+        end,
+        cond = vim.g.has_cmake
+    }
+}
 
 return telescope_config

@@ -7,4 +7,3 @@ require("lazycore")
 
 -- Checking dependencies is slow, only enable on first time setup
 -- require("dependencies")
-
