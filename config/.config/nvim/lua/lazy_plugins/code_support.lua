@@ -34,16 +34,19 @@ return {
 			require("colorizer").setup()
 		end,
 	},
+	-- {
+	-- 	"s1n7ax/nvim-terminal",
+	-- 	config = function()
+	-- 		require("nvim-terminal").setup({
+	-- 			window = {
+	-- 				height = 7,
+	-- 			},
+	-- 			toggle_keymap = "<leader>t",
+	-- 		})
+	-- 	end,
+	-- },
 	{
-		"s1n7ax/nvim-terminal",
-		config = function()
-			require("nvim-terminal").setup({
-				window = {
-					height = 7,
-				},
-				toggle_keymap = "<leader>t",
-			})
-		end,
+		"voldikss/vim-floaterm",
 	},
 	{
 		"alvan/vim-closetag",

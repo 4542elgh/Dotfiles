@@ -8,7 +8,7 @@
 ----------------------------------------------------------------------------------
 -- Require cmake
 ----------------------------------------------------------------------------------
-local telescope_config = {
+return {
 	"4542elgh/telescope-smb-unc.nvim",
 	"4542elgh/telescope-arsenal.nvim",
 	"4542elgh/telescope-scratch-run.nvim",
@@ -105,5 +105,3 @@ local telescope_config = {
 		cond = vim.g.has_cmake,
 	},
 }
-
-return telescope_config

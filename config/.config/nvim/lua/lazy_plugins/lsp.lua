@@ -14,7 +14,7 @@ return {
 		config = function()
 			require("lint").linters_by_ft = {
 				lua = { "luacheck" },
-				javascript = { "eslint" },
+				javascript = { "eslint_d" },
 				sql = { "sqlfluff" },
 			}
 
@@ -33,7 +33,8 @@ return {
 				formatters_by_ft = {
 					lua = { "stylua" },
 					python = { "black" },
-					javascript = { "prettier" },
+					-- javascript = { "prettier" },
+					javascript = { "biome" },
 					sql = { "sqlfmt" },
 				},
 				format = {
