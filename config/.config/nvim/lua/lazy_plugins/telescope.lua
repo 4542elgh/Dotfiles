@@ -81,9 +81,12 @@ local telescope_config = {
         'prochri/telescope-all-recent.nvim',
         dependencies = "kkharji/sqlite.lua",
         config = function()
+            local sqlite_path = table.concat({vim.g.win_bin, "sqlite3.dll"}, vim.g.separator)
+            -- sqlite.lua only take "/" path
+            sqlite_path = string.gsub(sqlite_path, "\\", "/")
             if vim.g.is_windows then
                 require('telescope-all-recent').setup({
-                    vim.cmd("let g:sqlite_clib_path = 'C:/Users/mliu/AppData/Local/nvim/bin/sqlite3.dll'")
+                    vim.cmd("let g:sqlite_clib_path = \"" .. sqlite_path .. "\"")
                 })
             else
                 require('telescope-all-recent').setup()

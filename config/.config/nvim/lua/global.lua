@@ -15,6 +15,7 @@ vim.opt.keymodel:remove({'stopsel'})
 
 vim.g.is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win32unix") == 1
 
+
 -- Yank will yank to system clipboard
 vim.api.nvim_set_option("clipboard","unnamed")
 
@@ -26,6 +27,8 @@ end
 
 vim.g.separator = "/"
 if vim.g.is_windows then vim.g.separator = "\\" end
+
+vim.g.win_bin = table.concat({vim.fn.stdpath("config"), "bin"}, vim.g.separator)
 
 vim.g.hostname = ""
 

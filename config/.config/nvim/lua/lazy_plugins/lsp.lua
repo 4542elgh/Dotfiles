@@ -7,6 +7,7 @@
 --================================================================================
 -- KEEP THE ORDER THIS WAY for LSP to work correctly, hopefully with lazy.nvim we dont need to keep order this way
 return {
+    {"wilriker/gcode.vim"},
     {"SmiteshP/nvim-navic",
         config = function ()
             vim.o.winbar = "      %{%v:lua.require'nvim-navic'.get_location()%}"
