@@ -1,6 +1,7 @@
 return {
 	{ "windwp/nvim-autopairs", config = true },
 	{ "kylechui/nvim-surround", config = true },
+	{ "mg979/vim-visual-multi" },
 	{
 		"bbjornstad/pretty-fold.nvim",
 		config = function()
